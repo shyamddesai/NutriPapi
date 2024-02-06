@@ -1,4 +1,4 @@
-# ECSE428-CountIt
+# NutriPapi
 
 ## Team Members
 Masa Kagami <br>
