@@ -103,3 +103,6 @@ build process.
 - As a user who enjoys culinary diversity, I want the NutriPapi system to recommend a variety of recipes for different meals each day and ensure that the same meal is not repeated within a two-week period unless I specifically request it.
 - As a user who uses multiple devices, I want the NutriPapi system to be responsive and compatible on all my devices so that I can access my meal plans and health tracking.
 - As a user concerned about my personal data, I want the NutriPapi system to implement secure authentication methods and encrypt sensitive user data to ensure my privacy and security.
+
+### UML
+https://drive.google.com/file/d/1TFZzuH50HIpUtgWauCQewDUQO2j3s7Fr/view?usp=sharing
