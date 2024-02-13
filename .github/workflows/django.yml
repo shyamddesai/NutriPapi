@@ -28,5 +28,10 @@ jobs:
       working-directory: ./Backend
     - name: Run Tests
       run: |
-        python manage.py behave
+        python manage.py behave --junit --junit-directory ./test-reports || true
       working-directory: ./Backend
+    - name: Upload Test Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-reports
+        path: ./Backend/test-reports
