@@ -108,7 +108,7 @@ build process.
 ---
 
 ## UML Class Diagram and Entity Relationship Diagram
-https://drive.google.com/file/d/1TFZzuH50HIpUtgWauCQewDUQO2j3s7Fr/view?usp=sharing
+![UML Class and Entity Relationship Diagram](docs/UML.png)
 
 ## Backlog Spreadsheet
 https://mcgill-my.sharepoint.com/:x:/r/personal/martin_eskaros_mail_mcgill_ca/Documents/ECSE428_Group16/Group16_Project_Backlog%201.xlsx?d=w97ab7333b3d3442b9646398562dca4d9&csf=1&web=1&e=dql57v
