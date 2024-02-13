@@ -105,5 +105,14 @@ build process.
 - As a user who uses multiple devices, I want the NutriPapi system to be responsive and compatible on all my devices so that I can access my meal plans and health tracking.
 - As a user concerned about my personal data, I want the NutriPapi system to implement secure authentication methods and encrypt sensitive user data to ensure my privacy and security.
 
-### UML
+---
+
+## UML Class Diagram and Entity Relationship Diagram
 https://drive.google.com/file/d/1TFZzuH50HIpUtgWauCQewDUQO2j3s7Fr/view?usp=sharing
+
+## Backlog Spreadsheet
+https://mcgill-my.sharepoint.com/:x:/r/personal/martin_eskaros_mail_mcgill_ca/Documents/ECSE428_Group16/Group16_Project_Backlog%201.xlsx?d=w97ab7333b3d3442b9646398562dca4d9&csf=1&web=1&e=dql57v
+
+## Figma UI Design
+https://www.figma.com/file/115FFldu0ZMXA5eoJNVURi/UI-Draft?type=design&node-id=0%3A1&mode=design&t=MNdBvrCJPntKGiQC-1
+
