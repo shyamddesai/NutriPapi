@@ -1,6 +1,7 @@
 # NutriPapi
 
 Introducing NutriPapi: Your Personalized Health Companion
+![NutriPapi Logo](Frontend/public/assets/iconH1080.png)
 
 NutriPapi is an innovative health management platform designed to empower users in achieving their wellness goals effortlessly. Seamlessly integrating advanced features with user-friendly design, NutriPapi provides a comprehensive suite of tools tailored to your individual needs.
 
