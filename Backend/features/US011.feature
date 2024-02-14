@@ -1,24 +1,20 @@
-Feature: Diverse Recipe Recommendations in the NutriPapi System
-  As a user who enjoys culinary diversity,
-  I want the NutriPapi system to recommend a variety of recipes for different meals each day
-  and ensure that the same meal is not repeated within a two-week period unless I specifically request it.
+Feature: Cross-Device Compatibility
 
-  Scenario: Successfully recommending diverse recipes (Normal Flow)
-    Given the user accesses the meal recommendation feature on the NutriPapi system.
-    When the system generates meal recommendations for the day.
-    Then it should recommend a variety of recipes for different meals that have not been recommended to the user in the past two weeks.
+  As a user who uses multiple devices,
+  I want the NutriPapi system to be responsive and compatible on all my devices
+  so that I can access my meal plans and health tracking.
 
-  Scenario: Repeating a recipe upon user's specific request (Normal Flow)
-    Given the user has received a specific recipe recommendation within the past two weeks and requests it again.
-    When the user selects an option to repeat a previously recommended recipe.
-    Then the system should include that recipe in the day's meal recommendations despite the two-week diversity rule.
+  Scenario: Accessing NutriPapi on Different Devices (Normal Flow)
+    Given the user has multiple devices
+    When the user accesses the NutriPapi system from each device
+    Then the system should render properly on all devices, allowing seamless access to meal plans features
 
-  Scenario: Preventing repeated recipes without specific request (Error Flow)
-    Given the system has recommended a specific recipe to the user within the last two weeks.
-    When the system generates new meal recommendations for the day.
-    Then it should not include any recipes that have been recommended within the past two weeks unless the user has specifically requested a repeat of those recipes.
+  Scenario: Testing Compatibility on New Device (Alternate Flow)
+    Given the user acquires a new device
+    When the user accesses the NutriPapi system for the first time on the new device
+    Then the system should adapt to the new device's specifications and display content properly, maintaining compatibility
 
-  Scenario: User requests a repeated recipe not recognized by the system (Error Flow)
-    Given the user wants to request a repeat of a recipe recommended within the last two weeks but the system does not recognize it as recently recommended.
-    When the user tries to select the recipe for a repeat.
-    Then the system should allow the user to manually search for and select the recipe to be repeated, overriding the two-week diversity rule.
+  Scenario: Compatibility Issues on Specific Device (Error Flow)
+    Given the user attempts to access the NutriPapi system on a specific device
+    When the system encounters compatibility issues on that device
+    Then the system should provide guidance or troubleshooting steps to resolve the compatibility issues, ensuring access across all devices

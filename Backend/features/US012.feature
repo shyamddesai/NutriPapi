@@ -1,20 +1,19 @@
-Feature: Cross-Device Compatibility
+Feature: Secure Authentication and Data Encryption
+  As a NutriPapi user concerned about my personal data,
+  I want the NutriPapi system to implement secure authentication methods and encrypt sensitive user data
+  to ensure my privacy and security.
 
-  As a user who uses multiple devices,
-  I want the NutriPapi system to be responsive and compatible on all my devices
-  so that I can access my meal plans and health tracking.
+  Scenario: Implementing Secure Authentication (Normal Flow)
+    Given a new or returning user is accessing the NutriPapi system,
+    When they attempt to log in or register,
+    Then the system requires a secure authentication method in addition to the standard username and password, to verify the user's identity and protect against unauthorized access.
 
-  Scenario: Accessing NutriPapi on Different Devices (Normal Flow)
-    Given the user has multiple devices
-    When the user accesses the NutriPapi system from each device
-    Then the system should render properly on all devices, allowing seamless access to meal plans and health tracking features
+  Scenario: Encrypting Sensitive User Data (Normal Flow)
+    Given a user inputs or updates their personal health information in the NutriPapi system (such as weight, dietary preferences, or health goals),
+    When this data is stored or transmitted by the NutriPapi system,
+    Then all sensitive user data is encrypted using industry-standard encryption protocols to ensure that it remains confidential and secure against data breaches and unauthorized access.
 
-  Scenario: Testing Compatibility on New Device (Alternate Flow)
-    Given the user acquires a new device
-    When the user accesses the NutriPapi system for the first time on the new device
-    Then the system should adapt to the new device's specifications and display content properly, maintaining compatibility
-
-  Scenario: Compatibility Issues on Specific Device (Error Flow)
-    Given the user attempts to access the NutriPapi system on a specific device
-    When the system encounters compatibility issues on that device
-    Then the system should provide guidance or troubleshooting steps to resolve the compatibility issues, ensuring access across all devices
+  Scenario: Unauthorized Access Attempt Detected (Error Flow)
+    Given an attempt is made to access a user's account with incorrect login details multiple times,
+    When the system detects these repeated unauthorized access attempts,
+    Then it temporarily locks the account and sends an alert to the user's email and a link to reset their password

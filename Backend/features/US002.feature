@@ -4,18 +4,18 @@ Feature: Health Profile Management
 
   Scenario: Inputting Health Profile Information (Normal Flow)
     Given the user is logged into the NutriPapi system
-    When the user navigates to the health profile management section
-    And the user inputs their current weight, target weight, height, weekly physical activity levels, and dietary requirements
+    When the user navigates to the health information section
+    And the user inputs their current weight, target weight, height, weekly physical activity levels, gender, and dietary requirements
     Then the system saves the information and acknowledges successful submission
 
   Scenario: Editing Health Profile Information (Alternate Flow)
     Given the user is logged into the NutriPapi system
-    When the user navigates to the health profile management section
-    And the user modifies their current weight, target weight, height, weekly physical activity levels, or dietary requirements
+    When the user navigates to the health information section
+    And the user modifies their current weight, target weight, height, weekly physical activity levels, gender, or dietary requirements
     Then the system updates the information and confirms the changes have been saved
 
   Scenario: Missing or Invalid Information (Error Flow)
     Given the user is logged into the NutriPapi system
-    When the user navigates to the health profile management section
+    When the user navigates to the health information section
     And the user attempts to submit the health profile form with missing or invalid information
     Then the system displays error messages for the missing or invalid fields and prompts the user to correct them

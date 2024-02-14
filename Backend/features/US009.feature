@@ -1,19 +1,20 @@
-Feature: Meal Plan Categorization
-  As a NutriPapi user,
-  I want the system to categorize my meal plans into breakfast, lunch, dinner, and snacks
-  so that I can have a structured and balanced daily eating schedule.
+Feature: Searching for ingredients to receive nutritional information
+  As a health-conscious user,
+  I want to search for ingredients by name
+  and receive detailed nutritional information about them
+  so that I can make informed choices about the ingredients I use in my meals.
 
-  Scenario: Meal Plan Categorization upon Creation (Normal Flow)
-    Given the user has logged into the NutriPapi system and is creating a new meal plan,
-    When they input meals and specify the meal type (breakfast, lunch, dinner, or snack) for each,
-    Then the system categorizes the meals accordingly and displays them in the user's daily meal plan under the specified meal type categories.
+  Scenario: Successfully finding nutritional information for an ingredient (Normal Flow)
+    Given the user is logged into the NutriPapi system and navigates to the ingredient search section for their meal suggestions.
+    When the user searches for an ingredient by name.
+    Then the system should display detailed nutritional information about that ingredient.
 
-  Scenario: Editing Meal Plan Categories (Alternate Flow)
-    Given the user is reviewing their daily meal plan in the NutriPapi system,
-    When they choose to edit a meal and change its meal type category (e.g., from lunch to dinner),
-    Then the system updates the meal's categorization and displays it under the new specified meal type in the daily meal plan.
+  Scenario: Searching for an ingredient that is not in the database (Error Flow)
+    Given the user is logged into the NutriPapi system and navigates to the ingredient search section.
+    When the user searches for an ingredient that is not available in the system's database.
+    Then the system should display a message indicating that the ingredient is not found.
 
-  Scenario: Categorization Error Due to Incorrect Input (Error Flow)
-    Given the user is inputting or editing a meal in their NutriPapi meal plan,
-    When they forget to select a meal type category or select an invalid category,
-    Then the system displays an error message such as "Please select a valid meal type category" and prompts the user to select from the available options (breakfast, lunch, dinner, snack).
+  Scenario: Searching for an ingredient with a vague or incomplete name (Error Flow)
+    Given the user is logged into the NutriPapi system and navigates to the ingredient search section.
+    When the user enters a vague or incomplete name for an ingredient.
+    Then the system should suggest possible matches or ask the user to provide more specific information.
