@@ -1,7 +1,7 @@
 # NutriPapi
 
 Introducing NutriPapi: Your Personalized Health Companion
-![NutriPapi Logo](Frontend/public/assets/iconH1080.png)
+![NutriPapi Logo](docs/NutriPapi_logo.png)
 
 NutriPapi is an innovative health management platform designed to empower users in achieving their wellness goals effortlessly. Seamlessly integrating advanced features with user-friendly design, NutriPapi provides a comprehensive suite of tools tailored to your individual needs.
 
@@ -108,11 +108,4 @@ build process.
 ---
 
 ## UML Class Diagram and Entity Relationship Diagram
-![UML Class and Entity Relationship Diagram](docs/UML.png)
-
-## Backlog Spreadsheet
-https://mcgill-my.sharepoint.com/:x:/r/personal/martin_eskaros_mail_mcgill_ca/Documents/ECSE428_Group16/Group16_Project_Backlog%201.xlsx?d=w97ab7333b3d3442b9646398562dca4d9&csf=1&web=1&e=dql57v
-
-## Figma UI Design
-https://www.figma.com/file/115FFldu0ZMXA5eoJNVURi/UI-Draft?type=design&node-id=0%3A1&mode=design&t=MNdBvrCJPntKGiQC-1
-
+![UML Class and Entity Relationship Diagram](docs/UML_ER.png)
