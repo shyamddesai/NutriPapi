@@ -109,3 +109,6 @@ build process.
 
 ## UML Class Diagram and Entity Relationship Diagram
 ![UML Class and Entity Relationship Diagram](docs/UML_ER.png)
+
+## Recommendation Algorithm Google Collab
+https://colab.research.google.com/drive/1z63EAkYDAWVljsX6oc2DoZ49CXXSUjl9?usp=sharing
