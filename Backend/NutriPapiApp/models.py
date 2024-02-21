@@ -26,8 +26,8 @@ class DietaryRestriction(models.Model):
         return self.restriction_type
 
 class User(AbstractUser):
-    target_weight = models.FloatField(verbose_name='Target Weight')
-    current_weight = models.FloatField(verbose_name='Current Weight')
+    target_weight = models.FloatField(verbose_name='Target Weight', default=80.0)
+    current_weight = models.FloatField(verbose_name='Current Weight', default=80.0)
     dietary_restriction = models.OneToOneField(DietaryRestriction, on_delete=models.SET_NULL, null=True, blank=True, related_name='user', verbose_name='Dietary Restriction')
 
     def __str__(self):
