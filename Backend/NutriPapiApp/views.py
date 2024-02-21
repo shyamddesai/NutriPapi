@@ -35,19 +35,31 @@ def signin_view(request):
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
+# @csrf_exempt
+# def logged_in_view(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         user = authenticate(caloriesConsumed=data['caloriesConsumed'])
+#         if user is not None:
+#             #TODO not sure which function to call to send post request
+#             return JsonResponse({'caloriesConsumed': user.caloriesConsumed}, status=200)  # User entered num calories
+#         else:
+#             return JsonResponse({'error': 'Invalid input'}, status=400)
+#     else:
+#         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
 @csrf_exempt
+@login_required
 def logged_in_view(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        user = authenticate(caloriesConsumed=data['caloriesConsumed'])
-        if user is not None:
-            #TODO not sure which function to call to send post request
-            return JsonResponse({'caloriesConsumed': user.caloriesConsumed}, status=200)  # User entered num calories
-        else:
-            return JsonResponse({'error': 'Invalid input'}, status=400)
+        try:
+            data = json.loads(request.body)
+            calories_consumed = data.get('caloriesConsumed')
+            return JsonResponse({'caloriesConsumed': calories_consumed}, status=200)
+        except KeyError:
+            return JsonResponse({'error': 'Missing caloriesConsumed in request'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
-    
 
 @csrf_exempt
 @login_required

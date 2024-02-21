@@ -29,9 +29,6 @@ class DietaryRestriction(models.Model):
 class User(AbstractUser):
     target_weight = models.FloatField(verbose_name='Target Weight', default=80.0)
     current_weight = models.FloatField(verbose_name='Current Weight', default=80.0)
-    dietary_restriction = models.OneToOneField(DietaryRestriction, on_delete=models.SET_NULL, null=True, blank=True, related_name='user', verbose_name='Dietary Restriction')
-    target_weight = models.FloatField(verbose_name='Target Weight')
-    current_weight = models.FloatField(verbose_name='Current Weight')
     dietary_restriction = models.ForeignKey(
         'DietaryRestriction', 
         on_delete=models.SET_NULL, 
@@ -39,12 +36,13 @@ class User(AbstractUser):
         blank=True, 
         verbose_name='Dietary Restriction'
     )
-    height = models.FloatField(verbose_name='Height in cm')
+    height = models.FloatField(verbose_name='Height in cm', default=160.0)
     weekly_physical_activity = models.IntegerField(
         verbose_name='Weekly Physical Activity in hours',
-        validators=[MinValueValidator(0), MaxValueValidator(168)] 
+        validators=[MinValueValidator(0), MaxValueValidator(168)],
+        default=0 
     )
-    gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], verbose_name='Gender')
+    gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], verbose_name='Gender', default='M')
     
 
     def __str__(self):
