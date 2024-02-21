@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Recipe(models.Model):
     name = models.CharField(max_length=255, verbose_name='Recipe Name')
@@ -29,6 +30,22 @@ class User(AbstractUser):
     target_weight = models.FloatField(verbose_name='Target Weight', default=80.0)
     current_weight = models.FloatField(verbose_name='Current Weight', default=80.0)
     dietary_restriction = models.OneToOneField(DietaryRestriction, on_delete=models.SET_NULL, null=True, blank=True, related_name='user', verbose_name='Dietary Restriction')
+    target_weight = models.FloatField(verbose_name='Target Weight')
+    current_weight = models.FloatField(verbose_name='Current Weight')
+    dietary_restriction = models.ForeignKey(
+        'DietaryRestriction', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        verbose_name='Dietary Restriction'
+    )
+    height = models.FloatField(verbose_name='Height in cm')
+    weekly_physical_activity = models.IntegerField(
+        verbose_name='Weekly Physical Activity in hours',
+        validators=[MinValueValidator(0), MaxValueValidator(168)] 
+    )
+    gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], verbose_name='Gender')
+    
 
     def __str__(self):
         return self.username
