@@ -33,3 +33,16 @@ def signin_view(request):
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+@csrf_exempt
+def logged_in_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user = authenticate(caloriesConsumed=data['caloriesConsumed'])
+        if user is not None:
+            #TODO not sure which function to call to send post request
+            return JsonResponse({'caloriesConsumed': user.caloriesConsumed}, status=200)  # User entered num calories
+        else:
+            return JsonResponse({'error': 'Invalid input'}, status=400)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
