@@ -103,3 +103,25 @@ def user_info_view(request):
         return JsonResponse(user_info, status=200)
     else:
         return JsonResponse({'error': 'Only POST and GET requests are allowed'}, status=405)
+    
+@csrf_exempt
+@login_required
+def add_ingredients_to_fridge_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            ingredient_names = data.get('ingredients', '').split(',')
+
+            fridge, created = Fridge.objects.get_or_create(user=request.user)
+            for ingredient_name in ingredient_names:
+                ingredient_name = ingredient_name.strip()  # Remove any leading/trailing whitespace
+                if ingredient_name:  # Check if the ingredient name is not empty
+                    ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
+                    fridge.ingredients.add(ingredient)
+            fridge.save()
+
+            return JsonResponse({'message': 'Ingredients added to fridge successfully'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
