@@ -56,3 +56,9 @@ class Schedule(models.Model):
 
     def __str__(self):
         return f"{self.date_and_time} - {self.meal_type}"
+class Fridge(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='fridge', verbose_name='User')
+    ingredients = models.ManyToManyField(Ingredient, related_name='fridges', verbose_name='Ingredients')
+
+    def __str__(self):
+        return f"{self.user.username}'s Fridge"
