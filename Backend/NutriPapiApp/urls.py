@@ -7,4 +7,5 @@ urlpatterns = [
     path('loggedin/', logged_in_view, name='loggedin'), 
     path('user/info/', user_info_view, name='user_info'),
     path('fridge/add_ingredients/', add_ingredients_to_fridge_view, name='add_ingredients_to_fridge'),
+    path('user/update_info/', update_user_info_view, name='update_user_info'),
 ]
