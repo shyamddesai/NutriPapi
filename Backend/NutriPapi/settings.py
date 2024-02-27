@@ -141,10 +141,14 @@ LOGGING = {
             "filename": "./logs/info.log",
             "formatter": "verbose",
         },
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
+            "handlers": ["file", "console"],
             "level": "INFO",
             "propagate": True,
         },
