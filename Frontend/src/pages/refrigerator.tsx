@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '/src/css/refrigerator.module.css'; // Assuming you have a CSS file for styles
+import styles from '/src/css/refrigerator.module.css'; // Assuming you have a CSS file for styles
 
 const MyFridge = () => {
   const [ingredients, setIngredients] = useState<string[]>([]); // Array of ingredients
@@ -32,7 +32,7 @@ const MyFridge = () => {
   };
 
   return (
-    <div className="fridge-container">
+    <div className={styles.fridgeContainer}>
       <label htmlFor="fridgeInput">My Fridge</label>
       <p>Press enter or add a comma after each ingredient</p>
       <input
@@ -43,15 +43,15 @@ const MyFridge = () => {
         onKeyPress={handleKeyPress}
         placeholder="Add ingredients"
       />
-      <ul>
+      <ul className={styles.list}>
         {ingredients.map(ingredient => (
-          <li key={ingredient}>
+          <li key={ingredient} className={styles.list_item}>
             {ingredient}
             <button onClick={() => removeIngredient(ingredient)}>Remove</button>
           </li>
         ))}
       </ul>
-      <button onClick={removeAllIngredients}>Remove All</button>
+      <button onClick={removeAllIngredients} className={styles.submitButon}>Remove All</button>
     </div>
   );
 };
