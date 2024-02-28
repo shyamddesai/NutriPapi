@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './MyFridge.css'; // Assuming you have a CSS file for styles
+import '/src/css/refrigerator.module.css'; // Assuming you have a CSS file for styles
 
 const MyFridge = () => {
   const [ingredients, setIngredients] = useState<string[]>([]); // Array of ingredients
