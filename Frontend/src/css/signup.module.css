@@ -1,0 +1,55 @@
+.container {
+    background-color: #f0f4f8;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.formCard {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+.formTitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.inputField {
+    margin-bottom: 1rem;
+    margin-right: 1.75rem;
+}
+
+.inputField input,
+.inputField select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dcdfe4;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.buttonContainer {
+    margin-top: 1rem;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #0070f3;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    background-color: #0056b3;
+}
