@@ -15,7 +15,7 @@ def step_impl(context):
     raise NotImplementedError(u'STEP: When they request a daily caloric intake recommendation,')
 
 
-@then("the system calculates and displays their recommended daily caloric intake\.")
+@then("the system calculates and displays their recommended daily caloric intake.")
 def step_impl(context):
     raise NotImplementedError(u'STEP: Then the system calculates and displays their recommended daily caloric intake.')
 
