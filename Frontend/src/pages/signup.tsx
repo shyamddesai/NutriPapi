@@ -24,10 +24,14 @@ const AuthPage = () => {
     const url = isSignUp ? 'http://localhost:8000/api/signup/' : 'http://localhost:8000/api/signin/';
     
     try {
-      const response = await axios.post(url, credentials);
-      console.log(response.data);
-      // Redirect to a new page upon success
-      router.push('/dashboard'); // Modify as needed
+        const response = await axios.post(url, credentials);
+        console.log(response.data);
+        if (isSignUp) {
+            localStorage.setItem('userInfo', JSON.stringify(response.data));
+            router.push('/signup_follow');
+        } else {
+            router.push('/dashboard');
+        }
     } catch (error: unknown) {
         if (error instanceof Error) {
           console.error('Error during authentication', error.message);
