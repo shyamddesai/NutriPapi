@@ -59,7 +59,7 @@ jobs:
         working-directory: ./Frontend
       - name: Start Next.js dev server
         run: |
-          npx next dev
+          npx next dev &
         working-directory: ./Frontend
       - name: Wait for Next.js server to be ready
         run: sleep 10  # Adjust the sleep time as necessary
