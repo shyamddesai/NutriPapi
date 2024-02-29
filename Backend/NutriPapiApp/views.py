@@ -19,7 +19,7 @@ def signup_view(request):
                 email=data['email'],
                 password=data['password']
             )
-            return JsonResponse({'user': user, 'id': user.id, 'username': user.username}, status=201)  # User created
+            return JsonResponse({'id': user.id, 'username': user.username}, status=201)  # User created
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     else:
