@@ -1,7 +1,9 @@
+
 import React, {ChangeEvent, FormEvent, useState} from 'react';
 import styles from '/src/css/signup_follow.module.css';
 import axios from "axios";
 import {useRouter} from "next/router";
+
 
 
 const SignupPage = () => {
@@ -22,6 +24,7 @@ const SignupPage = () => {
         const { name, value } = e.target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
+
 
     const handleSubmit = async (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -101,12 +104,14 @@ const SignupPage = () => {
                         className={styles.selectField}
                         required
                     >
+
                         <option value="">Select Activity Level</option>
                         <option value="sedentary">Sedentary</option>
                         <option value="light">Light Activity</option>
                         <option value="moderate">Moderate Activity</option>
                         <option value="active">Active</option>
                         <option value="veryActive">Very Active</option>
+
                     </select>
 
                     <label htmlFor="birthday" className={styles.label}>Birthday</label>
@@ -165,6 +170,7 @@ const SignupPage = () => {
                         className={styles.selectField}
                         required
                     >
+
                         <option value="">Select Dietary Preference</option>
                         <option value="none">None</option>
                         <option value="vegetarian">Vegetarian</option>
@@ -173,6 +179,7 @@ const SignupPage = () => {
                         <option value="paleo">Paleo</option>
                         <option value="lowcarb">Low Carb</option>
                         <option value="lowfat">Low Fat</option>
+
                     </select>
 
                     <button type="submit" className={styles.button}>Continue</button>

@@ -1,3 +1,4 @@
+from sqlite3 import IntegrityError
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
@@ -14,13 +15,21 @@ def signup_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print("Request data:", data)
+
+            if User.objects.filter(username=data['username']).exists():
+                return JsonResponse({'error': 'Username already exists'}, status=400)
+
             user = User.objects.create_user(
                 username=data['username'],
                 email=data['email'],
                 password=data['password']
             )
+
             return JsonResponse({'id': user.id, 'username': user.username}, status=201)  # User created
+
         except Exception as e:
+            print("Error:", str(e))
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
