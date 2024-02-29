@@ -111,31 +111,3 @@ def add_ingredients_to_fridge_view(request):
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
-@csrf_exempt
-@login_required
-def update_user_info_view(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            user = request.user
-            
-            # Update user info based on the provided data
-            if 'target_weight' in data:
-                user.target_weight = data['target_weight']
-            if 'current_weight' in data:
-                user.current_weight = data['current_weight']
-            if 'height' in data:
-                user.height = data['height']
-            if 'weekly_physical_activity' in data:
-                user.weekly_physical_activity = data['weekly_physical_activity']
-            if 'gender' in data:
-                user.gender = data['gender']
-            if 'dietary_restriction' in data:
-                user.dietary_restriction = data['dietary_restriction']
-            
-            user.save()
-            return JsonResponse({'message': 'User info updated successfully'}, status=200)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
-    else:
-        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
