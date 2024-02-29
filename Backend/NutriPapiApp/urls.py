@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import signup_view, signup_follow_view, signin_view, logged_in_view, user_info_view, add_ingredients_to_fridge_view, update_user_info_view
 
 urlpatterns = [
@@ -9,4 +10,5 @@ urlpatterns = [
     path('user/info/', user_info_view, name='user_info'),
     path('fridge/add_ingredients/', add_ingredients_to_fridge_view, name='add_ingredients_to_fridge'),
     path('fridge/add_ingredients/', update_user_info_view, name='update_user_info'),
+
 ]
