@@ -1,0 +1,205 @@
+.header1 {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  margin: 0 !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-gray-200);
+}
+.arrowIcon0132,
+.demo011Icon,
+.iconFoodFriedEggs,
+.iconFruitsWatermelon,
+.iconVegetablesBroccoli {
+  position: absolute;
+  height: 26.14%;
+  width: 32.9%;
+  top: 5.04%;
+  right: 56.57%;
+  bottom: 68.83%;
+  left: 10.53%;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+  object-fit: contain;
+}
+.arrowIcon0132,
+.iconFoodFriedEggs,
+.iconFruitsWatermelon,
+.iconVegetablesBroccoli {
+  height: 71.82%;
+  width: 73.05%;
+  top: 0;
+  right: 0;
+  bottom: 28.18%;
+  left: 26.95%;
+  z-index: 1;
+}
+.arrowIcon0132,
+.iconFoodFriedEggs,
+.iconFruitsWatermelon {
+  height: 36.6%;
+  width: 37.22%;
+  top: 50.26%;
+  right: 1.22%;
+  bottom: 13.15%;
+  left: 61.56%;
+  object-fit: cover;
+  z-index: 2;
+}
+.iconFoodFriedEggs,
+.iconFruitsWatermelon {
+  height: 72.47%;
+  width: 73.71%;
+  top: 27.53%;
+  right: 26.29%;
+  bottom: 0;
+  left: 0;
+  object-fit: contain;
+  z-index: 3;
+}
+.iconFoodFriedEggs {
+  height: 17.51%;
+  width: 19.97%;
+  top: 30.11%;
+  right: 63.61%;
+  bottom: 52.38%;
+  left: 16.42%;
+  z-index: 4;
+}
+.fruitIcon {
+  height: 833.7px;
+  width: 731px;
+  position: absolute;
+  margin: 0 !important;
+  top: -268px;
+  right: -668px;
+  z-index: 1;
+}
+.eatSmarterGet {
+  margin: 0;
+  color: var(--color-gray-100);
+}
+.blankLine,
+.blankLine1,
+.blankLine2 {
+  margin: 0;
+}
+.eatSmarterGetContainer {
+  align-self: stretch;
+  position: relative;
+  font-weight: 600;
+}
+.blankLine3,
+.blankLine4,
+.blankLine5,
+.forYourUnique,
+.tailoredNutrition {
+  margin: 0;
+}
+.inputYourGoals,
+.tailoredNutritionForContainer {
+  width: 424px;
+  position: relative;
+  display: inline-block;
+}
+.tailoredNutritionForContainer {
+  margin: 0;
+  height: 180px;
+  font-size: var(--font-size-27xl);
+  font-weight: 600;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.inputYourGoals {
+  font-size: var(--font-size-mid);
+}
+.eatSmarterGetFitterParent {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.frameChild {
+  align-self: stretch;
+  flex: 1;
+  position: relative;
+  border-radius: var(--br-6xs);
+  background-color: var(--color-darkblue);
+  cursor: pointer;
+}
+.tryForFree {
+  flex: 1;
+  position: relative;
+  line-height: 100%;
+  text-transform: capitalize;
+  display: inline-block;
+  z-index: 1;
+  margin-left: -160px;
+}
+.rectangleParent {
+  width: 160px;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  font-size: var(--link-size);
+  font-family: var(--link);
+}
+.header,
+.navbarFrame,
+.textButton {
+  display: flex;
+  justify-content: flex-start;
+  max-width: 100%;
+}
+.textButton {
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-base);
+  z-index: 5;
+}
+.header,
+.navbarFrame {
+  flex-direction: row;
+  position: relative;
+}
+.navbarFrame {
+  width: 424px;
+  align-items: flex-start;
+}
+.header {
+  align-self: stretch;
+  align-items: center;
+  padding: var(--padding-285xl) var(--padding-181xl);
+  box-sizing: border-box;
+  text-align: left;
+  font-size: var(--font-size-mini);
+  color: var(--colors-neutral-white);
+  font-family: var(--font-lexend);
+}
+@media screen and (max-width: 1050px) {
+  .tailoredNutritionForContainer {
+    font-size: var(--font-size-18xl);
+  }
+  .header {
+    padding: var(--padding-179xl) var(--padding-81xl);
+    box-sizing: border-box;
+  }
+}
+@media screen and (max-width: 450px) {
+  .tailoredNutritionForContainer {
+    font-size: var(--font-size-9xl);
+  }
+  .header {
+    padding: var(--padding-110xl) var(--padding-xl);
+    box-sizing: border-box;
+  }
+}
