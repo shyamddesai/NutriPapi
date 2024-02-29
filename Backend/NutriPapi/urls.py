@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('api/', include('NutriPapiApp.urls')),
     path('', include('NutriPapiApp.urls')),
+
 ]
