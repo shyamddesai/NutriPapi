@@ -1,9 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.contrib.auth import authenticate
-from .models import DietaryRestriction
-
+from .models import Fridge, Ingredient
 
 class SignupTestCase(TestCase):
     def test_signup_success(self):
@@ -82,3 +80,23 @@ class UserInfoViewTests(TestCase):
         url = reverse('user_info')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+class FridgeAddIngredientsTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.fridge = Fridge.objects.create(user=self.user)
+        self.client.login(username='testuser', password='testpass')
+
+    def test_add_ingredient_to_fridge(self):
+        url = reverse('add_ingredients_to_fridge')
+        data = {'name': 'Tomato', 'quantity': 3}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(Ingredient.objects.filter(name='Tomato').exists())
+
+    def test_add_ingredient_to_nonexistent_fridge(self):
+        url = reverse('add_ingredients_to_fridge')
+        data = {'name': 'Tomato', 'quantity': 3}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 404)
