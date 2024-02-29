@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import json
 
+from NutriPapiApp.models import Fridge, Ingredient
+
 User = get_user_model()
 
 @csrf_exempt
@@ -28,7 +30,22 @@ def signup_follow_view(request):
         try:
             data = json.loads(request.body)
             user = request.user
-            return JsonResponse({'id': user.id, 'username': user.username}, status=201)  # User created
+
+            # Initialize user info based on the provided data
+            if 'target_weight' in data:
+                user.target_weight = data['target_weight']
+            if 'current_weight' in data:
+                user.current_weight = data['current_weight']
+            if 'height' in data:
+                user.height = data['height']
+            if 'weekly_physical_activity' in data:
+                user.weekly_physical_activity = data['weekly_physical_activity']
+            if 'gender' in data:
+                user.gender = data['gender']
+            if 'dietary_restriction' in data:
+                user.dietary_restriction = data['dietary_restriction']
+            user.save()
+            return JsonResponse({'user': user, 'id': user.id, 'username': user.username}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     else:
