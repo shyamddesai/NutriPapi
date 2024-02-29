@@ -1,5 +1,7 @@
 import { useCallback } from "react";
 import styles from "./../css/navbar.module.css";
+import logo from "./../../public/assets/iconWhiteText.png"
+
 
 const Navbar = () => {
   const onFrameLogoffceClick = useCallback(() => {
@@ -7,14 +9,17 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className={styles.navbar}>
+    <header className="Navbar">
+      <img src="./../../public/assets/iconWhiteText.png" alt="logo" className="logo"/>
+
+
       <div className={styles.fRAMELogo}>
         <div className={styles.frameHubAbout}>
           <div className={styles.logo}>
-            <img className={styles.image1Icon} alt="" src="/image-1@2x.png" />
+            <img className={styles.image1Icon} alt="" src={logo} />
           </div>
           <div className={styles.logo1}>
-            <img className={styles.image1Icon1} alt="" src="/image-1@2x.png" />
+            <img className={styles.image1Icon1} alt="" src={logo} />
           </div>
         </div>
         <div className={styles.textButton}>
