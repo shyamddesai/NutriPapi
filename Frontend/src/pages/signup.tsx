@@ -21,10 +21,10 @@ const AuthPage = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const url = isSignUp ? 'http://localhost:8000/api/signup/' : 'http://localhost:8000/api/signin/';
+    const url = isSignUp ? 'http://localhost:8000/signup/' : 'http://localhost:8000/signin/';
     
     try {
-        const response = await axios.post(url, credentials);
+        const response = await axios.post(url, credentials, { withCredentials: true });
         console.log(response.data);
         localStorage.setItem('userInfo', JSON.stringify(response.data));
         const redirectPage = isSignUp ? '/signup_follow' : '/dashboard';

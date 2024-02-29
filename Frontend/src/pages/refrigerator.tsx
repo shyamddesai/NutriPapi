@@ -3,9 +3,9 @@ import styles from '/src/css/refrigerator.module.css'; // 更新CSS模块的路�
 import Image from 'next/image';
 
 // 导入图片
-import breakfastImage from 'Frontend/public/assets/Breakfast_001.jpeg';
-import lunchImage from 'Frontend/public/assets/Lunch_001.jpeg';
-import dinnerImage from 'Frontend/public/assets/Dinner_001.jpg';
+import breakfastImage from '../../public/assets/Breakfast_001.jpeg';
+import lunchImage from '../../public/assets/Lunch_001.jpeg';
+import dinnerImage from '../../public/assets/Dinner_001.jpg';
 
 const MyFridge = () => {
     const [ingredients, setIngredients] = useState<string[]>([]);

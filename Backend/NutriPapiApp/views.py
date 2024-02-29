@@ -26,6 +26,8 @@ def signup_view(request):
                 password=data['password']
             )
 
+            login(request, user)
+
             return JsonResponse({'id': user.id, 'username': user.username}, status=201)  # User created
 
         except Exception as e:
@@ -41,6 +43,9 @@ def signup_follow_view(request):
             data = json.loads(request.body)
             user = request.user
 
+            if not request.user.is_authenticated:
+                return JsonResponse({'error': 'The user is not logged in'}, status=401)
+            
             # Initialize user info based on the provided data
             if 'target_weight' in data:
                 user.target_weight = data['target_weight']
@@ -55,7 +60,19 @@ def signup_follow_view(request):
             if 'dietary_restriction' in data:
                 user.dietary_restriction = data['dietary_restriction']
             user.save()
-            return JsonResponse({'user': user, 'id': user.id, 'username': user.username}, status=200)
+
+            response_data = {
+                'id': user.id,
+                'username': user.username,
+                'target_weight': user.target_weight,
+                'current_weight': user.current_weight,
+                'height': user.height,
+                'weekly_physical_activity': user.weekly_physical_activity,
+                'gender': user.gender,
+                'dietary_restriction': user.dietary_restriction,
+            }
+
+            return JsonResponse(response_data, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     else:
