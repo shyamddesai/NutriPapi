@@ -26,12 +26,9 @@ const AuthPage = () => {
     try {
         const response = await axios.post(url, credentials);
         console.log(response.data);
-        if (isSignUp) {
-            localStorage.setItem('userInfo', JSON.stringify(response.data));
-            router.push('/signup_follow');
-        } else {
-            router.push('/dashboard');
-        }
+        localStorage.setItem('userInfo', JSON.stringify(response.data));
+        const redirectPage = isSignUp ? '/signup_follow' : '/dashboard';
+        router.push(redirectPage);
     } catch (error: unknown) {
         if (error instanceof Error) {
           console.error('Error during authentication', error.message);

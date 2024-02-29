@@ -17,6 +17,18 @@ def signup_view(request):
                 email=data['email'],
                 password=data['password']
             )
+            return JsonResponse({'user': user, 'id': user.id, 'username': user.username}, status=201)  # User created
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+@csrf_exempt
+def signup_follow_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user = request.user
             return JsonResponse({'id': user.id, 'username': user.username}, status=201)  # User created
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
