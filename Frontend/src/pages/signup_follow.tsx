@@ -1,5 +1,7 @@
-import React, {ChangeEvent, FormEvent, useState} from 'react';
-import styles from './signup_follow.module.css';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import styles from '/src/css/signup_follow.module.css';
 
 
 const SignupPage = () => {
@@ -14,20 +16,27 @@ const SignupPage = () => {
         height: '',
         dietaryPreferences: ''
     });
+    const router = useRouter();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
-    const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        const url = 'http://localhost:8000/api/signup_follow/';
 
-
-
-
-        console.log(formData);
+        try {
+            const response = await axios.post(url, formData);
+            console.log(formData);
+            console.log(response.data);
+            localStorage.setItem('userInfo', JSON.stringify(response.data));
+            // router.push('fridge/add_ingredients/'); //  (TEMPORARY REDIRECT, CHANGE LATER) Redirect to the next page
+        } catch (error) {
+            console.error('Error during form submission:', error);
+        }
     };
 
     return (
@@ -74,6 +83,7 @@ const SignupPage = () => {
                         required
                     >
                         <option value="">Your Activity Level</option>
+                        <option value="Temp">Temp</option>
                     </select>
 
                     <label htmlFor="birthday">Birthday:</label>
@@ -120,6 +130,7 @@ const SignupPage = () => {
                         required
                     >
                         <option value="">Your Dietary Preference</option>
+                        <option value="Temp">Temp</option>
                     </select>
 
                     <button type="submit" className={styles.button}>Continue</button>
