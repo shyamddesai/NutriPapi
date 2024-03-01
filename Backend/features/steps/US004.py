@@ -1,48 +1,70 @@
-from behave import *
+from NutriPapiApp.models import Fridge, Ingredient
+from behave import given, when, then
+from django.urls import reverse
+from django.test import Client
+from django.contrib.auth import get_user_model
+import json
 
-use_step_matcher("re")
-
-
-@given("the user is logged into the NutriPapi system and has entered the ingredients available in their fridge,")
+@given('the user is logged into the NutriPapi system and at the fridge page,')
 def step_impl(context):
-    raise NotImplementedError(
-        u'STEP: Given the user is logged into the NutriPapi system and has entered the ingredients available in their fridge,')
+    User = get_user_model()
+    user = User.objects.create(username='testuser', email='testuser@example.com', password='testpassword')
+    context.client = Client()
+    context.client.force_login(user)
+    context.user = user
+    # Pre-populate the fridge to ensure there are contents to view
+    fridge, _ = Fridge.objects.get_or_create(user=user)
+    ingredients = ['apple', 'banana', 'orange']
+    for item in ingredients:
+        ingredient, _ = Ingredient.objects.get_or_create(name=item)
+        fridge.ingredients.add(ingredient)
 
-
-@when("they request meal suggestions,")
+@when('they view the contents of their fridge,')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When they request meal suggestions,')
+    context.response = context.client.get(reverse('view_fridge_contents'))
 
-
-@then(
-    "the system suggests meals that can be prepared using those ingredients, considering the user's dietary preferences\.")
+@then('the system displays all the ingredients currently stored in the fridge.')
 def step_impl(context):
-    raise NotImplementedError(
-        u'STEP: Then the system suggests meals that can be prepared using those ingredients, considering the user\'s dietary preferences.')
+    assert context.response.status_code == 200
+    response_data = json.loads(context.response.content)
+    assert len(response_data['ingredients']) == 3
+    for ingredient in ['apple', 'banana', 'orange']:
+        assert ingredient in response_data['ingredients']
 
 
-@given("the user is logged into the NutriPapi system but has not entered any ingredients available in their fridge,")
+@when('they add ingredients to their fridge,')
 def step_impl(context):
-    raise NotImplementedError(
-        u'STEP: Given the user is logged into the NutriPapi system but has not entered any ingredients available in their fridge,')
+    url = reverse('add_ingredients_to_fridge')
+    context.response = context.client.post(url, json.dumps({'ingredients': 'apple,banana,orange'}), content_type='application/json')
 
-
-@then('a "No ingredients entered" error message is displayed\.')
+@then('those ingredients are stored in the user\'s fridge in the system.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then a "No ingredients entered" error message is displayed.')
+    assert context.response.status_code == 200
+    fridge = Fridge.objects.get(user=context.user)
+    ingredients = [ingredient.name for ingredient in fridge.ingredients.all()]
+    assert set(ingredients) == {'apple', 'banana', 'orange'}
 
-
-@given("the user is logged into the NutriPapi system,")
+@when('they attempt to add an empty ingredient list to their fridge,')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Given the user is logged into the NutriPapi system,')
+    url = reverse('add_ingredients_to_fridge')
+    context.response = context.client.post(url, json.dumps({'ingredients': ''}), content_type='application/json')
 
-
-@when("the user inputs unrecognizable ingredients,")
+@then('the system displays an error message indicating that no ingredients were added.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When the user inputs unrecognizable ingredients,')
+    assert context.response.status_code == 400
+    response_data = json.loads(context.response.content.decode())
+    assert 'error' in response_data
 
-
-@then("the system should indicate the ingredients are invalid and ask for re-input\.")
+@when('they remove one or more ingredients from their fridge,')
 def step_impl(context):
-    raise NotImplementedError(
-        u'STEP: Then the system should indicate the ingredients are invalid and ask for re-input.')
+    url = reverse('remove_ingredients_from_fridge')
+    context.response = context.client.post(url, json.dumps({'ingredients': ['apple']}), content_type='application/json')
+
+@then('those ingredients are no longer listed in the user\'s fridge in the system.')
+def step_impl(context):
+    assert context.response.status_code == 200
+    fridge = Fridge.objects.get(user=context.user)
+    ingredients = [ingredient.name for ingredient in fridge.ingredients.all()]
+    assert 'apple' not in ingredients
+
+
