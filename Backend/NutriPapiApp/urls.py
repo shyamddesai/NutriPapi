@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import caloric_intake_recommendation_view, get_user_info, signup_view, signup_follow_view, signin_view, logged_in_view, user_info_view, add_ingredients_to_fridge_view
+from .views import caloric_intake_recommendation_view, log_meal_view, get_user_info, signup_view, signup_follow_view, signin_view, logged_in_view, user_info_view, add_ingredients_to_fridge_view
 
 urlpatterns = [
     path('signup/', signup_view, name='signup'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('fridge/add_ingredients/', add_ingredients_to_fridge_view, name='add_ingredients_to_fridge'),
     path('user/get_info/', get_user_info, name='get_user_info'),
     path('caloric_recommendation/', caloric_intake_recommendation_view, name='caloric_intake_recommendation'),
+    path('log_meal/', log_meal_view, name='log_meal'),
 ]

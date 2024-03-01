@@ -1,12 +1,10 @@
-from sqlite3 import IntegrityError
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from .models import  Fridge, Ingredient, Recipe
+from NutriPapiApp.models import Fridge, Ingredient, Recipe
 import json
-from .models import  Fridge, Ingredient
-
-from NutriPapiApp.models import Fridge, Ingredient
 
 User = get_user_model()
 
@@ -208,3 +206,42 @@ def caloric_intake_recommendation_view(request):
 
     return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
+@csrf_exempt
+@login_required
+def log_meal_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user = request.user
+            
+            # Extracting meal details from the request
+            meal_details = data.get('meal')
+            if not meal_details:
+                return JsonResponse({'error': 'Meal details are required'}, status=400)
+
+            # Extracting recipe ID and validating it
+            recipe_id = meal_details.get('recipe_id')
+            if not recipe_id:
+                return JsonResponse({'error': 'Recipe ID is required'}, status=400)
+
+            try:
+                recipe = Recipe.objects.get(id=recipe_id)
+            except Recipe.DoesNotExist:
+                return JsonResponse({'error': 'Recipe not found'}, status=404)
+
+            # Log the meal and return the recipe details as confirmation
+            return JsonResponse({
+                'message': 'Meal logged successfully',
+                'meal': {
+                    'recipe_name': recipe.name,
+                    'calories': recipe.calories,
+                }
+            }, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
