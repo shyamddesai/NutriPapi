@@ -8,7 +8,7 @@ const UpdateUserInfoPage = () => {
     height: '',
     weeklyPhysicalActivity: '',
     gender: '',
-    dietaryPreferences: [], // Since multiple preferences can be selected
+    dietaryPreferences: [],
     email: '',
     password: ''
   });
@@ -34,11 +34,11 @@ const UpdateUserInfoPage = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const url = 'http://localhost:8000/api/user_info/'; // Adjust as needed
+    const url = 'http://localhost:8000/user/info/';
     
     try {
       const response = await axios.post(url, userInfo, {
-        withCredentials: true // Necessary for cookies if session based authentication is used
+        withCredentials: true // Necessary for cookies since session based authentication is used
       });
       console.log(response.data);
       // Handle the successful response
