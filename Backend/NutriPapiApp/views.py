@@ -64,6 +64,8 @@ def signup_follow_view(request):
                 user.gender = data['gender']
             if 'dietary_restriction' in data:
                 user.dietary_restriction = data['dietary_restriction']
+            if 'first_name' in data:
+                user.first_name = data['first_name']
             user.save()
 
             # Return a dictionary of user attributes
@@ -78,6 +80,7 @@ def signup_follow_view(request):
                 'dietary_restriction': user.dietary_restriction,
             }, status=200)
         except Exception as e:
+            print(e)
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
