@@ -1,31 +1,22 @@
-from behave import *
+from behave import given, when, then, use_step_matcher
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+import json
 
 use_step_matcher("re")
 
-
-@given("the user is logged into the NutriPapi system and navigates to the tracking section\.")
+@given(u'the user is logged into the NutriPapi system and navigates to the daily log section.')
 def step_impl(context):
-    raise NotImplementedError(
-        u'STEP: Given the user is logged into the NutriPapi system and navigates to the tracking section.')
+    raise NotImplementedError(u'STEP: Given the user is logged into the NutriPapi system and navigates to the daily log section.')
 
-
-@when("the user enters details of a meal and the user enters details of an exercise routine\.")
+@when(u'the user enters details of a meal')
 def step_impl(context):
-    raise NotImplementedError(
-        u'STEP: When the user enters details of a meal and the user enters details of an exercise routine.')
+    raise NotImplementedError(u'STEP: When the user enters details of a meal')
 
-
-@then("the system should save the meal and exercise information and display them in the user's daily health log\.")
+@then(u'the system should save the meal and display them in the user\'s daily health log.')
 def step_impl(context):
-    raise NotImplementedError(
-        u'STEP: Then the system should save the meal and exercise information and display them in the user\'s daily health log.')
+    raise NotImplementedError(u'STEP: Then the system should save the meal and display them in the user\'s daily health log.')
 
-
-@when("the user enters empty details for a meal or an exercise routine\.")
+@when(u'the user enters empty details for a meal')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When the user enters empty details for a meal or an exercise routine.')
-
-
-@then("the system should prompt the user to complete all required fields\.")
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then the system should prompt the user to complete all required fields.')
+    raise NotImplementedError(u'STEP: When the user enters empty details for a meal')

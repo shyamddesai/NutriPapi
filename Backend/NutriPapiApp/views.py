@@ -121,12 +121,20 @@ def user_info_view(request):
             
             # Update user info based on the provided data
             if 'target_weight' in data:
+                if float(data['target_weight']) < 0:
+                    return JsonResponse({'error': 'Weight cannot be negative'}, status=400)
                 user.target_weight = data['target_weight']
             if 'current_weight' in data:
+                if float(data['current_weight']) < 0:
+                    return JsonResponse({'error': 'Weight cannot be negative'}, status=400)
                 user.current_weight = data['current_weight']
             if 'height' in data:
+                if float(data['height']) < 0:
+                    return JsonResponse({'error': 'Height cannot be negative'}, status=400)
                 user.height = data['height']
             if 'weekly_physical_activity' in data:
+                if float(data['weekly_physical_activity']) < 0:
+                    return JsonResponse({'error': 'Weekly Physical Activity cannot be negative'}, status=400)
                 user.weekly_physical_activity = data['weekly_physical_activity']
             if 'gender' in data:
                 user.gender = data['gender']
