@@ -15,7 +15,7 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=255, verbose_name='Ingredient Name')
     nutritional_information = models.TextField(verbose_name='Nutritional Information')
     recipes = models.ManyToManyField(Recipe, related_name='ingredients', verbose_name='Recipes')
-    calories = models.IntegerField(verbose_name='Calories per Standard Unit')
+    calories = models.IntegerField(verbose_name='Calories per Standard Unit', null=True, blank=True)
 
     def __str__(self):
         return self.name
