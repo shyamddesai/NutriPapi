@@ -8,15 +8,15 @@ import {useRouter} from "next/router";
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
+        first_name: '',
         gender: '',
         goals: '',
-        activityLevel: '',
+        weekly_physical_activity: '',
         birthday: '1990-01-01',
-        currentWeight: '',
-        targetWeight: '',
+        current_weight: '',
+        target_weight: '',
         height: '',
-        dietaryPreferences: ''
+        dietary_restriction: ''
     });
     const router = useRouter();
 
@@ -55,10 +55,10 @@ const SignupPage = () => {
                     <label htmlFor="firstName" className={styles.label}>First Name</label>
                     <input
                         type="text"
-                        id="firstName"
-                        name="firstName"
+                        id="first_name"
+                        name="first_name"
                         placeholder="First Name"
-                        value={formData.firstName}
+                        value={formData.first_name}
                         onChange={handleChange}
                         className={styles.inputField}
                         required
@@ -97,9 +97,9 @@ const SignupPage = () => {
 
                     <label htmlFor="activityLevel" className={styles.label}>Activity Level</label>
                     <select
-                        id="activityLevel"
-                        name="activityLevel"
-                        value={formData.activityLevel}
+                        id="weekly_physical_activity"
+                        name="weekly_physical_activity"
+                        value={formData.weekly_physical_activity}
                         onChange={handleChange}
                         className={styles.selectField}
                         required
@@ -128,9 +128,9 @@ const SignupPage = () => {
                     <label htmlFor="currentWeight" className={styles.label}>Current Weight (kg)</label>
                     <input
                         type="number"
-                        id="currentWeight"
-                        name="currentWeight"
-                        value={formData.currentWeight}
+                        id="current_weight"
+                        name="current_weight"
+                        value={formData.current_weight}
                         onChange={handleChange}
                         className={styles.inputField}
                         step="1"
@@ -140,9 +140,9 @@ const SignupPage = () => {
                     <label htmlFor="targetWeight" className={styles.label}>Target Weight (kg)</label>
                     <input
                         type="number"
-                        id="targetWeight"
-                        name="targetWeight"
-                        value={formData.targetWeight}
+                        id="target_weight"
+                        name="target_weight"
+                        value={formData.target_weight}
                         onChange={handleChange}
                         className={styles.inputField}
                         step="1"
@@ -163,9 +163,9 @@ const SignupPage = () => {
 
                     <label htmlFor="dietaryPreferences" className={styles.label}>Dietary Preferences</label>
                     <select
-                        id="dietaryPreferences"
-                        name="dietaryPreferences"
-                        value={formData.dietaryPreferences}
+                        id="dietary_restriction"
+                        name="dietary_restriction"
+                        value={formData.dietary_restriction}
                         onChange={handleChange}
                         className={styles.selectField}
                         required
