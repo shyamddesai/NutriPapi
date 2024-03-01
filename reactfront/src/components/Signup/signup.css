@@ -1,18 +1,18 @@
-.loginBackground{
+.signupBackground{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(131,58,180);
-    background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 45%, rgba(252,176,69,1) 100%);
+    background: rgb(9,255,234);
+    background: linear-gradient(90deg, rgba(9,255,234,1) 0%, rgba(105,34,195,1) 51%, rgba(253,92,45,1) 100%);
     height: 46.5rem;
     width: 100%;
 }
 
-.login {
+.signup{
     margin-top: 6.5rem;
     width: 100%;
-    max-width: 350px; /* Adjusted width for form */
-    padding: 20px; /* Padding inside the login box */
+    max-width: 400px;
+    padding: 20px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -20,53 +20,53 @@
     box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1); /* Soft shadow around form */
 }
 
-.loginTitle{
+.signupTitle{
     font-size: 50px;
     font-weight: 600;
     margin-bottom: 20px;
 }
 
-.loginForm{
+.signupForm{
     display: flex;
     flex-direction: column;
 }
 
-.loginInput{
+.signupInput{
     margin-bottom: 10px;
     border:1px solid white;
     padding: 8px;
 }
 
-.loginInput::placeholder{
+.signupInput::placeholder{
     color: white;
 }
 
-.loginButton{
+.signupButton{
     margin-top: 20px;
     margin-bottom: 30px;
     padding: 12px;
     color: black;
     background: white;
     border: 1px solid white;
-    box-shadow: 10px 5px 5px red;
+    box-shadow: 10px 5px 5px #eceae5;
     cursor: pointer;
 }
 
-.loginButton:hover {
-    background-color: teal; /* Darker shade on hover */
-    border: 1px solid teal;
+.signupButton:hover {
+    background-color: dimgray; /* Darker shade on hover */
+    border: 1px solid dimgray;
     color: white;
 }
 
-.loginForm2{
+.signupForm2{
     width: 100%;
 }
-.loginToSignUp{
+.signupToLogIn{
     font-size: 12px;
     right: 0;
 }
 
-.signUpLink {
+.loginLink {
     color: darkgray; /* Make sign-up link stand out */
     cursor: pointer;
     text-decoration: underline;

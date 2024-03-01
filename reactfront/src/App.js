@@ -7,6 +7,8 @@ import Header from './components/Landing/Header/header'
 import About from './components/Landing/About/about'
 import Testimonials from './components/Landing/Testimonials/testimonials'
 import Login from './pages/Login'
+import Signup from './pages/Signup'
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
             </>
           } />
           <Route path="/login" element={<Login/>} />
+          <Route path="/sign-up" element={<Signup/>}/>
         </Routes>
       </div>
     </Router>
