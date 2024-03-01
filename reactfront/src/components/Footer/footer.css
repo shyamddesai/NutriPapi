@@ -16,29 +16,29 @@
     padding: 10px;
 }
 
-.slogan{
+.footerSlogan{
     display: flex;
     flex-direction: column;
     align-items: start;
-    margin: 40px;
+    margin: 20px;
 }
 
-.title{
-    font-weight: 500;
-    font-size: 20px;
+.footerTitle{
+    font-weight: 450;
+    font-size: 30px;
 }
 
-.slogan{
+.footerSlogan{
     font-weight: 350;
     font-size: 13px;
 }
 
-.copyText{
+.footerCopyText{
     font-weight: 300;
     font-size: 12px;
 }
 
-.copyTextWrapper {
+.footerCopyTextWrapper {
     width: 100%; /* Ensures the wrapper fills the footer width */
     display: flex;
     justify-content: center; /* Centers the .copyText horizontally */

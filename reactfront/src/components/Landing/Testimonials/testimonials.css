@@ -1,0 +1,110 @@
+.testiBackground{
+    background-color: #2148C0;
+    display: flex;
+    justify-content: center;
+}
+
+.testi{
+    width: 100vw;
+    max-width: 65rem;
+    height: auto;
+    margin: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.testiHeader{
+    font-size: 50px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.testiTexts{
+    display: flex;
+    flex-direction: row;
+}
+
+.testi1, .testi2, .testi3{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: white;
+    color: black;
+    margin: 0 15px;
+    padding: 15px;
+    width: 18.75rem;
+    box-shadow: 3px 3px #ff0000, -1em 0 .4em #5D5DFF;
+}
+
+.testiQuotes{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.testiTopLeft{
+    margin-right: 10px;
+}
+
+.testiBottomRight{
+    margin-left: 10px;
+}
+
+/* .testi2{
+    display:flex;
+    flex-direction: row;
+    background: white;
+    color: black;
+    padding: 15px;
+    width: 18.75rem;
+    height: auto;
+}
+
+.testi3{
+    display:flex;
+    flex-direction: row;
+    background: white;
+    color: black;
+    margin-left:20px;
+    padding: 15px;
+    width: 18.75rem;
+    height: auto;
+} */
+
+
+.testiBody{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.testiBodyText{
+    display: flex;
+    flex-direction: column;
+}
+
+.ellipseLogo{
+    height: 90px;
+    width: auto;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+h2{
+    font-weight:600;
+    font-size: 20px;
+}
+
+h3{
+    color: gray;
+    font-weight: 400;
+    font-size: 12px;
+
+}
+
+h4{
+    font-size: 15px;
+    font-weight: 400;
+}
