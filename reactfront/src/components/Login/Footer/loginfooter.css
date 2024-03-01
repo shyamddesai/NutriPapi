@@ -1,0 +1,45 @@
+.footerBackground{
+    background-color: rgba(30, 30, 30);
+    display: flex;
+    justify-content: center;
+}
+
+.footer{
+    width: 100vw;
+    height: auto;
+    max-width: 65rem;
+    background: rgba(30, 30, 30);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /*centers it vertically */
+    align-items: start;
+    padding: 10px;
+}
+
+.footerSlogan{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin: 20px;
+}
+
+.footerTitle{
+    font-weight: 450;
+    font-size: 30px;
+}
+
+.footerSlogan{
+    font-weight: 350;
+    font-size: 13px;
+}
+
+.footerCopyText{
+    font-weight: 300;
+    font-size: 12px;
+}
+
+.footerCopyTextWrapper {
+    width: 100%; /* Ensures the wrapper fills the footer width */
+    display: flex;
+    justify-content: center; /* Centers the .copyText horizontally */
+}

@@ -1,0 +1,72 @@
+.loginBackground{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(131,58,180);
+    background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 45%, rgba(252,176,69,1) 100%);
+    height: 46.5rem;
+    width: 100%;
+}
+
+.login {
+    margin-top: 6.5rem;
+    width: 100%;
+    max-width: 350px; /* Adjusted width for form */
+    padding: 20px; /* Padding inside the login box */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0,0,0,0.2);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1); /* Soft shadow around form */
+}
+
+.loginTitle{
+    font-size: 50px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.loginForm{
+    display: flex;
+    flex-direction: column;
+}
+
+.loginInput{
+    margin-bottom: 10px;
+    border:1px solid white;
+    padding: 8px;
+}
+
+.loginInput::placeholder{
+    color: white;
+}
+
+.loginButton{
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding: 12px;
+    color: black;
+    background: white;
+    border: 1px solid white;
+    box-shadow: 10px 5px 5px red;
+    cursor: pointer;
+}
+
+.loginButton:hover {
+    background-color: olive; /* Darker shade on hover */
+    border: 1px solid olive;
+}
+
+.loginForm2{
+    width: 100%;
+}
+.loginToSignUp{
+    font-size: 12px;
+    right: 0;
+}
+
+.signUpLink {
+    color: #2148C0; /* Make sign-up link stand out */
+    cursor: pointer;
+    text-decoration: underline;
+}
