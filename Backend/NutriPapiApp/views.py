@@ -167,7 +167,21 @@ def get_user_info(request):
         'target_weight': user.target_weight,
         'dietary_restriction':user.dietary_restriction,
         'weekly_physical_activity':user.weekly_physical_activity
-
-
     })
+
+
+@login_required
+def caloric_intake_recommendation_view(request):
+    if request.method == 'GET':
+        user = request.user
+
+        # Check if the user's health profile is complete
+        if not all([user.current_weight, user.target_weight, user.height, user.weekly_physical_activity]):
+            return JsonResponse({'error': 'Please complete your health profile'}, status=400)
+        # This is a placeholder formula 
+        recommended_calories = (10 * user.current_weight + 6.25 * user.height - 5 ) * user.weekly_physical_activity
+
+        return JsonResponse({'recommended_calories': recommended_calories}, status=200)
+
+    return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
