@@ -154,7 +154,7 @@ def user_info_view(request):
             'height': user.height,
             'weekly_physical_activity': user.weekly_physical_activity,
             'gender': user.gender,
-            'dietary_restriction': user.dietary_restriction.id if user.dietary_restriction else None
+            'dietary_restriction': user.dietary_restriction if user.dietary_restriction else None
         }
         return JsonResponse(user_info, status=200)
     else:
