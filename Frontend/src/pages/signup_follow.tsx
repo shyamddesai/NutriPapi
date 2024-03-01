@@ -1,22 +1,20 @@
-
 import React, {ChangeEvent, FormEvent, useState} from 'react';
 import styles from '/src/css/signup_follow.module.css';
 import axios from "axios";
 import {useRouter} from "next/router";
 
 
-
 const SignupPage = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
+        first_name: '',
         gender: '',
         goals: '',
-        activityLevel: '',
+        weekly_physical_activity: '',
         birthday: '1990-01-01',
-        currentWeight: '',
-        targetWeight: '',
+        current_weight: '',
+        target_weight: '',
         height: '',
-        dietaryPreferences: ''
+        dietary_restriction: ''
     });
     const router = useRouter();
 
@@ -25,7 +23,6 @@ const SignupPage = () => {
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
-
     const handleSubmit = async (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const url = 'http://localhost:8000/signup_follow/';
@@ -33,7 +30,7 @@ const SignupPage = () => {
             const response = await axios.post(url, formData, { withCredentials: true });
             console.log(response.data);
             localStorage.setItem('userInfo', JSON.stringify(response.data));
-            const redirectPage = 'user_info' //Temporary redirect page instead of dashboard
+            const redirectPage = '/refrigerator' // Temporary redirect to refrigerator page
             router.push(redirectPage);
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -55,10 +52,10 @@ const SignupPage = () => {
                     <label htmlFor="firstName" className={styles.label}>First Name</label>
                     <input
                         type="text"
-                        id="firstName"
-                        name="firstName"
+                        id="first_name"
+                        name="first_name"
                         placeholder="First Name"
-                        value={formData.firstName}
+                        value={formData.first_name}
                         onChange={handleChange}
                         className={styles.inputField}
                         required
@@ -97,20 +94,19 @@ const SignupPage = () => {
 
                     <label htmlFor="activityLevel" className={styles.label}>Activity Level</label>
                     <select
-                        id="activityLevel"
-                        name="activityLevel"
-                        value={formData.activityLevel}
+                        id="weekly_physical_activity"
+                        name="weekly_physical_activity"
+                        value={formData.weekly_physical_activity}
                         onChange={handleChange}
                         className={styles.selectField}
                         required
                     >
-
                         <option value="">Select Activity Level</option>
-                        <option value="sedentary">Sedentary</option>
-                        <option value="light">Light Activity</option>
-                        <option value="moderate">Moderate Activity</option>
-                        <option value="active">Active</option>
-                        <option value="veryActive">Very Active</option>
+                        <option value="1">Sedentary</option>
+                        <option value="2">Light Activity</option>
+                        <option value="3">Moderate Activity</option>
+                        <option value="4">Active</option>
+                        <option value="5">Very Active</option>
 
                     </select>
 
@@ -128,9 +124,9 @@ const SignupPage = () => {
                     <label htmlFor="currentWeight" className={styles.label}>Current Weight (kg)</label>
                     <input
                         type="number"
-                        id="currentWeight"
-                        name="currentWeight"
-                        value={formData.currentWeight}
+                        id="current_weight"
+                        name="current_weight"
+                        value={formData.current_weight}
                         onChange={handleChange}
                         className={styles.inputField}
                         step="1"
@@ -140,9 +136,9 @@ const SignupPage = () => {
                     <label htmlFor="targetWeight" className={styles.label}>Target Weight (kg)</label>
                     <input
                         type="number"
-                        id="targetWeight"
-                        name="targetWeight"
-                        value={formData.targetWeight}
+                        id="target_weight"
+                        name="target_weight"
+                        value={formData.target_weight}
                         onChange={handleChange}
                         className={styles.inputField}
                         step="1"
@@ -163,14 +159,13 @@ const SignupPage = () => {
 
                     <label htmlFor="dietaryPreferences" className={styles.label}>Dietary Preferences</label>
                     <select
-                        id="dietaryPreferences"
-                        name="dietaryPreferences"
-                        value={formData.dietaryPreferences}
+                        id="dietary_restriction"
+                        name="dietary_restriction"
+                        value={formData.dietary_restriction}
                         onChange={handleChange}
                         className={styles.selectField}
                         required
                     >
-
                         <option value="">Select Dietary Preference</option>
                         <option value="none">None</option>
                         <option value="vegetarian">Vegetarian</option>
@@ -179,7 +174,6 @@ const SignupPage = () => {
                         <option value="paleo">Paleo</option>
                         <option value="lowcarb">Low Carb</option>
                         <option value="lowfat">Low Fat</option>
-
                     </select>
 
                     <button type="submit" className={styles.button}>Continue</button>

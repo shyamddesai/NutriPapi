@@ -1,12 +1,10 @@
-from sqlite3 import IntegrityError
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from .models import  Fridge, Ingredient, Recipe
+from NutriPapiApp.models import Fridge, Ingredient, Recipe
 import json
-from .models import  Fridge, Ingredient
-
-from NutriPapiApp.models import Fridge, Ingredient
 
 User = get_user_model()
 
@@ -66,6 +64,8 @@ def signup_follow_view(request):
                 user.gender = data['gender']
             if 'dietary_restriction' in data:
                 user.dietary_restriction = data['dietary_restriction']
+            if 'first_name' in data:
+                user.first_name = data['first_name']
             user.save()
 
             # Return a dictionary of user attributes
@@ -80,6 +80,7 @@ def signup_follow_view(request):
                 'dietary_restriction': user.dietary_restriction,
             }, status=200)
         except Exception as e:
+            print(e)
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
@@ -242,3 +243,36 @@ def caloric_intake_recommendation_view(request):
 
     return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
+@csrf_exempt
+@login_required
+def log_meal_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user = request.user
+            
+           # Extracting meal and exercise details from the request
+            breakfast = data.get('breakfast')
+            lunch = data.get('lunch')
+            dinner = data.get('dinner')
+
+            if not all([breakfast, lunch, dinner]):
+                return JsonResponse({'error': 'Meal details are required'}, status=400)
+
+            # We'll just return the meal log data as confirmation for now
+            return JsonResponse({
+                'message': 'Meal and exercise details logged successfully',
+                'details': {
+                    'breakfast': breakfast,
+                    'lunch': lunch,
+                    'dinner': dinner
+                }
+            }, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)

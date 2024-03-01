@@ -29,7 +29,6 @@
     flex-direction: column;
 }
 
-
 .label {
     margin-bottom: 0.5rem;
     text-align: left;
@@ -50,7 +49,6 @@
 .selectField:focus {
     outline: none;
     border-color: #007bff;
-
 }
 
 .button {
