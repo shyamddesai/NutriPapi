@@ -66,7 +66,7 @@ build process.
 - The NutriPapi system shall allow the user to input the ingredients that they have in the fridge
 - The NutriPapi system shall allow the user to set their dietary preferences in the profile (such as vegetarian, vegan, lactose intolerant, no nuts, etc.) to filter out the ingredients from the suggested meals
 - The NutriPapi system shall allow the user to set and update their personal information eg weight, height, gender, weight goals
-- The NutriPapi system shall allow the user to access and log their meal and exercise history 
+- The NutriPapi system shall allow the user to access and log their meal history 
 - The NutriPapi ​system shall allow users to delete the accounts they created.
 
 ### System Requirements:
@@ -93,10 +93,10 @@ build process.
 ### User Stories
 - As a user, I want to create an account on the NutriPapi system so that I can get access to its functionalities
 - As a user, I want to input my current weight, target weight, height, weekly physical activity levels, and dietary requirements so that the system can provide me with tailored suggestions on achieving my health goals.
-- As a user, I want to receive a daily suggested caloric intake based on my target/current weight and my timeline for gaining or losing weight so that I can make informed dietary choices.
-- As a user, I want to be able to input the ingredients I have in my fridge so that the NutriPapi system can recommend different recipes and I can enjoy diverse and healthy meals.
+- As a user, I would like to receive a daily caloric intake recommendation so that I can adjust my diet to meet my weight goals.
+- As a user, I want to be able to input the ingredients I have in my fridge so that I can keep track of what I have available.  
 - As a user who may have lost or gained weight, I want to update my weight in the NutriPapi system so that it can adjust my daily caloric intake recommendations accordingly.
-- As a user, I want to log my daily meals and exercise routines so that I can track my progress towards my health goals over time.
+- As a user, I want to log my daily meals so that I can track my progress towards my health goals over time.
 - As a user who no longer wishes to use the NutriPapi system, I want to be able to delete my account so that my personal data is removed from the system.
 - As a user, I want to receive daily reminders to log my meals, drink water, and exercise so that I can stay consistent with my health routines.
 - As a user, I want the system to categorize my meal plans into breakfast, lunch, dinner, and snacks so that I can have a structured and balanced daily eating schedule.
@@ -109,6 +109,3 @@ build process.
 
 ## UML Class Diagram and Entity Relationship Diagram
 ![UML Class and Entity Relationship Diagram](docs/UML_ER.png)
-
-## Recommendation Algorithm Google Collab
-https://colab.research.google.com/drive/1z63EAkYDAWVljsX6oc2DoZ49CXXSUjl9?usp=sharing
