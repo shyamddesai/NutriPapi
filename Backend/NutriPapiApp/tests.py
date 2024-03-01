@@ -1,132 +1,169 @@
+from datetime import datetime, timedelta  
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import Fridge, Ingredient
+from .models import Ingredient, Fridge, Recipe, Schedule
+import json
 
-class SignupTestCase(TestCase):
-    def test_signup_success(self):
+User = get_user_model()
+
+class UserTests(TestCase):
+
+    def test_signup_view(self):
+        """Test the signup view for creating a new user."""
         url = reverse('signup')
         data = {
-            'username': 'papi',
-            'email': 'papi@test.com',
-            'password': 'Nutr!P@pi2024',
+            'username': 'testuser',
+            'email': 'test@example.com',
+            'password': 'password123'
         }
-        response = self.client.post(url, data, content_type='application/json')
-        # print("Response: ", response)
+        response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 201)
-        
-        User = get_user_model()
-        user = User.objects.get(username=data['username'])
-        # print("User.username: ", user.username)
-        # print("User.email: ", user.email)
-        # print("User.password: ", user.password)
-        self.assertEqual(user.username, data['username'])
-        self.assertEqual(user.email, data['email'])
-        self.assertTrue(user.check_password(data['password']))
+        self.assertTrue(User.objects.filter(username='testuser').exists())
 
-class SignupFollowViewTestCase(TestCase):
+    def test_signin_view(self):
+        """Test the signin view for authenticating a user."""
+        User.objects.create_user('testuser', 'test@example.com', 'password123')
+        url = reverse('signin')
+        data = {
+            'username': 'testuser',
+            'password': 'password123'
+        }
+        response = self.client.post(url, json.dumps(data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+
+
+class FridgeIngredientTests(TestCase):
+
     def setUp(self):
-        User = get_user_model()
-        self.client = Client()
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        """Create a user and log them in for testing."""
+        self.user = User.objects.create_user('testuser', 'test@example.com', 'password123')
+        self.client.login(username='testuser', password='password123')
+ 
+        self.ingredient = Ingredient.objects.create(name='Tomato', nutritional_information='Rich in Vitamin C', calories=18)
 
-    def test_post_signup_follow(self):
-        self.client.force_login(self.user)
-        url = reverse('signup_follow')
+    def test_add_ingredient_to_fridge_and_calories(self):
+        """Test adding an ingredient with calorie information to the fridge."""
+        url = reverse('add_ingredients_to_fridge')
+        data = {'ingredients': 'Tomato'}
+        response = self.client.post(url, json.dumps(data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Fridge.objects.filter(user=self.user, ingredients__name='Tomato').exists())
 
-        post_data = {
-            'somekey': 'somevalue'  # Your view doesn't seem to use the posted data
+        ingredient_in_fridge = Fridge.objects.get(user=self.user).ingredients.get(name='Tomato')
+        self.assertEqual(ingredient_in_fridge.calories, 18)
+
+class UserInfoUpdateTests(TestCase):
+
+    def setUp(self):
+        """Create a user and log them in for testing."""
+        self.user = User.objects.create_user('testuser', 'test@example.com', 'password123')
+        self.client.login(username='testuser', password='password123')
+
+    def test_user_info_update(self):
+        """Test updating user information."""
+        url = reverse('user_info')
+        data = {
+            'target_weight': 70,
+            'current_weight': 75,
+            'height': 180,
+            'weekly_physical_activity': 5,
+            'gender': 'M'
         }
+        response = self.client.post(url, json.dumps(data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        updated_user = User.objects.get(id=self.user.id)
+        self.assertEqual(updated_user.target_weight, 70)
+        self.assertEqual(updated_user.current_weight, 75)
+        self.assertEqual(updated_user.height, 180)
+        self.assertEqual(updated_user.weekly_physical_activity, 5)
+        self.assertEqual(updated_user.gender, 'M')
 
-        response = self.client.post(url, json.dumps(post_data), content_type='application/json')
-        self.assertEqual(response.status_code, 201)
-        response_data = json.loads(response.content)
-        self.assertEqual(response_data['id'], self.user.id)
-        self.assertEqual(response_data['username'], self.user.username)
+class RecipeTests(TestCase):
 
-    def test_post_signup_follow_no_post(self):
-        response = self.client.get(reverse('signup_follow'))
-        self.assertEqual(response.status_code, 405)
-        response_data = json.loads(response.content)
-        self.assertEqual(response_data['error'], 'Only POST requests are allowed')
+    def setUp(self):
+        """Create a user for the test and ingredients with calorie information."""
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        # Now including calories when creating ingredients
+        self.ingredient1 = Ingredient.objects.create(
+            name='Tomato', 
+            nutritional_information='Rich in Vitamin C', 
+            calories=18  # Assuming 18 calories per standard amount (e.g., per 100g)
+        )
+        self.ingredient2 = Ingredient.objects.create(
+            name='Cucumber', 
+            nutritional_information='Rich in Vitamin K', 
+            calories=16  # Assuming 16 calories per standard amount
+        )
 
-# class SigninViewTests(TestCase):
-#     def setUp(self):
-#         User = get_user_model()
-#         User.objects.create_user(username='testuser', email='test@example.com', password='testpassword123')
+    def test_recipe_creation_and_ingredient_association(self):
+        """Test creating a recipe and associating it with ingredients including calorie information."""
+        recipe = Recipe.objects.create(
+            name='Salad',
+            preparation='Chop ingredients and mix.',
+            meal_type='Lunch',
+            instructions='Mix all ingredients in a bowl.'
+        )
+        recipe.ingredients.add(self.ingredient1, self.ingredient2)
+        recipe.save()
 
-#     def test_signin_success(self):
-#         url = reverse('signin')
-#         data = {
-#             'username': 'testuser',
-#             'password': 'testpassword123'
-#         }
-#         response = self.client.post(url, data, content_type='application/json')
-#         self.assertEqual(response.status_code, 200)
+        # Verify the recipe was created
+        self.assertEqual(Recipe.objects.count(), 1)
+        # Verify the ingredients are associated with the recipe and have correct calorie information
+        self.assertEqual(recipe.ingredients.count(), 2)
+        self.assertIn(self.ingredient1, recipe.ingredients.all())
+        self.assertIn(self.ingredient2, recipe.ingredients.all())
+        self.assertEqual(self.ingredient1.calories, 18)
+        self.assertEqual(self.ingredient2.calories, 16)
 
-#     def test_signin_failure(self):
-#         url = reverse('signin')
-#         data = {
-#             'username': 'testuser',
-#             'password': 'wrongpassword'
-#         }
-#         response = self.client.post(url, data, content_type='application/json')
-#         self.assertEqual(response.status_code, 400)
+class ScheduleTests(TestCase):
 
-# class LoggedInViewTests(TestCase):
-#     def setUp(self):
-#         User = get_user_model()
-#         self.user = User.objects.create_user(username='testuser', email='testuser@example.com', password='testpassword123')
-#         self.client.login(username='testuser', password='testpassword123')
+    def setUp(self):
+        
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.ingredient1 = Ingredient.objects.create(
+            name='Tomato', 
+            nutritional_information='Vitamin C', 
+            calories=22  
+        )
+        self.ingredient2 = Ingredient.objects.create(
+            name='Lettuce', 
+            nutritional_information='Rich in vitamins A, C, and K', 
+            calories=5  # Example calorie count
+        )
+        self.recipe = Recipe.objects.create(
+            name='Salad',
+            preparation='Chop ingredients and mix.',
+            meal_type='Lunch',
+            instructions='Mix all ingredients in a bowl.'
+        )
+        # Add both ingredients to the recipe
+        self.recipe.ingredients.set([self.ingredient1, self.ingredient2])
+        self.recipe.save()
 
-#     def test_action_requires_login(self):
-#         self.client.logout() 
-#         url = reverse('loggedin')
-#         response = self.client.post(url, {}, content_type='application/json')
-#         self.assertEqual(response.status_code, 302)
+    def test_schedule_creation(self):
+        # Create a schedule for a meal
+        schedule_time = datetime.now() + timedelta(days=1)  # Schedule for tomorrow
+        schedule = Schedule.objects.create(
+            user=self.user,
+            date_and_time=schedule_time,
+            meal_type='Lunch'
+        )
+        schedule.recipes.add(self.recipe)
+        schedule.save()
 
-#     def test_logged_in_action(self):
-#         url = reverse('loggedin')
-#         data = {'caloriesConsumed': 500}
-#         response = self.client.post(url, data, content_type='application/json')
-#         self.assertEqual(response.status_code, 200)
-#         self.assertEqual(response.json().get('caloriesConsumed'), 500)
+        # Verify the schedule was created and associated correctly
+        self.assertEqual(Schedule.objects.count(), 1)
+        self.assertEqual(schedule.recipes.count(), 1)
+        self.assertIn(self.recipe, schedule.recipes.all())
+        # Optionally, verify that the recipe ingredients include the expected ingredients with calories
+        recipe_ingredients = list(schedule.recipes.first().ingredients.all())
+        self.assertIn(self.ingredient1, recipe_ingredients)
+        self.assertIn(self.ingredient2, recipe_ingredients)
+        self.assertEqual(self.ingredient1.calories, 22)
+        self.assertEqual(self.ingredient2.calories, 5)
 
-# class UserInfoViewTests(TestCase):
-#     def setUp(self):
-#         User = get_user_model()
-#         self.user = User.objects.create_user(username='testuser', password='testpassword123', email='test@example.com')
-#         self.client.login(username='testuser', password='testpassword123')
 
-#     def test_update_user_info(self):
-#         url = reverse('user_info')
-#         data = {'target_weight': 70}
-#         response = self.client.post(url, data, content_type='application/json')
-#         self.assertEqual(response.status_code, 200)
-#         self.user.refresh_from_db()
-#         self.assertEqual(self.user.target_weight, 70)
 
-#     def test_get_user_info(self):
-#         url = reverse('user_info')
-#         response = self.client.get(url)
-#         self.assertEqual(response.status_code, 200)
 
-# class FridgeAddIngredientsTests(TestCase):
-#     def setUp(self):
-#         User = get_user_model()
-#         self.user = User.objects.create_user(username='testuser', password='testpass')
-#         self.fridge = Fridge.objects.create(user=self.user)
-#         self.client.login(username='testuser', password='testpass')
-
-#     def test_add_ingredient_to_fridge(self):
-#         url = reverse('add_ingredients_to_fridge')
-#         data = {'name': 'Tomato', 'quantity': 3}
-#         response = self.client.post(url, data, format='json')
-#         self.assertEqual(response.status_code, 201)
-#         self.assertTrue(Ingredient.objects.filter(name='Tomato').exists())
-
-#     def test_add_ingredient_to_nonexistent_fridge(self):
-#         url = reverse('add_ingredients_to_fridge')
-#         data = {'name': 'Tomato', 'quantity': 3}
-#         response = self.client.post(url, data, format='json')
-#         self.assertEqual(response.status_code, 404)

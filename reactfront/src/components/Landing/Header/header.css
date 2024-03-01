@@ -1,0 +1,58 @@
+.headerBackground{
+    background-color: rgb(20, 20, 20);
+    display: flex;
+    justify-content: center;
+}
+
+.header{
+    width: 100vw;
+    height: auto;
+    max-width: 65rem;
+    background: rgb(20, 20, 20);
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.subTitle{
+    color: gray;
+    font-weight: 14px;
+    font-size: 15px;
+}
+
+.title{
+    font-weight: 18px;
+    font-size: 40px;
+}
+
+.desc{
+    font-weight: 12px;
+    font-size: 17px;
+    margin-bottom: 16px;
+}
+
+.btn{
+    border: none;
+    width: 10rem;
+    height: 3.75 rem;
+    background: #3232B4;
+    color: white;
+    padding: 1rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    align-items: center;
+    /* align-items: start; */
+}
+
+.image{
+    width: 40rem;
+    height: auto;
+}
