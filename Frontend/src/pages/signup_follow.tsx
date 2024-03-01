@@ -106,11 +106,11 @@ const SignupPage = () => {
                     >
 
                         <option value="">Select Activity Level</option>
-                        <option value="sedentary">Sedentary</option>
-                        <option value="light">Light Activity</option>
-                        <option value="moderate">Moderate Activity</option>
-                        <option value="active">Active</option>
-                        <option value="veryActive">Very Active</option>
+                        <option value="1">Sedentary</option>
+                        <option value="2">Light Activity</option>
+                        <option value="3">Moderate Activity</option>
+                        <option value="4">Active</option>
+                        <option value="5">Very Active</option>
 
                     </select>
 
