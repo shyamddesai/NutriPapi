@@ -1,12 +1,10 @@
-from sqlite3 import IntegrityError
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from .models import  Fridge, Ingredient, Recipe
+from NutriPapiApp.models import Fridge, Ingredient, Recipe
 import json
-from .models import Fridge, Ingredient
-
-from NutriPapiApp.models import Fridge, Ingredient
 
 User = get_user_model()
 
@@ -43,6 +41,7 @@ def signup_view(request):
 
 
 @csrf_exempt
+@login_required
 def signup_follow_view(request):
     if request.method == 'POST':
         try:
@@ -54,20 +53,21 @@ def signup_follow_view(request):
             
             # Initialize user info based on the provided data
             if 'target_weight' in data:
-                user.target_weight = data['target_weight']
+                user.target_weight = float(data['target_weight'])
             if 'current_weight' in data:
-                user.current_weight = data['current_weight']
+                user.current_weight = float(data['current_weight'])
             if 'height' in data:
-                user.height = data['height']
+                user.height = float(data['height'])
             if 'weekly_physical_activity' in data:
-                user.weekly_physical_activity = data['weekly_physical_activity']
+                user.weekly_physical_activity = int(data['weekly_physical_activity'])
             if 'gender' in data:
                 user.gender = data['gender']
-            if 'Dietary_restriction' in data:
+            if 'dietary_restriction' in data:
                 user.dietary_restriction = data['dietary_restriction']
             user.save()
 
-            response_data = {
+            # Return a dictionary of user attributes
+            return JsonResponse({
                 'id': user.id,
                 'username': user.username,
                 'target_weight': user.target_weight,
@@ -76,13 +76,12 @@ def signup_follow_view(request):
                 'weekly_physical_activity': user.weekly_physical_activity,
                 'gender': user.gender,
                 'dietary_restriction': user.dietary_restriction,
-            }
-
-            return JsonResponse(response_data, status=200)
+            }, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
 
 @csrf_exempt
 def signin_view(request):
@@ -120,16 +119,24 @@ def user_info_view(request):
             
             # Update user info based on the provided data
             if 'target_weight' in data:
+                if float(data['target_weight']) < 0:
+                    return JsonResponse({'error': 'Weight cannot be negative'}, status=400)
                 user.target_weight = data['target_weight']
             if 'current_weight' in data:
+                if float(data['current_weight']) < 0:
+                    return JsonResponse({'error': 'Weight cannot be negative'}, status=400)
                 user.current_weight = data['current_weight']
             if 'height' in data:
+                if float(data['height']) < 0:
+                    return JsonResponse({'error': 'Height cannot be negative'}, status=400)
                 user.height = data['height']
             if 'weekly_physical_activity' in data:
+                if float(data['weekly_physical_activity']) < 0:
+                    return JsonResponse({'error': 'Weekly Physical Activity cannot be negative'}, status=400)
                 user.weekly_physical_activity = data['weekly_physical_activity']
             if 'gender' in data:
                 user.gender = data['gender']
-            if 'DietaryRestriction ' in data:
+            if 'dietary_restriction' in data:
                 user.dietary_restriction = data['dietary_restriction']
             
             user.save()
@@ -199,3 +206,42 @@ def caloric_intake_recommendation_view(request):
 
     return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
+@csrf_exempt
+@login_required
+def log_meal_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user = request.user
+            
+            # Extracting meal details from the request
+            meal_details = data.get('meal')
+            if not meal_details:
+                return JsonResponse({'error': 'Meal details are required'}, status=400)
+
+            # Extracting recipe ID and validating it
+            recipe_id = meal_details.get('recipe_id')
+            if not recipe_id:
+                return JsonResponse({'error': 'Recipe ID is required'}, status=400)
+
+            try:
+                recipe = Recipe.objects.get(id=recipe_id)
+            except Recipe.DoesNotExist:
+                return JsonResponse({'error': 'Recipe not found'}, status=404)
+
+            # Log the meal and return the recipe details as confirmation
+            return JsonResponse({
+                'message': 'Meal logged successfully',
+                'meal': {
+                    'recipe_name': recipe.name,
+                    'calories': recipe.calories,
+                }
+            }, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
