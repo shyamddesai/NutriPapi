@@ -53,8 +53,9 @@
 }
 
 .loginButton:hover {
-    background-color: olive; /* Darker shade on hover */
-    border: 1px solid olive;
+    background-color: teal; /* Darker shade on hover */
+    border: 1px solid teal;
+    color: white;
 }
 
 .loginForm2{
