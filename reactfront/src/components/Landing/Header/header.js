@@ -4,7 +4,7 @@ import Fruits from './../../../assets/fruit.png'
 
 export const header = () => {
   return (
-    <div className='headerBackground'>
+    <header className='headerBackground'>
         <div className='header'>
             <div className='text'>
                 <div className='subTitle'>
@@ -26,7 +26,7 @@ export const header = () => {
                 <img src={Fruits} alt="fruits" className='Fruits'/>
             </div>
         </div>
-    </div>
+    </header>
 
   )
 }
