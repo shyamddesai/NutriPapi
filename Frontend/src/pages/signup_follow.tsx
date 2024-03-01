@@ -30,7 +30,7 @@ const SignupPage = () => {
             const response = await axios.post(url, formData, { withCredentials: true });
             console.log(response.data);
             localStorage.setItem('userInfo', JSON.stringify(response.data));
-            const redirectPage = '/dashboard'
+            const redirectPage = '/refrigerator' // Temporary redirect to refrigerator page
             router.push(redirectPage);
         } catch (error: unknown) {
             if (error instanceof Error) {
