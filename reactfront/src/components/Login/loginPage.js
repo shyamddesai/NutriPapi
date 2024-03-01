@@ -17,7 +17,7 @@ const LoginPage = () => {
             <form className='loginForm'>
               <input type="email" placeholder="Email" className="loginInput" />
               <input type="password" placeholder="Password" className="loginInput" />
-              <button type="submit" className="loginButton">Log In</button>
+              <button type="submit" className="loginButton">LOG IN</button>
             </form>
             <div className='loginForm2'>
               <h4 className='loginToSignUp'>
