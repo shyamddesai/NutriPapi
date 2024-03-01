@@ -61,7 +61,7 @@ def signup_follow_view(request):
                 user.weekly_physical_activity = data['weekly_physical_activity']
             if 'gender' in data:
                 user.gender = data['gender']
-            if 'Dietary_restriction' in data:
+            if 'dietary_restriction' in data:
                 user.dietary_restriction = data['dietary_restriction']
             user.save()
             return JsonResponse({'user': user, 'id': user.id, 'username': user.username}, status=200)
@@ -167,7 +167,5 @@ def get_user_info(request):
         'target_weight': user.target_weight,
         'dietary_restriction':user.dietary_restriction,
         'weekly_physical_activity':user.weekly_physical_activity
-
-
     })
 
