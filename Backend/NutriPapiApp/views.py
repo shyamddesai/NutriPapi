@@ -248,27 +248,21 @@ def log_meal_view(request):
             data = json.loads(request.body)
             user = request.user
             
-            # Extracting meal details from the request
-            meal_details = data.get('meal')
-            if not meal_details:
+           # Extracting meal and exercise details from the request
+            breakfast = data.get('breakfast')
+            lunch = data.get('lunch')
+            dinner = data.get('dinner')
+
+            if not all([breakfast, lunch, dinner]):
                 return JsonResponse({'error': 'Meal details are required'}, status=400)
 
-            # Extracting recipe ID and validating it
-            recipe_id = meal_details.get('recipe_id')
-            if not recipe_id:
-                return JsonResponse({'error': 'Recipe ID is required'}, status=400)
-
-            try:
-                recipe = Recipe.objects.get(id=recipe_id)
-            except Recipe.DoesNotExist:
-                return JsonResponse({'error': 'Recipe not found'}, status=404)
-
-            # Log the meal and return the recipe details as confirmation
+            # We'll just return the meal log data as confirmation for now
             return JsonResponse({
-                'message': 'Meal logged successfully',
-                'meal': {
-                    'recipe_name': recipe.name,
-                    'calories': recipe.calories,
+                'message': 'Meal and exercise details logged successfully',
+                'details': {
+                    'breakfast': breakfast,
+                    'lunch': lunch,
+                    'dinner': dinner
                 }
             }, status=200)
 

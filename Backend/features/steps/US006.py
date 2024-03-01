@@ -15,27 +15,28 @@ def step_impl(context):
 @when(u'the user enters details of a meal')
 def step_impl(context):
     meal_data = {
-            'meal': {
-                'recipe_id': 1,  # Assuming a valid recipe_id for the test
-                'meal_type': 'breakfast',
-                'portion_size': 1
-            }
-        }
+        'breakfast': 'Oatmeal',
+        'lunch': 'Salad',
+        'dinner': 'Grilled Chicken'
+    }
     context.response = context.test.client.post(context.url, json.dumps(meal_data), content_type='application/json')
 
 @then(u'the system should save the meal and display them in the user\'s daily health log.')
 def step_impl(context):
     assert context.response.status_code == 200
     response_data = json.loads(context.response.content)
-    assert 'meal' in response_data, "Meal data was not returned"
+    assert 'message' in response_data and response_data['message'] == 'Meal and exercise details logged successfully'
+    assert all(meal in response_data['details'] for meal in ['breakfast', 'lunch', 'dinner'])
+
 
 @when(u'the user enters empty details for a meal')
 def step_impl(context):
-    context.response = context.test.client.post(context.url, json.dumps({'meal': {}}), content_type='application/json')
+    context.response = context.test.client.post(context.url, json.dumps({}), content_type='application/json')
 
 @then("the system should prompt the user to complete all required fields.")
 def step_impl(context):
-    assert context.response.status_code != 200
+    # print(context.response.content)
+    # print(context.response.status_code)
+    assert context.response.status_code == 400
     response_data = json.loads(context.response.content.decode())
-    assert 'error' in response_data
-    assert 'Meal details are required' in response_data['error']
+    assert 'error' in response_data and 'Meal details are required' in response_data['error']
