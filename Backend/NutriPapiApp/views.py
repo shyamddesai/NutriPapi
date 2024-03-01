@@ -159,12 +159,17 @@ def add_ingredients_to_fridge_view(request):
             data = json.loads(request.body)
             ingredient_names = data.get('ingredients', '').split(',')
 
+            # Strip whitespace and filter out empty strings
+            ingredient_names = [name.strip() for name in ingredient_names if name.strip()]
+
+            # Check if the list is empty after stripping whitespace
+            if not ingredient_names:
+                return JsonResponse({'error': 'No ingredients were added'}, status=400)
+
             fridge, created = Fridge.objects.get_or_create(user=request.user)
             for ingredient_name in ingredient_names:
-                ingredient_name = ingredient_name.strip()  # Remove any leading/trailing whitespace
-                if ingredient_name:  # Check if the ingredient name is not empty
-                    ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
-                    fridge.ingredients.add(ingredient)
+                ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
+                fridge.ingredients.add(ingredient)
             fridge.save()
 
             return JsonResponse({'message': 'Ingredients added to fridge successfully'}, status=200)
@@ -172,6 +177,35 @@ def add_ingredients_to_fridge_view(request):
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+
+    
+@login_required
+def view_fridge_contents_view(request):
+    if request.method == 'GET':
+        fridge = Fridge.objects.filter(user=request.user).first()
+        if fridge:
+            ingredients = [ingredient.name for ingredient in fridge.ingredients.all()]
+            return JsonResponse({'ingredients': ingredients}, status=200)
+        return JsonResponse({'error': 'Fridge is empty'}, status=404)
+    
+@csrf_exempt
+@login_required
+def remove_ingredients_from_fridge_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        ingredient_names = data.get('ingredients', [])
+
+        fridge = Fridge.objects.filter(user=request.user).first()
+        if not fridge:
+            return JsonResponse({'error': 'Fridge not found'}, status=404)
+
+        for name in ingredient_names:
+            ingredient = Ingredient.objects.filter(name=name).first()
+            if ingredient:
+                fridge.ingredients.remove(ingredient)
+
+        return JsonResponse({'message': 'Ingredients removed successfully'}, status=200)
+
     
 def get_user_info(request):
     user = request.user
