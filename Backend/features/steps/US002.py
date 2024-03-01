@@ -77,3 +77,4 @@ def step_verify_error_messages(context):
     # Check for specific error messages (the exact key and message might vary based on your implementation)
     assert 'current_weight' in response_data['error'], "No error for missing current weight"
     
+    
