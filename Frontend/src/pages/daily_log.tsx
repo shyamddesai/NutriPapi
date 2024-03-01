@@ -19,7 +19,7 @@ const LogPage = () => {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const url = 'log_meal/';
+        const url = 'http://localhost:8000/user/info/';
         try {
             const response = await axios.post(url, mealLog, { withCredentials: true });
             console.log(response.data);
