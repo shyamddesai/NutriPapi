@@ -81,9 +81,9 @@ const UpdateUserInfoPage = () => {
         />
         <select name="gender" value={userInfo.gender} onChange={handleChange}>
           <option value="">Select Gender</option>
-          <option value="M">Male</option>
-          <option value="F">Female</option>
-          <option value="O">Other</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
         </select>
         {/* Render checkboxes for dietary preferences */}
         <div>

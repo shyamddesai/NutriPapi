@@ -15,28 +15,15 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=255, verbose_name='Ingredient Name')
     nutritional_information = models.TextField(verbose_name='Nutritional Information')
     recipes = models.ManyToManyField(Recipe, related_name='ingredients', verbose_name='Recipes')
-    calories = models.IntegerField(verbose_name='Calories per Standard Unit')
+    calories = models.IntegerField(verbose_name='Calories per Standard Unit', null=True, blank=True)
 
     def __str__(self):
         return self.name
 
-class DietaryRestriction(models.Model):
-    restriction_type = models.CharField(max_length=255, verbose_name='Restriction Type')
-    ingredients = models.ManyToManyField(Ingredient, related_name='dietary_restrictions', verbose_name='Ingredients')
-
-    def __str__(self):
-        return self.restriction_type
-
 class User(AbstractUser):
     target_weight = models.FloatField(verbose_name='Target Weight', default=80.0)
     current_weight = models.FloatField(verbose_name='Current Weight', default=80.0)
-    dietary_restriction = models.ForeignKey(
-        'DietaryRestriction', 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        verbose_name='Dietary Restriction'
-    )
+    dietary_restriction = models.CharField(max_length=255, verbose_name='Dietary Restriction', null=True, blank=True)
     height = models.FloatField(verbose_name='Height in cm', default=160.0)
     weekly_physical_activity = models.IntegerField(
         verbose_name='Weekly Physical Activity in hours',
