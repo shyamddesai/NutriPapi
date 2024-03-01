@@ -17,7 +17,6 @@ class UserTests(TestCase):
             'email': 'test@example.com',
             'password': 'password123'
         }
-  
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 201)
         self.assertTrue(User.objects.filter(username='testuser').exists())

@@ -42,7 +42,6 @@ def signup_view(request):
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
 
-
 @csrf_exempt
 @login_required
 def signup_follow_view(request):
@@ -51,6 +50,9 @@ def signup_follow_view(request):
             data = json.loads(request.body)
             user = request.user
 
+            if not request.user.is_authenticated:
+                return JsonResponse({'error': 'The user is not logged in'}, status=401)
+            
             # Initialize user info based on the provided data
             if 'target_weight' in data:
                 user.target_weight = float(data['target_weight'])
