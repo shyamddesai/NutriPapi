@@ -9,7 +9,3 @@ class UserForm(forms.ModelForm):
             'dietary_restriction': forms.Select()
         }
 
-class DietaryRestrictionForm(forms.ModelForm):
-    class Meta:
-        model = DietaryRestriction
-        fields = ['restriction_type']
