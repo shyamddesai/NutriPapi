@@ -33,7 +33,7 @@ const SignupPage = () => {
             const response = await axios.post(url, formData, { withCredentials: true });
             console.log(response.data);
             localStorage.setItem('userInfo', JSON.stringify(response.data));
-            const redirectPage = 'user_info' //Temporary redirect page instead of dashboard
+            const redirectPage = '/user_info' //Temporary redirect page instead of dashboard
             router.push(redirectPage);
         } catch (error: unknown) {
             if (error instanceof Error) {
