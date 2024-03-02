@@ -1,8 +1,15 @@
 import './header.css';
 import React from 'react'
 import Fruits from './../../../assets/fruit.png'
+import { useNavigate } from 'react-router-dom';
 
-export const header = () => {
+export const Header = () => {
+
+    const navigate = useNavigate();
+    
+    const handleTryClick = () => {
+        navigate('/login'); // Navigate to the login page
+      };
   return (
     <header className='headerBackground'>
         <div className='header'>
@@ -18,7 +25,7 @@ export const header = () => {
                 <div className="desc">
                     Input your goals, and let's tailor your path to a healthier you with custom recipe plans.
                 </div>
-                <button className='btn'>
+                <button className='btn' onClick={handleTryClick}>
                     Try For Free
                 </button>
             </div>
@@ -31,4 +38,4 @@ export const header = () => {
   )
 }
 
-export default header;
+export default Header;
