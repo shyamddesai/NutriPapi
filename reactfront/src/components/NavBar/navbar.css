@@ -29,6 +29,7 @@
     height:3rem;
     width:hug;
     margin-right: 20px;
+    cursor: pointer;
 }
 
 .desktopMenuBtn{
@@ -48,9 +49,9 @@
 }
 
 .desktopMenuListItem:hover {
-    color:#bada55;
+    color: rgb(253,29,29);
     padding-bottom: 0.5rem;
-    border-bottom: 4px solid;
+    border-bottom: 10px solid;
 }
 
 .desktopMenuBtn{

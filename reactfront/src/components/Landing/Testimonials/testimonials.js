@@ -2,7 +2,7 @@ import './testimonials.css'
 import React from 'react'
 import paddy from './../../../assets/paddy.png'
 import masa from './../../../assets/masa.png'
-import mozart from './../../../assets/mozart.png'
+import michelle from './../../../assets/michelle.png'
 
 
 const testimonials = () => {
@@ -35,7 +35,7 @@ const testimonials = () => {
               <h4 className='testiBottomRight'>"</h4>
             </div>
             <div className='testiBody'>
-            <img src={masa} alt='paddy' className='ellipseLogo'/>
+            <img src={masa} alt='masa' className='ellipseLogo'/>
             <div className='testiBodyText'>
               <h2>Masa Kagami</h2>
               <h3>5x World Champion</h3>
@@ -50,10 +50,10 @@ const testimonials = () => {
               <h4 className='testiBottomRight'>"</h4>
             </div>
             <div className='testiBody'>
-            <img src={mozart} alt='paddy' className='ellipseLogo'/>
+            <img src={michelle} alt='michelle' className='ellipseLogo'/>
             <div className='testiBodyText'>
-              <h2>Wolfgang Amadeus Mozart</h2>
-              <h3>Musician</h3>
+              <h2>Michelle Obama</h2>
+              <h3>Lawyer</h3>
             </div>
             </div>
           </div>
