@@ -1,6 +1,6 @@
 import './testimonials.css'
 import React from 'react'
-import paddy from './../../../assets/paddy.png'
+import greta from './../../../assets/greta.png'
 import masa from './../../../assets/masa.png'
 import michelle from './../../../assets/michelle.png'
 
@@ -20,10 +20,10 @@ const testimonials = () => {
               <h4 className='testiBottomRight'>"</h4>
             </div>
             <div className='testiBody'>
-            <img src={paddy} alt='paddy' className='ellipseLogo'/>
+            <img src={greta} alt='greta' className='ellipseLogo'/>
             <div className='testiBodyText'>
-              <h2>Paddy Pimblett</h2>
-              <h3>Fighter</h3>
+              <h2>Greta Thunberg</h2>
+              <h3>Activist</h3>
             </div>
             </div>
           </div>
