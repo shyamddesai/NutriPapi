@@ -15,8 +15,8 @@ const LoginPage = () => {
         <section className='login'>
             <h1 className='loginTitle'>Log In</h1>
             <form className='loginForm'>
-              <input type="email" placeholder="Email" className="loginInput" />
-              <input type="password" placeholder="Password" className="loginInput" />
+              <input type="email" placeholder="Email" className="loginInput" required />
+              <input type="password" placeholder="Password" className="loginInput" required/>
               <button type="submit" className="loginButton">LOG IN</button>
             </form>
             <div className='loginForm2'>

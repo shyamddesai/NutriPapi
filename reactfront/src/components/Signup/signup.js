@@ -10,7 +10,8 @@ const SignUp = () => {
     navigate('/login'); // Navigate to the sign-up page
   };
 
-  const handleSignUpContClick = () => {
+  const handleSignUpSubmit = (event) => {
+    event.preventDefault();
     navigate('/sign-up2'); // Navigate to the sign-up page
   };
 
@@ -18,12 +19,13 @@ const SignUp = () => {
     <div className='signupBackground'>
         <section className='signup'>
           <h1 className='signupTitle'>Sign Up</h1>
-          <form className='signupForm'>
+          <form className='signupForm' onSubmit={handleSignUpSubmit}>
             <input type="firstname" placeholder="First name" className="signupInput" required/>
             <input type="lastname" placeholder="Last name" className="signupInput" required/>
             <input type="email" placeholder="Email" className="signupInput" required/>
             <input type="password" placeholder="Password" className="signupInput" required/>
-            <button type="submit" className="signupButton" onClick={handleSignUpContClick}>CONTINUE</button>
+            {/* <button type="submit" className="signupButton" onClick={handleSignUpContClick}>CONTINUE</button> */}
+            <button type="submit" className="signupButton">CONTINUE</button>
           </form>
           <div className='signupForm2'>
               <h4 className='signupToLogIn'>

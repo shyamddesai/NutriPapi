@@ -5,14 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const SignUp2 = () => {
   
   const navigate = useNavigate(); // Initialize useNavigate
-
-  const handleLoginClick = () => {
-    navigate('/login'); // Navigate to the sign-up page
-  };
-
-  const handleSignUpContClick = () => {
-    navigate('/sign-up2'); // Navigate to the sign-up page
-  };
   const [gender, setGender] = useState(''); 
   const [goals, setGoals] = useState('');
   const [activityLevel, setActivityLevel] = useState('');
@@ -22,8 +14,8 @@ const SignUp2 = () => {
   const [height, setHeight] = useState('');
   const [dietaryPreferences, setDietaryPreferences] = useState('');
   
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
     // Here you would typically handle the form submission, e.g., sending data to a backend server
     // For demonstration, we'll just navigate to a different route
     navigate('/hub'); // Adjust the navigation target as needed
@@ -75,7 +67,7 @@ const SignUp2 = () => {
                     <option value="lactose">Lactose Intolerant</option>
                     <option value="vegan">Vegan</option>
                 </select>
-              <button type="submit" className="signup2Button" onClick={handleSignUpContClick}>SUBMIT</button>
+              <button type="submit" className="signup2Button">SUBMIT</button>
           </form>
         </section>
     </div>
