@@ -1,12 +1,19 @@
-Feature: Account Deletion
-  As a user who no longer wishes to use the NutriPapi system, I want to be able to delete my account so that my personal data is removed from the system.
+Feature: Daily Health Reminders
+  As a user,
+  I want to receive daily reminders to log my meals, drink water, and exercise
+  so that I can stay consistent with my health routines.
 
-  Scenario: Successful Account Deletion (Normal Flow)
-    Given the user has logged into the NutriPapi system and navigated to the account settings section,
-    When they select the option to delete their account and confirm their decision by entering their password or responding to a confirmation email,
-    Then the system permanently deletes their account and all associated personal data, displaying a confirmation message that their account has been successfully deleted.
+  Scenario: Receive daily reminders for logging meals, drinking water, and exercising (Normal Flow)
+    Given the user has opted in to receive daily health reminders
+    When it's the scheduled time for the daily reminder
+    Then the system should display a pop-up reminder to log meals, drink water, and exercise.
 
-  Scenario: Attempt to Delete Account without Confirmation (Error Flow)
-    Given the user has selected the option to delete their account in the NutriPapi system,
-    When they fail to confirm the account deletion (either by not entering their password correctly or not responding to the confirmation email),
-    Then the system does not delete their account, displaying an error message such as "Account deletion not confirmed. Please confirm to proceed with account deletion."
+  Scenario: User opts out of receiving daily health reminders (Alternate Flow)
+    Given the user has previously opted in to receive daily health reminders
+    When the user chooses to opt out of receiving reminders
+    Then the system should disable the daily reminder functionality.
+
+  Scenario: Backend service for pop-up reminder is not available (Error Flow)
+    Given the user is expecting to receive a daily health reminder
+    When the service for sending the pop-up reminder is down
+    Then the system should return an error.

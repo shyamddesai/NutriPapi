@@ -17,4 +17,4 @@ Feature: Searching for ingredients to receive nutritional information
   Scenario: Searching for an ingredient with a vague or incomplete name (Error Flow)
     Given the user is logged into the NutriPapi system and navigates to the ingredient search section.
     When the user enters a vague or incomplete name for an ingredient.
-    Then the system should suggest possible matches or ask the user to provide more specific information.
+    Then the system should ask the user to provide more specific information.
