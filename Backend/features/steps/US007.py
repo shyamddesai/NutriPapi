@@ -11,8 +11,8 @@ use_step_matcher("re")
 
 MEAL_TIMES = {
     'breakfast': time(8, 0),
-    'lunch': datetime.time(12, 0),
-    'dinner': datetime.time(18, 0)
+    'lunch': time(12, 0),
+    'dinner': time(18, 0)
 }
 
 @given(u'the user is logged into the NutriPapi system and navigates to the meals section')
