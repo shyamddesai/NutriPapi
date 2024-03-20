@@ -70,7 +70,7 @@ build process.
 - The NutriPapi ​system shall allow users to delete the accounts they created.
 
 ### System Requirements:
-- The NutriPapi system shall send the user daily notifications at 6 pm that their recipes are ready for the next day.
+- The NutriPapi system shall send the user daily notifications at 8 am, 12 pm, and 6 pm that their recipes are ready for the day and to prepare the ingredients.
 - The NutriPapi system shall be able to filter out suggestions for the ingredients based on the dietary restrictions entered by the user
 - The NutriPapi system shall have 4 meals dedicated to breakfast, lunch, dinner, and snacks.
 - The NutriPapi system shall allow users to search for the ingredients by their name and get nutritional information about that ingredient.
@@ -93,15 +93,15 @@ build process.
 ### User Stories
 - As a user, I want to create an account on the NutriPapi system so that I can get access to its functionalities
 - As a user, I want to input my current weight, target weight, height, weekly physical activity levels, and dietary requirements so that the system can provide me with tailored suggestions on achieving my health goals.
-- As a user, I would like to receive a daily caloric intake recommendation so that I can adjust my diet to meet my weight goals.
-- As a user, I want to be able to input the ingredients I have in my fridge so that I can keep track of what I have available.  
+- As a user, I want to receive a daily suggested caloric intake based on my target/current weight and my timeline for gaining or losing weight so that I can make informed dietary choices.
+- As a user, I want to be able to input the ingredients I have in my fridge so that the NutriPapi system can recommend different recipes and I can enjoy diverse and healthy meals.
 - As a user who may have lost or gained weight, I want to update my weight in the NutriPapi system so that it can adjust my daily caloric intake recommendations accordingly.
 - As a user, I want to log my daily meals so that I can track my progress towards my health goals over time.
-- As a user who no longer wishes to use the NutriPapi system, I want to be able to delete my account so that my personal data is removed from the system.
-- As a user, I want to receive daily reminders to log my meals, drink water, and exercise so that I can stay consistent with my health routines.
-- As a user, I want the system to categorize my meal plans into breakfast, lunch, dinner, and snacks so that I can have a structured and balanced daily eating schedule.
+- As a user, I want to receive timely reminders for meal preparation so that I can prepare my meals on time and maintain my health routines.
+- As a user, I want to receive timely reminders for meal preparation so that I can prepare my meals on time and maintain my health routines.
 - As a health-conscious user, I want to search for ingredients by name and receive detailed nutritional information about them so that I can make informed choices about the ingredients I use in my meals.
 - As a user who enjoys culinary diversity, I want the NutriPapi system to recommend a variety of recipes for different meals each day and ensure that the same meal is not repeated within a two-week period unless I specifically request it.
+- As a user who no longer wishes to use the NutriPapi system, I want to be able to delete my account so that my personal data is removed from the system.
 - As a user who uses multiple devices, I want the NutriPapi system to be responsive and compatible on all my devices so that I can access my meal plans and health tracking.
 - As a user concerned about my personal data, I want the NutriPapi system to implement secure authentication methods and encrypt sensitive user data to ensure my privacy and security.
 

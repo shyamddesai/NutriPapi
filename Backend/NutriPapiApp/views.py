@@ -279,32 +279,34 @@ def log_meal_view(request):
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
     
 MEAL_TIMES = {
-    'breakfast': datetime.time(7, 0),  # Reminder at 7:00 AM for breakfast at 8:00 AM
-    'lunch': datetime.time(11, 0),     # Reminder at 11:00 AM for lunch at 12:00 PM
-    'dinner': datetime.time(17, 0)     # Reminder at 5:00 PM for dinner at 6:00 PM
+    'breakfast': datetime.time(8, 0),  # Reminder at 7:00 AM for breakfast at 8:00 AM
+    'lunch': datetime.time(12, 0),     # Reminder at 11:00 AM for lunch at 12:00 PM
+    'dinner': datetime.time(18, 0)     # Reminder at 5:00 PM for dinner at 6:00 PM
 }
+
+def get_current_time():
+    return datetime.datetime.now()
 
 @csrf_exempt
 @login_required
 def meal_reminder_view(request):
     if request.method == 'GET':
         user = request.user
-        current_time = datetime.datetime.now().time()
+        current_time = get_current_time().time()
 
         # Iterate through meal times to check if it's within one hour of the meal time
         for meal, meal_time in MEAL_TIMES.items():
             meal_datetime = datetime.datetime.combine(datetime.date.today(), meal_time)
             current_datetime = datetime.datetime.combine(datetime.date.today(), current_time)
-            time_difference = meal_datetime - current_datetime
+            time_difference = (meal_datetime - current_datetime).total_seconds()
 
-            if 0 <= time_difference.total_seconds() <= 3600:  # Time difference is within one hour
-                # Check if a Schedule exists for this meal and user on the current date
-                if not Schedule.objects.filter(user=user, meal_type=meal, date_and_time__date=datetime.date.today()).exists():
-                    return JsonResponse({
-                        'reminder': f"Reminder, get your ingredients ready for {meal}!",
-                        'meal': meal
-                    })
+            print("Current time: ", current_time)
+            print("Meal time: ", meal_time)
+            print("Time difference: ", time_difference)
 
-            return JsonResponse({'message': 'No reminders at this time'})
+            if 0 <= time_difference <= 3600:  # Time difference within an hour
+                if Schedule.objects.filter(user=user, meal_type=meal, date_and_time__date=datetime.date.today()).exists():
+                    return JsonResponse({'reminder': f"Reminder, get your ingredients ready for {meal}!"}, status=200)
+            return JsonResponse({'message': 'No meal suggestions available, so no reminders can be provided.'}, status=204)  # 204 No Content
         else:
-            return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+            return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed
