@@ -2,9 +2,10 @@ from django.http import JsonResponse
 from django.contrib.auth import get_user_model, authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .models import  Fridge, Ingredient, Recipe
-from NutriPapiApp.models import Fridge, Ingredient, Recipe
+from .models import  Fridge, Ingredient, Schedule
+from NutriPapiApp.models import Fridge, Ingredient, Schedule
 import json
+import datetime
 
 User = get_user_model()
 
@@ -276,3 +277,30 @@ def log_meal_view(request):
 
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
+MEAL_TIMES = {
+    'breakfast': datetime.time(7, 0),  # Reminder at 7:00 AM for breakfast at 8:00 AM
+    'lunch': datetime.time(11, 0),     # Reminder at 11:00 AM for lunch at 12:00 PM
+    'dinner': datetime.time(17, 0)     # Reminder at 5:00 PM for dinner at 6:00 PM
+}
+
+@csrf_exempt
+@login_required
+def meal_reminder_view(request):
+    if request.method == 'GET':
+        user = request.user
+        current_time = datetime.datetime.now().time()
+
+        # Check if it's time for any meal based on MEAL_TIMES
+        for meal, meal_time in MEAL_TIMES.items():
+            if current_time.hour == meal_time.hour and current_time.minute == meal_time.minute:
+                # Check if a Schedule exists for this meal and user
+                if not Schedule.objects.filter(user=user, meal_type=meal, datetime__date=datetime.datetime.now().date()).exists():
+                    return JsonResponse({
+                        'reminder': f"It's time for your {meal}!",
+                        'meal': meal
+                    })
+        
+        return JsonResponse({'message': 'No reminders at this time'})
+
+    return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
