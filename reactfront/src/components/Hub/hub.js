@@ -30,7 +30,6 @@ const hub = () => {
                 </body>
             </section>    
         </div>
-
     </div>
   )
 }
