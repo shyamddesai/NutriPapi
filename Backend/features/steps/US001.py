@@ -1,10 +1,6 @@
-
-# features/steps/user_creation_steps.py
-
 from behave import given, when, then
 from django.urls import reverse
-from NutriPapiApp.models import User  # Adjust the import path based on your app name
-
+from NutriPapiApp.models import User 
 from django.contrib.auth import get_user_model
 
 @given('the visitor is on the NutriPapi account creation page')
