@@ -291,16 +291,20 @@ def meal_reminder_view(request):
         user = request.user
         current_time = datetime.datetime.now().time()
 
-        # Check if it's time for any meal based on MEAL_TIMES
+        # Iterate through meal times to check if it's within one hour of the meal time
         for meal, meal_time in MEAL_TIMES.items():
-            if current_time.hour == meal_time.hour and current_time.minute == meal_time.minute:
-                # Check if a Schedule exists for this meal and user
-                if not Schedule.objects.filter(user=user, meal_type=meal, datetime__date=datetime.datetime.now().date()).exists():
+            meal_datetime = datetime.datetime.combine(datetime.date.today(), meal_time)
+            current_datetime = datetime.datetime.combine(datetime.date.today(), current_time)
+            time_difference = meal_datetime - current_datetime
+
+            if 0 <= time_difference.total_seconds() <= 3600:  # Time difference is within one hour
+                # Check if a Schedule exists for this meal and user on the current date
+                if not Schedule.objects.filter(user=user, meal_type=meal, date_and_time__date=datetime.date.today()).exists():
                     return JsonResponse({
-                        'reminder': f"It's time for your {meal}!",
+                        'reminder': f"Reminder, get your ingredients ready for {meal}!",
                         'meal': meal
                     })
-        
-        return JsonResponse({'message': 'No reminders at this time'})
 
-    return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+            return JsonResponse({'message': 'No reminders at this time'})
+        else:
+            return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
