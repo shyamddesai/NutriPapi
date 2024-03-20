@@ -1,0 +1,24 @@
+.hubBackground{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vw;
+}
+
+/* .hub{
+    margin-top: 6.5rem;
+    width: 100%;
+    max-width: 65rem;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.hubBodyHeader{
+    
+} */
