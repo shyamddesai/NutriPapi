@@ -27,6 +27,7 @@
     height: auto;
     padding: 0.5rem 1rem;
     font-size: 20px;
+    font-weight: 500;
     /* justify-content: center; */
 }
 
@@ -67,7 +68,7 @@
 }
 
 .hubSummaryCalCount{
-    font-size: 3.5rem;
+    font-size: 3.3rem;
     font-weight: 600;
 }
 
@@ -107,10 +108,62 @@
     font-size: 32px;
 }
 
+.hubBodyContainer{
+    display: flex;
+    flex-direction: column;
+    background-color: #F0F0F0;
+    color: black;
+    padding: 1rem 2rem;
+}
 
+.hubBodyContainer h3{
+    font-size: 20px;
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+    color: black;
+}
 
 .hubTodayMeal{
     margin-bottom: 1rem;
+    height: auto
+}
+
+.hubBodyMeal{
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    margin-bottom: 1.5rem;
+    justify-content: space-between;
+}
+
+.hubFoodDetail{
+    margin: 0.5rem;
+}
+
+.hubFoodDetail h4{
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.hubFoodDetail button{
+    border: none;
+    background-color: black;
+    color: white;
+    margin-bottom: 0.5rem;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+}
+
+.hubFoodDetail p{
+    font-size: 14px;
+    font-weight:300;
+}
+
+.hubFoodPhotos{
+    width: 40%;
+    height: auto;
 }
 
 .hubFridge{
