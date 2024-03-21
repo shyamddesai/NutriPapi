@@ -1,19 +1,19 @@
-Feature: Daily Health Reminders
+Feature: Meal Preparation Reminders
   As a user,
-  I want to receive daily reminders to log my meals, drink water, and exercise
-  so that I can stay consistent with my health routines.
+  I want to receive timely reminders for meal preparation
+  so that I can prepare my meals on time and maintain my health routines.
 
-  Scenario: Receive daily reminders for logging meals, drinking water, and exercising (Normal Flow)
-    Given the user has opted in to receive daily health reminders
-    When it's the scheduled time for the daily reminder
-    Then the system should display a pop-up reminder to log meals, drink water, and exercise.
+  Scenario: Receive reminders to begin meal preparation (Normal Flow)
+    Given the user is logged into the NutriPapi system and navigates to the meals section
+    When a meal is scheduled within the next one hour
+    Then the system should display a reminder message on the page for the upcoming meal.
 
-  Scenario: User opts out of receiving daily health reminders (Alternate Flow)
-    Given the user has previously opted in to receive daily health reminders
-    When the user chooses to opt out of receiving reminders
-    Then the system should disable the daily reminder functionality.
+  Scenario: User logs in outside of scheduled meal reminder times (Alternate Flow)
+    Given the user is logged into the NutriPapi system and navigates to the meal section outside of scheduled meal reminder times
+    When the user checks the dashboard or meal log section
+    Then the system should not display any reminder message for meal preparation.
 
-  Scenario: Backend service for pop-up reminder is not available (Error Flow)
-    Given the user is expecting to receive a daily health reminder
-    When the service for sending the pop-up reminder is down
-    Then the system should return an error.
+  Scenario: No meal suggestions available for reminders (Error Flow)
+    Given the user is logged into the NutriPapi system and navigates to the meals section
+    When there are no meal suggestions available
+    Then the system should inform the user that no reminders can be provided
