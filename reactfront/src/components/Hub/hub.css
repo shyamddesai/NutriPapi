@@ -3,22 +3,124 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100vw;
+    width: 100vw;
+    height: auto;
+    margin-top: 6.5rem;
 }
 
-/* .hub{
-    margin-top: 6.5rem;
+.hub{
+    margin-top: 4rem;
     width: 100%;
     max-width: 65rem;
-    padding: 1rem;
-    align-items: center;
-    justify-content: center;
+    background-color: white;
+}
+
+.hubSummary{
+    margin-bottom: 1rem;
+    height:auto;
+}
+
+.hubBodyHeader{
+    background: #B4B4B4;
+    color: black;
+    width: 100%;
     height: auto;
+    padding: 0.5rem 1rem;
+    font-size: 20px;
+    /* justify-content: center; */
+}
+
+.hubBody{
+    height: auto;
+    background-color: #F0F0F0;
+    display: flex;
+    flex-direction: row;
+    color: black;
+    align-items: center;
+    padding: 1rem 2rem;
+    font-size: 20px;
+}
+
+.hubSummaryPic{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    margin-right: 2rem;
+}
+
+.hubSummaryPic img{
+    width: 7rem;
+    height: 7rem;
+}
+
+.hubSummaryPic input{
+    height: auto;
+}
+
+.hubSummaryPic button{
+    height: auto;
+}
+
+.hubSummaryCal{
     display: flex;
     flex-direction: column;
 }
 
-.hubBodyHeader{
+.hubSummaryCalCount{
+    font-size: 3.5rem;
+    font-weight: 600;
+}
+
+.hubVerticalLine{
+    height: 100%;
+    width: 5px;
+    background: black;
+    margin: 0 20px;
+}
+
+.hubSummaryWeight{
+    display: flex;
+    flex-direction: column;
+}
+
+.hubSummaryWeights{
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+    justify-content: space-between;
+}
+
+.hubSummaryWeightNumber{
+    font-size: 24px;
     
+}
+
+.hubSummaryStreakBox{
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    align-items: center;
+}
+
+.hubSummaryStreakBoxDays{
+    margin-left: 5rem;
+    font-size: 32px;
+}
+
+
+
+.hubTodayMeal{
+    margin-bottom: 1rem;
+}
+
+.hubFridge{
+    margin-bottom: 4rem;
+}
+
+/* .hubSummaryBody{
+    background-color: white;
+    color: black;
+    width: 100%;
+    height: 20px;
+    padding:
 } */
