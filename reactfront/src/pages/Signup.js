@@ -1,6 +1,5 @@
 import React from 'react'
 import Navbar from '../components/Login/NavBar/loginNavbar'
-import Footer from '../components/Footer/footer'
 import SignUp from '../components/Signup/signup';
 
 function Signup(){
@@ -8,7 +7,6 @@ function Signup(){
         <div className="Signup">
             <Navbar/>
             <SignUp/>
-            <Footer/>
         </div>
     );
 }

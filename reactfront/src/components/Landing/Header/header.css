@@ -2,6 +2,7 @@
     background-color: rgb(20, 20, 20);
     display: flex;
     justify-content: center;
+    width: 100vw;
 }
 
 .header{

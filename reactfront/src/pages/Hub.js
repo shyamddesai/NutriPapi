@@ -1,13 +1,14 @@
 import React from 'react'
-// import Navbar from '../components/Login/NavBar/loginNavbar'
-import NavBar from '../components/NavBar/navbar'
-import Footer from '../components/Footer/footer'
-import Hub from '../components/Hub/hub';
+import Hub from '../components/Hub/hub'
+import HubNav from '../components/HubNav/hubNav'
+// import Nav from '../components/Login/NavBar/loginNavbar'
+import Nav from '../components/NavBar/navbar'
 
 function hub(){
     return(
         <div className="hub">
-            <NavBar/>
+            <Nav />
+            <HubNav/>
             <Hub/>
         </div>
     );

@@ -2,10 +2,10 @@
     background-color: rgb(30, 30, 30);
     display: flex;
     justify-content: center;
-    position: fixed;
     width: 100%;
     top:0;
     left:0;
+    position: sticky;
 }
 
 .navbar{
@@ -17,7 +17,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
     top: 0;
     left: 0;
     z-index: 1000;

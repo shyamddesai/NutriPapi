@@ -1,7 +1,6 @@
 import './hub.css'
 import icon from './../../assets/userIcon.png'
-import placeHolder from './../../assets/placeholderImage.png'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect} from 'react'
 import axios from 'axios'
 import placeHolderMeal1 from './../../assets/meal1.png'
 import placeHolderMeal2 from './../../assets/meal2.png'
@@ -218,14 +217,15 @@ const Hub = () => {
 
 
 
-                <section className='hubFridge'>
+                {/* <section className='hubFridge'>
                     <header className='hubBodyHeader'>
                         My Fridge
                     </header>
                     <body className='hubBody'>
                         
                     </body>
-                </section>    
+                </section>     //the fridge section is currently unavaiable LOLS
+                */}
             </div>
         </div>
     )

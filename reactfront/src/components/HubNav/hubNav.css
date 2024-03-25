@@ -1,0 +1,19 @@
+.hubnav{
+    background-color: #2148C0;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    /* margin-top: 6.5rem; */
+}
+
+.hubnavheader{
+    width: 100%;
+    max-width: 65rem;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    color: white;
+}
+
