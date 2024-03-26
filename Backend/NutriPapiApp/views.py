@@ -41,13 +41,13 @@ def signup_view(request):
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
-
 @csrf_exempt
 @login_required
 def signup_follow_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print(data)
             user = request.user
 
             if not request.user.is_authenticated:

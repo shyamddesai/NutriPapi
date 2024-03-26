@@ -8,12 +8,12 @@ const SignUp2 = () => {
     first_name: '',
     gender: '',
     goals: '',
-    activityLevel: '',
+    weekly_physical_activity: '',
     birthday: '',
-    currentWeight: '',
-    targetWeight: '',
+    current_weight: '',
+    target_weight: '',
     height: '',
-    dietaryPreferences: ''
+    dietary_restriction: ''
   });
 
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ const SignUp2 = () => {
           </select>
 
           <label className='signup2label'>Activity Level</label>
-          <select className='signup2select' name="activityLevel" value={formData.activityLevel} onChange={handleChange} required>
+          <select className='signup2select' name="weekly_physical_activity" value={formData.weekly_physical_activity} onChange={handleChange} required>
             <option value="">Select Activity Level</option>
             <option value="2.5">Sedentary (0-5 hours a week)</option>
             <option value="9">Moderately Active (6-12 hours a week)</option>
@@ -73,26 +73,27 @@ const SignUp2 = () => {
           <input className='signup2select' type="date" name="birthday" value={formData.birthday} onChange={handleChange} required />
 
           <label className='signup2label'>Current Weight (kgs)</label>
-          <input className='signup2labelslider' type="range" min="40" max="140" name="currentWeight" value={formData.currentWeight} onChange={handleChange} required />
-          <output className='signup2output'>{formData.currentWeight} kgs</output>
+          <input className='signup2labelslider' type="range" min="40" max="140" name="current_weight" value={formData.current_weight} onChange={handleChange} required />
+          <output className='signup2output'>{formData.current_weight} kgs</output>
 
           <label className='signup2label'>Target Weight (kgs)</label>
-          <input className='signup2labelslider' type="range" min="40" max="140" name="targetWeight" value={formData.targetWeight} onChange={handleChange} required />
-          <output className='signup2output'>{formData.targetWeight} kgs</output>
+          <input className='signup2labelslider' type="range" min="40" max="140" name="target_weight" value={formData.target_weight} onChange={handleChange} required />
+          <output className='signup2output'>{formData.target_weight} kgs</output>
 
           <label className='signup2label'>Height (cm)</label>
           <input className='signup2labelslider' type="range" min="120" max="240" name="height" value={formData.height} onChange={handleChange} required />
           <output className='signup2output'>{formData.height} cm</output>
 
           <label className='signup2label'>Dietary Preferences</label>
-          <select className='signup2select' name="dietaryPreferences" value={formData.dietaryPreferences} onChange={handleChange} required>
+          <select className='signup2select' name="dietary_restriction" value={formData.dietary_restriction} onChange={handleChange} required>
             <option value="">Select Dietary Preferences</option>
             <option value="none">None</option>
-            <option value="pescatarian">Pescatarian</option>
-            <option value="pescatarian">Pescatarian</option>
-            <option value="vegetarian">Vegetarian</option>
             <option value="lactose">Lactose Intolerant</option>
+            <option value="gluten">Gluten-Free</option>
+            <option value="vegetarian">Vegetarian</option>
             <option value="vegan">Vegan</option>
+            <option value="kosher">Kosher</option>
+            <option value="keto">Ketogenic</option>
           </select>
           <button type="submit" className="signup2Button">SUBMIT</button>
         </form>

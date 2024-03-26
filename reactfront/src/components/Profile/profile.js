@@ -8,9 +8,10 @@ const Profile = () => {
     target_weight: '',
     height: '',
     weekly_physical_activity: '',
-    dietary_restriction: [],
+    dietary_restriction: '',
   });
 
+  // Set default values for the form fields from the database
   useEffect(() => {
     const fetchUserInfo = async () => {
       const url = 'http://localhost:8000/user/get_info/';
@@ -22,7 +23,7 @@ const Profile = () => {
           target_weight: data.target_weight,
           height: data.height,
           weekly_physical_activity: data.weekly_physical_activity,
-          dietary_restriction: data.dietary_restriction || [],
+          dietary_restriction: data.dietary_restriction,
         });
       } catch (error) {
         console.error('Failed to fetch user info:', error);
@@ -34,17 +35,7 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      let newPreferences = [...userInfo.dietary_restriction];
-      if (checked) {
-        newPreferences = [...newPreferences, value];
-      } else {
-        newPreferences = newPreferences.filter((pref) => pref !== value);
-      }
-      setUserInfo({ ...userInfo, dietary_restriction: newPreferences });
-    } else {
-      setUserInfo({ ...userInfo, [name]: value });
-    }
+    setUserInfo({ ...userInfo, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -98,20 +89,16 @@ const Profile = () => {
 
         <div className="formGroup">
           <label>Dietary Preferences</label>
-          <div className="checkboxGroup">
-            {['Vegan', 'Vegetarian', 'Lactose intolerant', 'Nut free', 'Gluten Intolerant', 'Diabetic', 'Kosher', 'Keto'].map((pref) => (
-              <label key={pref}>
-                <input
-                  type="checkbox"
-                  name="dietary_restriction"
-                  value={pref}
-                  checked={userInfo.dietary_restriction.includes(pref)}
-                  onChange={handleChange}
-                />
-                {pref}
-              </label>
-            ))}
-          </div>
+          <select name="dietary_restriction" value={userInfo.dietary_restriction} onChange={handleChange} required>
+            <option value="">Select Dietary Preferences</option>
+            <option value="none">None</option>
+            <option value="lactose">Lactose Intolerant</option>
+            <option value="gluten">Gluten-Free</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="kosher">Kosher</option>
+            <option value="keto">Ketogenic</option>
+          </select>
         </div>
 
         <button className="formSubmitButton" type="submit">Update</button>
