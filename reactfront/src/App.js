@@ -10,6 +10,7 @@ import Signup2 from './pages/Signup2';
 import Hub from './pages/Hub';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import Meals from './pages/Meals';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/hub" element={<Hub />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/meals" element={<Meals />} />
           {/* Footer can still remain here if it's meant to be on every page */}
         </Routes>
         <Footer />

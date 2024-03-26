@@ -241,8 +241,9 @@ def add_ingredients_to_fridge_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            ingredient_names = data.get('ingredients', '').split(',')
-
+            # print(data)
+            ingredient_names = data.get('ingredients', [])
+            
             # Strip whitespace and filter out empty strings
             ingredient_names = [name.strip() for name in ingredient_names if name.strip()]
 
@@ -254,15 +255,15 @@ def add_ingredients_to_fridge_view(request):
             for ingredient_name in ingredient_names:
                 ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
                 fridge.ingredients.add(ingredient)
+                print(f"Added ingredient '{ingredient_name}' to fridge.")
             fridge.save()
-
+            print(fridge.ingredients.all())
             return JsonResponse({'message': 'Ingredients added to fridge successfully'}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
-    
 @login_required
 def view_fridge_contents_view(request):
     if request.method == 'GET':
@@ -270,24 +271,41 @@ def view_fridge_contents_view(request):
         if fridge:
             ingredients = [ingredient.name for ingredient in fridge.ingredients.all()]
             return JsonResponse({'ingredients': ingredients}, status=200)
-        return JsonResponse({'error': 'Fridge is empty'}, status=404)
+        else:
+            return JsonResponse({'error': 'Fridge not found'}, status=404)
     
 @csrf_exempt
 @login_required
 def remove_ingredients_from_fridge_view(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        ingredient_names = data.get('ingredients', [])
+        print(data)
 
         fridge = Fridge.objects.filter(user=request.user).first()
         if not fridge:
             return JsonResponse({'error': 'Fridge not found'}, status=404)
+        
+        if 'ingredient' in data:
+            ingredient_names = [data['ingredient']]
+        else:
+            if 'ingredients' in data and not data['ingredients']:
+                fridge.ingredients.clear()
+                print("All ingredients removed from the fridge.")
+                print("Ingredients in Fridge: ", fridge.ingredients.all())
+                return JsonResponse({'message': 'All ingredients removed successfully'}, status=200)
+            else:
+                ingredient_names = data.get('ingredients', [])
+                if 'ingredient' in data:
+                    ingredient_names = [data['ingredient']]
+                print("Ingredients to remove:", ingredient_names)
 
         for name in ingredient_names:
             ingredient = Ingredient.objects.filter(name=name).first()
             if ingredient:
                 fridge.ingredients.remove(ingredient)
+                print(f"Removed '{name}' from fridge.")  # Log each removed ingredient
 
+        print("Ingredients in Fridge: ", fridge.ingredients.all())
         return JsonResponse({'message': 'Ingredients removed successfully'}, status=200)
 
 @login_required
