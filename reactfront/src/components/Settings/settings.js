@@ -57,7 +57,7 @@ const Settings = () => {
   const handleDeleteAccount = async () => {
     try {
       const url = 'http://localhost:8000/user/delete/';
-      await axios.delete(url, { password: currentPasswordForDeletion }, { withCredentials: true });
+      await axios.delete(url, { data: { password: currentPasswordForDeletion }, withCredentials: true});
       setSuccessMessage('Your account has been deleted successfully.');
       navigate('/');
     } catch (error) {
@@ -65,7 +65,7 @@ const Settings = () => {
       setErrorMessage('Failed to delete account. Please try again.');
     } finally {
       setShowDeleteModal(false);
-      setCurrentPasswordForDeletion(''); // Clear the password field
+      setCurrentPasswordForDeletion('');
     }
   }; 
 

@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -103,21 +103,23 @@ def signin_view(request):
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
+@csrf_exempt
 @require_http_methods(["DELETE"])
-@login_required
+# @login_required
 def delete_account_view(request):
     if request.method == 'DELETE':
         user = request.user
-
         try:
             data = json.loads(request.body)
             password = data.get('password')
+            print(data)
             
             if not authenticate(username=user.username, password=password):
                 return JsonResponse({'error': 'The password entered is incorrect. Please retry to proceed with account deletion.'}, status=400)
 
             Fridge.objects.filter(user=user).delete()
             Schedule.objects.filter(user=user).delete()
+            logout(request)
             user.delete()
             return JsonResponse({'message': 'Account deleted successfully'}, status=200)
         except Exception as e:
