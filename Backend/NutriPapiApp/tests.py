@@ -190,12 +190,15 @@ class RecipeTests(TestCase):
     def setUp(self):
         """Create a user for the test and ingredients with calorie information."""
         self.user = User.objects.create_user(username='testuser', password='password123')
+        self.client.login(username=self.user.username, password='password123')
+        
         # Now including calories when creating ingredients
         self.ingredient1 = Ingredient.objects.create(
             name='Tomato', 
             nutritional_information='Rich in Vitamin C', 
             calories=18  # Assuming 18 calories per standard amount (e.g., per 100g)
         )
+
         self.ingredient2 = Ingredient.objects.create(
             name='Cucumber', 
             nutritional_information='Rich in Vitamin K', 
@@ -204,23 +207,35 @@ class RecipeTests(TestCase):
 
     def test_recipe_creation_and_ingredient_association(self):
         """Test creating a recipe and associating it with ingredients including calorie information."""
-        recipe = Recipe.objects.create(
+        self.recipe = Recipe.objects.create(
             name='Salad',
             preparation='Chop ingredients and mix.',
             meal_type='Lunch',
             instructions='Mix all ingredients in a bowl.'
         )
-        recipe.ingredients.add(self.ingredient1, self.ingredient2)
-        recipe.save()
+        self.recipe.ingredients.set([self.ingredient1, self.ingredient2])
 
         # Verify the recipe was created
         self.assertEqual(Recipe.objects.count(), 1)
+
         # Verify the ingredients are associated with the recipe and have correct calorie information
-        self.assertEqual(recipe.ingredients.count(), 2)
-        self.assertIn(self.ingredient1, recipe.ingredients.all())
-        self.assertIn(self.ingredient2, recipe.ingredients.all())
+        self.assertEqual(self.recipe.ingredients.count(), 2)
+        self.assertIn(self.ingredient1, self.recipe.ingredients.all())
+        self.assertIn(self.ingredient2, self.recipe.ingredients.all())
         self.assertEqual(self.ingredient1.calories, 18)
         self.assertEqual(self.ingredient2.calories, 16)
+
+    def test_log_meal_success(self):
+        """Test successfully logging a meal with all details provided."""
+        url = reverse('log_meal')
+        meal_data = {
+            'breakfast': 'Oatmeal',
+            'lunch': 'Salad',
+            'dinner': 'Grilled Chicken Breast'
+        }
+        response = self.client.post(url, json.dumps(meal_data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Meal details logged successfully', response.json()['message'])
 
 class ScheduleTests(TestCase):
     def setUp(self):
