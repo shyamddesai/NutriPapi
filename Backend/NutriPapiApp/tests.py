@@ -72,6 +72,10 @@ class UserTests(TestCase):
         """Test retrieving user information."""
         self.user.first_name = 'Test'
         self.user.gender = 'M'
+        self.user.target_weight = 70
+        self.user.current_weight = 75
+        self.user.height = 180
+        self.user.weekly_physical_activity = 5
         self.user.save()
 
         url = reverse('get_user_info')
@@ -83,6 +87,10 @@ class UserTests(TestCase):
         self.assertEqual(data['email'], 'test@example.com')
         self.assertEqual(data['first_name'], 'Test')
         self.assertEqual(data['gender'], 'M')
+        self.assertEqual(data['target_weight'], 70)
+        self.assertEqual(data['current_weight'], 75)
+        self.assertEqual(data['height'], 180)
+        self.assertEqual(data['weekly_physical_activity'], 5)
 
     def test_change_password(self):
         """Test changing the user's password."""
@@ -127,43 +135,54 @@ class FridgeIngredientTests(TestCase):
         self.user = User.objects.create_user('testuser', 'test@example.com', 'password123')
         self.client.login(username='testuser', password='password123')
  
+        # Create an Ingredient for testing
         self.ingredient = Ingredient.objects.create(name='Tomato', nutritional_information='Rich in Vitamin C', calories=18)
+
+        # Create a Fridge associated with the test user
+        self.fridge = Fridge.objects.create(user=self.user)
 
     def test_add_ingredient_to_fridge_and_calories(self):
         """Test adding an ingredient with calorie information to the fridge."""
         url = reverse('add_ingredients_to_fridge')
-        data = {'ingredients': ['Tomato']}
+        data = {'ingredients': [self.ingredient.name]}
+        
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(Fridge.objects.filter(user=self.user, ingredients__name='Tomato').exists())
+        self.assertTrue(self.fridge.ingredients.filter(name=self.ingredient.name).exists())
 
-        ingredient_in_fridge = Fridge.objects.get(user=self.user).ingredients.get(name='Tomato')
+        ingredient_in_fridge = self.fridge.ingredients.get(name=self.ingredient.name)
         self.assertEqual(ingredient_in_fridge.calories, 18)
 
-class UserInfoUpdateTests(TestCase):
-    def setUp(self):
-        """Create a user and log them in for testing."""
-        self.user = User.objects.create_user('testuser', 'test@example.com', 'password123')
-        self.client.login(username='testuser', password='password123')
+    def test_view_fridge_contents(self):
+        """Test viewing the ingredients in the fridge."""
+        self.fridge.ingredients.add(self.ingredient)
 
-    def test_user_info_update(self):
-        """Test updating user information."""
-        url = reverse('user_info')
-        data = {
-            'target_weight': 70,
-            'current_weight': 75,
-            'height': 180,
-            'weekly_physical_activity': 5,
-            'gender': 'M'
-        }
+        url = reverse('view_fridge_contents')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertIn(self.ingredient.name, data['ingredients'])
+
+    def test_remove_ingredients_from_fridge(self):
+        """Test removing ingredients from the fridge."""
+        cucumber = Ingredient.objects.create(name='Cucumber', calories=16)
+        self.fridge.ingredients.add(self.ingredient, cucumber)
+
+        # Remove one ingredient
+        url = reverse('remove_ingredients_from_fridge')
+        data = {'ingredients': [self.ingredient.name]}
+        
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        updated_user = User.objects.get(id=self.user.id)
-        self.assertEqual(updated_user.target_weight, 70)
-        self.assertEqual(updated_user.current_weight, 75)
-        self.assertEqual(updated_user.height, 180)
-        self.assertEqual(updated_user.weekly_physical_activity, 5)
-        self.assertEqual(updated_user.gender, 'M')
+        self.assertFalse(self.fridge.ingredients.filter(name=self.ingredient.name).exists()) # Check Tomato is removed
+        self.assertTrue(self.fridge.ingredients.filter(name=cucumber.name).exists()) # Check Cucumber is still there
+
+        # Test removing all ingredients
+        data = {'ingredients': []}
+        response = self.client.post(url, json.dumps(data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(self.fridge.ingredients.exists())  # The fridge should now be empty
 
 class RecipeTests(TestCase):
     def setUp(self):

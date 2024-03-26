@@ -233,7 +233,7 @@ def change_password(request):
                 return JsonResponse({'error': 'New password is required.'}, status=400)
 
             user = request.user
-            print(user)
+            # print(user)
             user.set_password(new_password)
             user.save()
             login(request, user)
@@ -299,22 +299,22 @@ def remove_ingredients_from_fridge_view(request):
         else:
             if 'ingredients' in data and not data['ingredients']:
                 fridge.ingredients.clear()
-                print("All ingredients removed from the fridge.")
-                print("Ingredients in Fridge: ", fridge.ingredients.all())
+                # print("All ingredients removed from the fridge.")
+                # print("Ingredients in Fridge: ", fridge.ingredients.all())
                 return JsonResponse({'message': 'All ingredients removed successfully'}, status=200)
             else:
                 ingredient_names = data.get('ingredients', [])
                 if 'ingredient' in data:
                     ingredient_names = [data['ingredient']]
-                print("Ingredients to remove:", ingredient_names)
+                # print("Ingredients to remove:", ingredient_names)
 
         for name in ingredient_names:
             ingredient = Ingredient.objects.filter(name=name).first()
             if ingredient:
                 fridge.ingredients.remove(ingredient)
-                print(f"Removed '{name}' from fridge.")  # Log each removed ingredient
+                # print(f"Removed '{name}' from fridge.")  # Log each removed ingredient
 
-        print("Ingredients in Fridge: ", fridge.ingredients.all())
+        # print("Ingredients in Fridge: ", fridge.ingredients.all())
         return JsonResponse({'message': 'Ingredients removed successfully'}, status=200)
 
 @login_required
@@ -388,9 +388,9 @@ def meal_reminder_view(request):
             current_datetime = datetime.datetime.combine(datetime.date.today(), current_time)
             time_difference = (meal_datetime - current_datetime).total_seconds()
 
-            print("Current time: ", current_time)
-            print("Meal time: ", meal_time)
-            print("Time difference: ", time_difference)
+            # print("Current time: ", current_time)
+            # print("Meal time: ", meal_time)
+            # print("Time difference: ", time_difference)
 
             if 0 <= time_difference <= 3600:  # Time difference within an hour
                 if Schedule.objects.filter(user=user, meal_type=meal, date_and_time__date=datetime.date.today()).exists():
