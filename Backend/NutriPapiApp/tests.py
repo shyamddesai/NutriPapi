@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta  
+from datetime import datetime, timedelta
+from django.utils import timezone
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
@@ -8,7 +9,6 @@ import json
 User = get_user_model()
 
 class UserTests(TestCase):
-
     def test_signup_view(self):
         """Test the signup view for creating a new user."""
         url = reverse('signup')
@@ -32,10 +32,35 @@ class UserTests(TestCase):
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
+    def test_account_deletion(self):
+        """Test that deleting a user account removes all associated personal information."""
+        password = 'password123'
+        user = User.objects.create_user('testuser', 'test@example.com', password)
+        self.client.login(username='testuser', password=password)
 
+        # Create related data for the user
+        fridge = Fridge.objects.create(user=user)
+        ingredient = Ingredient.objects.create(name='Tomato')
+        fridge.ingredients.add(ingredient)
+        
+        recipe = Recipe.objects.create(name='Tomato Salad', preparation='Mix all ingredients.')
+        schedule = Schedule.objects.create(user=user, meal_type='Dinner', date_and_time=timezone.now() + timezone.timedelta(days=1))
+        schedule.recipes.add(recipe)
+
+        # Delete the user account
+        url = reverse('delete_account')
+        data = {'password': password}
+        response = self.client.delete(url, json.dumps(data), content_type="application/json")
+
+        # Verify the user and all related data are deleted
+        self.assertEqual(response.status_code, 200) # Check error code for successful deletion       
+        self.assertFalse(User.objects.filter(username='testuser').exists()) # Check if user is deleted
+        self.assertFalse(Fridge.objects.filter(user=user).exists()) # Check if fridge is deleted
+        self.assertTrue(Ingredient.objects.filter(name='Tomato').exists())  # Check if ingredient still exists
+        self.assertTrue(Recipe.objects.filter(name='Tomato Salad').exists())  # Check if recipe still exists
+        self.assertFalse(Schedule.objects.filter(user=user).exists()) # Check if schedule is deleted
 
 class FridgeIngredientTests(TestCase):
-
     def setUp(self):
         """Create a user and log them in for testing."""
         self.user = User.objects.create_user('testuser', 'test@example.com', 'password123')
@@ -55,7 +80,6 @@ class FridgeIngredientTests(TestCase):
         self.assertEqual(ingredient_in_fridge.calories, 18)
 
 class UserInfoUpdateTests(TestCase):
-
     def setUp(self):
         """Create a user and log them in for testing."""
         self.user = User.objects.create_user('testuser', 'test@example.com', 'password123')
@@ -81,7 +105,6 @@ class UserInfoUpdateTests(TestCase):
         self.assertEqual(updated_user.gender, 'M')
 
 class RecipeTests(TestCase):
-
     def setUp(self):
         """Create a user for the test and ingredients with calorie information."""
         self.user = User.objects.create_user(username='testuser', password='password123')
@@ -118,7 +141,6 @@ class RecipeTests(TestCase):
         self.assertEqual(self.ingredient2.calories, 16)
 
 class ScheduleTests(TestCase):
-
     def setUp(self):
         
         self.user = User.objects.create_user(username='testuser', password='password123')
@@ -163,7 +185,3 @@ class ScheduleTests(TestCase):
         self.assertIn(self.ingredient2, recipe_ingredients)
         self.assertEqual(self.ingredient1.calories, 22)
         self.assertEqual(self.ingredient2.calories, 5)
-
-
-
-
