@@ -8,6 +8,8 @@ const Settings = () => {
     email: '',
     new_password: '',
   });
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -34,10 +36,12 @@ const Settings = () => {
     try {
       const response = await axios.post(url, { new_password: userInfo.new_password }, { withCredentials: true });
       console.log(response.data);
-      // Handle success here, e.g., showing a success message
+      setSuccessMessage('Your password has been changed successfully.');
+      setErrorMessage(''); // Clearing any previous error messages
     } catch (error) {
       console.error('Error updating password:', error.response?.data || error.message);
-      // Handle error here, e.g., showing an error message
+      setErrorMessage('Failed to update password. Please try again.');
+      setSuccessMessage('');
     }
   };
 
@@ -54,7 +58,7 @@ const Settings = () => {
         <p><strong>Email: </strong> {userInfo.email}</p>
       </div>
 
-      <h2>Change Password</h2>
+      {/* <h1>Change Password</h1> */}
       <form onSubmit={handleSubmit}>
         <div className="formGroup">
           <label>Change Password</label>
@@ -68,6 +72,8 @@ const Settings = () => {
           />
         </div>
         <button className="formSubmitButton" type="submit">Update Password</button>
+        {successMessage && <div className="successMessage">{successMessage}</div>}
+        {errorMessage && <div className="errorMessage">{errorMessage}</div>}
       </form>
     </div>
   );
