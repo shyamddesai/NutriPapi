@@ -71,7 +71,7 @@ class FridgeIngredientTests(TestCase):
     def test_add_ingredient_to_fridge_and_calories(self):
         """Test adding an ingredient with calorie information to the fridge."""
         url = reverse('add_ingredients_to_fridge')
-        data = {'ingredients': 'Tomato'}
+        data = {'ingredients': ['Tomato']}
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Fridge.objects.filter(user=self.user, ingredients__name='Tomato').exists())

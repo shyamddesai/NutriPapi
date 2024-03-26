@@ -35,7 +35,7 @@ def step_impl(context):
 @when('they add ingredients to their fridge,')
 def step_impl(context):
     url = reverse('add_ingredients_to_fridge')
-    context.response = context.client.post(url, json.dumps({'ingredients': 'apple,banana,orange'}), content_type='application/json')
+    context.response = context.client.post(url, json.dumps({'ingredients': ['apple', 'banana', 'orange']}), content_type='application/json')
 
 @then('those ingredients are stored in the user\'s fridge in the system.')
 def step_impl(context):
