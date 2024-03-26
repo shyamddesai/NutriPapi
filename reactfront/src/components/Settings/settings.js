@@ -70,57 +70,58 @@ const Settings = () => {
   }; 
 
   return (
-    <div className="updateSettings">
-      <h1>Account Settings</h1>
-      <div className="userInfoDisplay">
-        <p><strong>Username: </strong> {userInfo.username}</p>
-        <p><strong>Email: </strong> {userInfo.email}</p>
-      </div>
 
-      {/* <h1>Change Password</h1> */}
-      <form onSubmit={handleSubmit}>
-        <div className="formGroup">
-          <label>Change Password</label>
-          <input
-            type="password"
-            name="new_password"
-            placeholder="Enter new password"
-            value={userInfo.new_password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button className="formSubmitButton" type="submit">Update Password</button>
-        {successMessage && <div className="successMessage">{successMessage}</div>}
-        {errorMessage && <div className="errorMessage">{errorMessage}</div>}
-      </form>
-
-      <button onClick={() => setShowDeleteModal(true)} className="formDeleteButton">Delete Account</button>
-
-      {showDeleteModal && (
-      <div className="modal">
-        <div className="modalContent">
-          <h2>Delete Account</h2>
-          <p>Please confirm your password to delete your account:</p>
-          <input
-            type="password"
-            value={currentPasswordForDeletion}
-            onChange={(e) => setCurrentPasswordForDeletion(e.target.value)}
-            placeholder="Enter current password"
-          />
-          <div className="modalActions">
-            <button onClick={() => setShowDeleteModal(false)} className="cancelButton">
-              Cancel
-            </button>
-            <button onClick={handleDeleteAccount} className="deleteButton">
-              Delete Account
-            </button>
+    <div className='settingsBackground'>
+      <div className='settings'>
+        <header>My Account</header>
+        <body className='settingsBody'>
+          <div className='settingsAccount'>
+            <p><strong>Username:</strong> {userInfo.username}</p>
+            <p><strong>Email:</strong> {userInfo.email}</p>
           </div>
-        </div>
+          <form className='settingsPassword' onSubmit={handleSubmit}>
+            <strong>New Password:</strong>
+            <input
+              type="password"
+              name="new_password"
+              placeholder="Enter new password"
+              value={userInfo.new_password}
+              onChange={handleChange}
+              required
+            />
+            <button className="settingsPasswordBtn" type="submit">Update Password</button>
+            {successMessage && <div className="successMessage">{successMessage}</div>}
+            {errorMessage && <div className="errorMessage">{errorMessage}</div>}
+          </form>
+          
+          <button onClick={() => setShowDeleteModal(true)} className="settingsDelete">Delete Account</button>
+          {showDeleteModal && (
+          <div className="modal">
+            <div className="modalContent">
+              <h2>Delete Account</h2>
+              <p>Please confirm your password to delete your account:</p>
+              <input
+                type="password"
+                value={currentPasswordForDeletion}
+                onChange={(e) => setCurrentPasswordForDeletion(e.target.value)}
+                placeholder="Enter current password"
+              />
+              <div className="modalActions">
+                <button onClick={() => setShowDeleteModal(false)} className="cancelButton">
+                  Cancel
+                </button>
+                <button onClick={handleDeleteAccount} className="deleteButton">
+                  Delete Account
+                </button>
+              </div>
+            </div>
+          </div>
+          )}
+        </body>
       </div>
-    )}
-  </div>
-  );
-};
+    </div>
+        )
+  }
 
-export default Settings;
+
+export default Settings

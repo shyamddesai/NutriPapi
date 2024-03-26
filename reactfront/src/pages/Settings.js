@@ -1,12 +1,12 @@
 import React from 'react'
-import Nav from '../components/Login/NavBar/loginNavbar'
+import NavBarHub from '../components/NavBarHub/navbarhub'
 import HubNav from '../components/HubNav/hubNav'
 import Settings from '../components/Settings/settings';
 
 function settings() {
     return(
         <div className="settings">
-            <Nav />
+            <NavBarHub />
             <HubNav/>
             <Settings />
         </div>

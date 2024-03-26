@@ -62,73 +62,75 @@ const Profile = () => {
 
   return (
     <div className="updateUserInfo">
-      <h1>Update Information</h1>
-      <form onSubmit={handleSubmit}>
-
-      <div className="formGroup">
-          <label>First Name</label>
-          <input type="text" name="first_name" placeholder="First Name" value={userInfo.first_name} onChange={handleChange} required />
-        </div>
+      <div className='profile'>
+        <h1>Update Information</h1>
+        <form onSubmit={handleSubmit}>
 
         <div className="formGroup">
-        <label>Gender</label>
-          <select name="gender" value={userInfo.gender} onChange={handleChange} required>
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
+            <label>First Name</label>
+            <input type="text" name="first_name" placeholder="First Name" value={userInfo.first_name} onChange={handleChange} required />
+          </div>
 
-        <div className="formGroup">
-          <label>Birthday</label>
-          <input type="date" name="birthday" value={userInfo.birthday} onChange={handleChange} required />
-        </div>
-        
-        <div className="formGroup">
-          <label>Current Weight (kgs)</label>
-          <input type="range" min="40" max="140" name="current_weight" value={userInfo.current_weight} onChange={handleChange} required />
-          <output>{userInfo.current_weight} kgs</output>
-        </div>
+          <div className="formGroup">
+          <label>Gender</label>
+            <select name="gender" value={userInfo.gender} onChange={handleChange} required>
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
 
-        <div className="formGroup">
-        <label>Target Weight (kgs)</label>
-          <input type="range" min="40" max="140" name="target_weight" value={userInfo.target_weight} onChange={handleChange} required />
-          <output>{userInfo.target_weight} kgs</output>
-        </div>
+          <div className="formGroup">
+            <label>Birthday</label>
+            <input type="date" name="birthday" value={userInfo.birthday} onChange={handleChange} required />
+          </div>
+          
+          <div className="formGroup">
+            <label>Current Weight (kgs)</label>
+            <input type="range" min="40" max="140" name="current_weight" value={userInfo.current_weight} onChange={handleChange} required />
+            <output>{userInfo.current_weight} kgs</output>
+          </div>
 
-        <div className="formGroup">
-        <label>Height (cm)</label>
-          <input type="range" min="120" max="240" name="height" value={userInfo.height} onChange={handleChange} required />
-          <output>{userInfo.height} cm</output>
-        </div>
+          <div className="formGroup">
+          <label>Target Weight (kgs)</label>
+            <input type="range" min="40" max="140" name="target_weight" value={userInfo.target_weight} onChange={handleChange} required />
+            <output>{userInfo.target_weight} kgs</output>
+          </div>
 
-        <div className="formGroup">
-          <label>Weekly Activity Level</label>
-          <select name="weekly_physical_activity" value={userInfo.weekly_physical_activity} onChange={handleChange} required>
-            <option value="">Select Activity Level</option>
-            <option value="3">Sedentary (0-5 hours a week)</option>
-            <option value="9">Moderately Active (6-12 hours a week)</option>
-            <option value="16">Very Active (12+ hours a week)</option>
-          </select>
-        </div>
+          <div className="formGroup">
+          <label>Height (cm)</label>
+            <input type="range" min="120" max="240" name="height" value={userInfo.height} onChange={handleChange} required />
+            <output>{userInfo.height} cm</output>
+          </div>
 
-        <div className="formGroup">
-          <label>Dietary Preferences</label>
-          <select name="dietary_restriction" value={userInfo.dietary_restriction} onChange={handleChange} required>
-            <option value="">Select Dietary Preferences</option>
-            <option value="none">None</option>
-            <option value="lactose">Lactose Intolerant</option>
-            <option value="gluten">Gluten-Free</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="vegan">Vegan</option>
-            <option value="kosher">Kosher</option>
-            <option value="keto">Ketogenic</option>
-          </select>
-        </div>
+          <div className="formGroup">
+            <label>Weekly Activity Level</label>
+            <select name="weekly_physical_activity" value={userInfo.weekly_physical_activity} onChange={handleChange} required>
+              <option value="">Select Activity Level</option>
+              <option value="3">Sedentary (0-5 hours a week)</option>
+              <option value="9">Moderately Active (6-12 hours a week)</option>
+              <option value="16">Very Active (12+ hours a week)</option>
+            </select>
+          </div>
 
-        <button className="formSubmitButton" type="submit">Update</button>
-      </form>
+          <div className="formGroup">
+            <label>Dietary Preferences</label>
+            <select name="dietary_restriction" value={userInfo.dietary_restriction} onChange={handleChange} required>
+              <option value="">Select Dietary Preferences</option>
+              <option value="none">None</option>
+              <option value="lactose">Lactose Intolerant</option>
+              <option value="gluten">Gluten-Free</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="kosher">Kosher</option>
+              <option value="keto">Ketogenic</option>
+            </select>
+          </div>
+
+          <button className="formSubmitButton" type="submit">Update</button>
+        </form>
+      </div>
     </div>
   );
 };
