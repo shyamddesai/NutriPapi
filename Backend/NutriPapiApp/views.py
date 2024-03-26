@@ -142,6 +142,7 @@ def user_info_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print(data)
             user = request.user
             
             # Update user info based on the provided data
@@ -184,6 +185,21 @@ def user_info_view(request):
     else:
         return JsonResponse({'error': 'Only POST and GET requests are allowed'}, status=405)
     
+def get_user_info(request):
+    user = request.user
+    return JsonResponse({
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'gender': user.gender,
+        'current_weight': user.current_weight,
+        'target_weight': user.target_weight,
+        'height': user.height,
+        'dietary_restriction':user.dietary_restriction,
+        'weekly_physical_activity':user.weekly_physical_activity
+    })
+
 @csrf_exempt
 @login_required
 def add_ingredients_to_fridge_view(request):
@@ -238,19 +254,6 @@ def remove_ingredients_from_fridge_view(request):
                 fridge.ingredients.remove(ingredient)
 
         return JsonResponse({'message': 'Ingredients removed successfully'}, status=200)
-
-    
-def get_user_info(request):
-    user = request.user
-    return JsonResponse({
-        'id': user.id,
-        'username': user.username,
-        'email': user.email,
-        'target_weight': user.target_weight,
-        'dietary_restriction':user.dietary_restriction,
-        'weekly_physical_activity':user.weekly_physical_activity
-    })
-
 
 @login_required
 def caloric_intake_recommendation_view(request):
