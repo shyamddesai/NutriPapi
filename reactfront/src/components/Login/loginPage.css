@@ -4,11 +4,12 @@
     align-items: center;
     background-color: rgb(131,58,180);
     background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 45%, rgba(252,176,69,1) 100%);
-    height: 46.5rem;
-    width: 100%;
+    height: auto;
+    width: 100vw;
 }
 
 .login {
+    margin: 9rem 0rem;
     width: 100%;
     max-width: 350px; /* Adjusted width for form */
     padding: 20px; /* Padding inside the login box */

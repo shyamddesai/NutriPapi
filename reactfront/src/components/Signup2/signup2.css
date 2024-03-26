@@ -5,7 +5,7 @@
     background: rgb(9,255,234);
     background: linear-gradient(90deg, rgba(9,255,234,1) 0%, rgba(105,34,195,1) 51%, rgba(253,92,45,1) 100%);
     height: auto;
-    width: 100%;
+    width: 100vw;
     padding:40px;
 }
 option{
@@ -24,6 +24,7 @@ input{
     font-weight: 350;
 }
 .signup2{
+    margin: 2rem 0rem;
     width: 100%;
     max-width: 400px;
     padding: 20px;
@@ -76,13 +77,13 @@ input{
 
 .signup2label{
     color: black;
-    margin-bottom: 5px;
+    margin-bottom: 0.2rem;
     border:1px solid white;
-    padding: 3px;
+    /* padding: 3px; */
 }
 
 .signup2select{
-    margin-bottom: 3px;
+    margin-bottom: 0.8rem;
 }
 
 .signup2output{

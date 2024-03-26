@@ -43,7 +43,7 @@ const SignUp2 = () => {
         <h1 className='signup2Title'>Enter Your Details</h1>
         <form className='signup2Form' onSubmit={handleSubmit}>
           <label className='signup2label'>First Name</label>
-          <input type="text" name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required />
+          <input className='signup2select' type="text" name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required />
 
           <label className='signup2label'>Gender</label>
           <select className='signup2select' name="gender" value={formData.gender} onChange={handleChange} required>

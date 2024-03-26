@@ -4,11 +4,12 @@
     align-items: center;
     background: rgb(9,255,234);
     background: linear-gradient(90deg, rgba(9,255,234,1) 0%, rgba(105,34,195,1) 51%, rgba(253,92,45,1) 100%);
-    height: 46.5rem;
-    width: 100%;
+    height: auto;
+    width: 100vw;
 }
 
 .signup{
+    margin: 8rem 0rem;
     width: 100%;
     max-width: 400px;
     padding: 20px;
