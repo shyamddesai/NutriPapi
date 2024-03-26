@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.utils import timezone
 from django.test import TestCase
 from django.urls import reverse
@@ -9,29 +9,25 @@ import json
 User = get_user_model()
 
 class UserTests(TestCase):
+    def setUp(self):
+        """Create a user and log them in for testing."""
+        self.base_url = reverse('signup')
+        self.user = User.objects.create_user('testuser', 'test@example.com', 'password123')
+        self.client.login(username='testuser', password='password123')
+
     def test_signup_view(self):
         """Test the signup view for creating a new user."""
-        url = reverse('signup')
         data = {
-            'username': 'testuser',
-            'email': 'test@example.com',
-            'password': 'password123'
+            'username': 'newuser',
+            'email': 'new@example.com',
+            'password': 'newpassword123'
         }
-        response = self.client.post(url, json.dumps(data), content_type="application/json")
+        response = self.client.post(self.base_url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 201)
-        self.assertTrue(User.objects.filter(username='testuser').exists())
+        self.assertTrue(User.objects.filter(username='newuser').exists())
 
     def test_signup_follow(self):
         """Test that a user can submit additional profile information after signup."""
-        signup_url = reverse('signup')
-        signup_data = {
-            'username': 'testuser',
-            'email': 'test@example.com',
-            'password': 'password123'
-        }
-        self.client.post(signup_url, json.dumps(signup_data), content_type="application/json")
-        self.client.login(username='testuser', password='password123')
-        
         signup_follow_url = reverse('signup_follow')
         follow_data = {
             'target_weight': 70.0,
@@ -58,7 +54,6 @@ class UserTests(TestCase):
 
     def test_signin_view(self):
         """Test the signin view for authenticating a user."""
-        User.objects.create_user('testuser', 'test@example.com', 'password123')
         url = reverse('signin')
         data = {
             'username': 'testuser',
@@ -69,40 +64,62 @@ class UserTests(TestCase):
 
     def test_sign_out_view(self):
         """Test the sign out view logs a user out."""
-        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='password123')
-        self.client.login(username='testuser', password='password123')
-
         sign_out_url = reverse('signout')
         response = self.client.post(sign_out_url)
         self.assertEqual(response.status_code, 200)
 
+    def test_get_user_info(self):
+        """Test retrieving user information."""
+        self.user.first_name = 'Test'
+        self.user.gender = 'M'
+        self.user.save()
+
+        url = reverse('get_user_info')
+        response = self.client.get(url)
+        data = json.loads(response.content)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['username'], 'testuser')
+        self.assertEqual(data['email'], 'test@example.com')
+        self.assertEqual(data['first_name'], 'Test')
+        self.assertEqual(data['gender'], 'M')
+
+    def test_change_password(self):
+        """Test changing the user's password."""
+        url = reverse('change_password')
+        data = {'new_password': 'newpassword123'}
+        response = self.client.post(url, json.dumps(data), content_type="application/json")
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(User.objects.filter(username='testuser').exists())
+        self.assertTrue(User.objects.filter(email='test@example.com').exists())
+
     def test_account_deletion(self):
         """Test that deleting a user account removes all associated personal information."""
-        password = 'password123'
-        user = User.objects.create_user('testuser', 'test@example.com', password)
-        self.client.login(username='testuser', password=password)
+        url = reverse('change_password')
+        data = {'new_password': 'password123'}
+        response = self.client.post(url, json.dumps(data), content_type="application/json")
 
-        # Create related data for the user
-        fridge = Fridge.objects.create(user=user)
+        fridge = Fridge.objects.create(user=self.user)
         ingredient = Ingredient.objects.create(name='Tomato')
         fridge.ingredients.add(ingredient)
         
         recipe = Recipe.objects.create(name='Tomato Salad', preparation='Mix all ingredients.')
-        schedule = Schedule.objects.create(user=user, meal_type='Dinner', date_and_time=timezone.now() + timezone.timedelta(days=1))
+        schedule = Schedule.objects.create(user=self.user, meal_type='Dinner', date_and_time=timezone.now())
         schedule.recipes.add(recipe)
 
         # Delete the user account
         url = reverse('delete_account')
-        data = {'password': password}
+        data = {'password': data.get('new_password')}
         response = self.client.delete(url, json.dumps(data), content_type="application/json")
 
         # Verify the user and all related data are deleted
         self.assertEqual(response.status_code, 200) # Check error code for successful deletion       
         self.assertFalse(User.objects.filter(username='testuser').exists()) # Check if user is deleted
-        self.assertFalse(Fridge.objects.filter(user=user).exists()) # Check if fridge is deleted
+        self.assertFalse(Fridge.objects.filter(user=self.user).exists()) # Check if fridge is deleted
         self.assertTrue(Ingredient.objects.filter(name='Tomato').exists())  # Check if ingredient still exists
         self.assertTrue(Recipe.objects.filter(name='Tomato Salad').exists())  # Check if recipe still exists
-        self.assertFalse(Schedule.objects.filter(user=user).exists()) # Check if schedule is deleted
+        self.assertFalse(Schedule.objects.filter(user=self.user).exists()) # Check if schedule is deleted
 
 class FridgeIngredientTests(TestCase):
     def setUp(self):
@@ -210,7 +227,7 @@ class ScheduleTests(TestCase):
 
     def test_schedule_creation(self):
         # Create a schedule for a meal
-        schedule_time = datetime.now() + timedelta(days=1)  # Schedule for tomorrow
+        schedule_time = timezone.now() + timedelta(days=1)  # Schedule for tomorrow
         schedule = Schedule.objects.create(
             user=self.user,
             date_and_time=schedule_time,
