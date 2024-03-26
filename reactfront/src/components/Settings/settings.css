@@ -83,3 +83,18 @@
   .formSubmitButton:hover {
     background-color: #2828a5;
   }
+
+  .formDeleteButton {
+    background-color: #d11a2a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .formDeleteButton:hover {
+    background-color: #c70000;
+  }
