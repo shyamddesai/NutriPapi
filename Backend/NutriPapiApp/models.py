@@ -30,6 +30,7 @@ class User(AbstractUser):
         validators=[MinValueValidator(0), MaxValueValidator(168)],
         default=0 
     )
+    birthday = models.DateField(verbose_name='Birthday', null=True, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], verbose_name='Gender', default='M')
     
     def __str__(self):

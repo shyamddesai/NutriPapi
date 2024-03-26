@@ -27,7 +27,7 @@ const SignUp = () => {
       const response = await axios.post('http://localhost:8000/signup/', credentials, { withCredentials: true });
       console.log(response.data);
       localStorage.setItem('userInfo', JSON.stringify(response.data));
-      navigate('/sign-up2'); // Navigate to the next signup step upon successful signup
+      navigate('/signup2'); // Navigate to the next signup step upon successful signup
     } catch (error) {
       console.error('Error during signup:', error.response?.data || error.message);
     }

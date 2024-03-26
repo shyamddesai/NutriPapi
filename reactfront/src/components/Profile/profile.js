@@ -4,6 +4,9 @@ import './profile.css';
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({
+    first_name: '',
+    gender: '',
+    birthday: '',
     current_weight: '',
     target_weight: '',
     height: '',
@@ -24,6 +27,9 @@ const Profile = () => {
           height: data.height,
           weekly_physical_activity: data.weekly_physical_activity,
           dietary_restriction: data.dietary_restriction,
+          first_name: data.first_name,
+          gender: data.gender,
+          birthday: data.birthday,
         });
       } catch (error) {
         console.error('Failed to fetch user info:', error);
@@ -40,7 +46,7 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = 'http://localhost:8000/user/info/';
+    const url = 'http://localhost:8000/user/update_info/';
 
     console.log(userInfo);
 
@@ -58,6 +64,26 @@ const Profile = () => {
     <div className="updateUserInfo">
       <h1>Update Information</h1>
       <form onSubmit={handleSubmit}>
+
+      <div className="formGroup">
+          <label>First Name</label>
+          <input type="text" name="first_name" placeholder="First Name" value={userInfo.first_name} onChange={handleChange} required />
+        </div>
+
+        <div className="formGroup">
+        <label>Gender</label>
+          <select name="gender" value={userInfo.gender} onChange={handleChange} required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div className="formGroup">
+          <label>Birthday</label>
+          <input type="date" name="birthday" value={userInfo.birthday} onChange={handleChange} required />
+        </div>
         
         <div className="formGroup">
           <label>Current Weight (kgs)</label>
@@ -81,7 +107,7 @@ const Profile = () => {
           <label>Weekly Activity Level</label>
           <select name="weekly_physical_activity" value={userInfo.weekly_physical_activity} onChange={handleChange} required>
             <option value="">Select Activity Level</option>
-            <option value="2.5">Sedentary (0-5 hours a week)</option>
+            <option value="3">Sedentary (0-5 hours a week)</option>
             <option value="9">Moderately Active (6-12 hours a week)</option>
             <option value="16">Very Active (12+ hours a week)</option>
           </select>

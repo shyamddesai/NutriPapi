@@ -68,6 +68,8 @@ def signup_follow_view(request):
                 user.dietary_restriction = data['dietary_restriction']
             if 'first_name' in data:
                 user.first_name = data['first_name']
+            if 'birthday' in data:
+                user.birthday = data['birthday']
             user.save()
 
             # Return a dictionary of user attributes
@@ -80,13 +82,13 @@ def signup_follow_view(request):
                 'weekly_physical_activity': user.weekly_physical_activity,
                 'gender': user.gender,
                 'dietary_restriction': user.dietary_restriction,
+                'birthday': user.birthday,
             }, status=200)
         except Exception as e:
             print(e)
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
-
 
 @csrf_exempt
 def signin_view(request):
@@ -100,7 +102,7 @@ def signin_view(request):
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
-    
+
 @require_http_methods(["DELETE"])
 @login_required
 def delete_account_view(request):
@@ -166,7 +168,12 @@ def user_info_view(request):
                 user.gender = data['gender']
             if 'dietary_restriction' in data:
                 user.dietary_restriction = data['dietary_restriction']
-            
+            if 'birthday' in data:
+                user.birthday = data['birthday']    
+            if 'first_name' in data:
+                user.first_name = data['first_name']
+            if 'email' in data:
+                user.email = data['email'] 
             user.save()
             return JsonResponse({'message': 'User info updated successfully'}, status=200)
         except Exception as e:
@@ -193,12 +200,38 @@ def get_user_info(request):
         'email': user.email,
         'first_name': user.first_name,
         'gender': user.gender,
+        'birthday': user.birthday,
         'current_weight': user.current_weight,
         'target_weight': user.target_weight,
         'height': user.height,
-        'dietary_restriction':user.dietary_restriction,
-        'weekly_physical_activity':user.weekly_physical_activity
+        'dietary_restriction': user.dietary_restriction,
+        'weekly_physical_activity': user.weekly_physical_activity,
+        'password': user.password
     })
+
+@csrf_exempt
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print(data)
+
+            new_password = data.get('new_password')
+            if not new_password:
+                return JsonResponse({'error': 'New password is required.'}, status=400)
+
+            user = request.user
+            print(user)
+            user.set_password(new_password)
+            user.save()
+            login(request, user)
+
+            return JsonResponse({'success': 'Password changed successfully.'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed.'}, status=405)
 
 @csrf_exempt
 @login_required

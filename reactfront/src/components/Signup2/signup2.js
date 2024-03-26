@@ -64,7 +64,7 @@ const SignUp2 = () => {
           <label className='signup2label'>Activity Level</label>
           <select className='signup2select' name="weekly_physical_activity" value={formData.weekly_physical_activity} onChange={handleChange} required>
             <option value="">Select Activity Level</option>
-            <option value="2.5">Sedentary (0-5 hours a week)</option>
+            <option value="3">Sedentary (0-5 hours a week)</option>
             <option value="9">Moderately Active (6-12 hours a week)</option>
             <option value="16">Very Active (12+ hours a week)</option>
           </select>

@@ -1,0 +1,65 @@
+.updateSettings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: white;
+    padding: 40px;
+    height: auto;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+
+  .userInfoDisplay {
+    background-color: #f4f4f4; /* Light grey background */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px; /* Space between this section and the next */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for some depth */
+  }
+  
+  .userInfoDisplay p {
+    color: #333; /* Dark grey color for text */
+    font-size: 16px; /* Slightly larger font size */
+    line-height: 1.5; /* Spacing between lines */
+    margin-bottom: 10px; /* Space between paragraphs */
+  }
+  
+  .userInfoDisplay p strong {
+    color: #000; /* Black color for emphasis */
+    font-weight: bold;
+  }
+  
+  .updateSettings h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+  }
+
+  .formSubmitButton {
+    background-color: #3232B4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .formSubmitButton:hover {
+    background-color: #2828a5;
+  }
