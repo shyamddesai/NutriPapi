@@ -47,7 +47,7 @@ def signup_follow_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print(data)
+            # print(data)
             user = request.user
 
             if not request.user.is_authenticated:
@@ -102,6 +102,15 @@ def signin_view(request):
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
+@csrf_exempt
+@login_required
+def sign_out_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'message': 'Successfully logged out'}, status=200)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
 
 @csrf_exempt
 @require_http_methods(["DELETE"])
@@ -112,7 +121,7 @@ def delete_account_view(request):
         try:
             data = json.loads(request.body)
             password = data.get('password')
-            print(data)
+            # print(data)
             
             if not authenticate(username=user.username, password=password):
                 return JsonResponse({'error': 'The password entered is incorrect. Please retry to proceed with account deletion.'}, status=400)
@@ -146,7 +155,7 @@ def user_info_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print(data)
+            # print(data)
             user = request.user
             
             # Update user info based on the provided data
@@ -217,7 +226,7 @@ def change_password(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            print(data)
+            # print(data)
 
             new_password = data.get('new_password')
             if not new_password:
@@ -255,9 +264,9 @@ def add_ingredients_to_fridge_view(request):
             for ingredient_name in ingredient_names:
                 ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
                 fridge.ingredients.add(ingredient)
-                print(f"Added ingredient '{ingredient_name}' to fridge.")
+                # print(f"Added ingredient '{ingredient_name}' to fridge.")
             fridge.save()
-            print(fridge.ingredients.all())
+            # print(fridge.ingredients.all())
             return JsonResponse({'message': 'Ingredients added to fridge successfully'}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -279,7 +288,7 @@ def view_fridge_contents_view(request):
 def remove_ingredients_from_fridge_view(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print(data)
+        # print(data)
 
         fridge = Fridge.objects.filter(user=request.user).first()
         if not fridge:

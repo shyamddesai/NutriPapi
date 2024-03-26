@@ -21,6 +21,41 @@ class UserTests(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertTrue(User.objects.filter(username='testuser').exists())
 
+    def test_signup_follow(self):
+        """Test that a user can submit additional profile information after signup."""
+        signup_url = reverse('signup')
+        signup_data = {
+            'username': 'testuser',
+            'email': 'test@example.com',
+            'password': 'password123'
+        }
+        self.client.post(signup_url, json.dumps(signup_data), content_type="application/json")
+        self.client.login(username='testuser', password='password123')
+        
+        signup_follow_url = reverse('signup_follow')
+        follow_data = {
+            'target_weight': 70.0,
+            'current_weight': 75.0,
+            'height': 180,
+            'weekly_physical_activity': 3,
+            'gender': 'M',
+            'dietary_restriction': 'None',
+            'first_name': 'New',
+            'birthday': '2000-01-01'
+        }
+        response = self.client.post(signup_follow_url, json.dumps(follow_data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        user = User.objects.get(username='testuser')
+        self.assertEqual(user.target_weight, 70.0)
+        self.assertEqual(user.current_weight, 75.0)
+        self.assertEqual(user.height, 180)
+        self.assertEqual(user.weekly_physical_activity, 3)
+        self.assertEqual(user.gender, 'M')
+        self.assertEqual(user.dietary_restriction, 'None')
+        self.assertEqual(user.first_name, 'New')
+        self.assertEqual(str(user.birthday), '2000-01-01')
+
     def test_signin_view(self):
         """Test the signin view for authenticating a user."""
         User.objects.create_user('testuser', 'test@example.com', 'password123')
@@ -30,6 +65,15 @@ class UserTests(TestCase):
             'password': 'password123'
         }
         response = self.client.post(url, json.dumps(data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+    def test_sign_out_view(self):
+        """Test the sign out view logs a user out."""
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='password123')
+        self.client.login(username='testuser', password='password123')
+
+        sign_out_url = reverse('signout')
+        response = self.client.post(sign_out_url)
         self.assertEqual(response.status_code, 200)
 
     def test_account_deletion(self):
