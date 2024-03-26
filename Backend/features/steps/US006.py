@@ -25,7 +25,7 @@ def step_impl(context):
 def step_impl(context):
     assert context.response.status_code == 200
     response_data = json.loads(context.response.content)
-    assert 'message' in response_data and response_data['message'] == 'Meal and exercise details logged successfully'
+    assert 'message' in response_data and response_data['message'] == 'Meal details logged successfully'
     assert all(meal in response_data['details'] for meal in ['breakfast', 'lunch', 'dinner'])
 
 
