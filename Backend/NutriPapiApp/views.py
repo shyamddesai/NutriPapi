@@ -341,7 +341,7 @@ def log_meal_view(request):
 
             # We'll just return the meal log data as confirmation for now
             return JsonResponse({
-                'message': 'Meal and exercise details logged successfully',
+                'message': 'Meal details logged successfully',
                 'details': {
                     'breakfast': breakfast,
                     'lunch': lunch,
