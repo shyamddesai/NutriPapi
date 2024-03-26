@@ -13,23 +13,30 @@
 
   .profile{
     background: #F0F0F0;
-    width: 100%
+    width: 100%;
+    max-width: 65rem;
   }
   
   .updateUserInfo h1 {
     color: #333;
     background: #B4B4B4;
+    height: auto;
+    padding: 0.5rem 1rem;
+    font-size: 20px;
+    font-weight: 500;
+    width: 100%;
     margin-bottom: 20px;
   }
   
   .formGroup {
-    margin-bottom: 20px;
-    width: 100%;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.2rem;
+    width: 40rem;
   }
   
   .formGroup label {
     display: block;
-    margin-bottom: 5px;
+    /* margin-bottom: 1rem; */
     color: #333;
     font-weight: bold;
   }
@@ -76,9 +83,13 @@
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 4px;
-    font-weight: bold;
+    font-weight: 500;
     text-transform: uppercase;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-bottom: 2rem;
   }
+  
   
   .formSubmitButton:hover {
     background-color: #2828a5;
