@@ -4,6 +4,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from .models import Ingredient, Fridge, Recipe, Schedule
+from unittest.mock import patch
+import pytz
 import json
 
 User = get_user_model()
@@ -222,8 +224,9 @@ class RecipeTests(TestCase):
 
 class ScheduleTests(TestCase):
     def setUp(self):
-        
         self.user = User.objects.create_user(username='testuser', password='password123')
+        self.client.login(username=self.user.username, password='password123')
+
         self.ingredient1 = Ingredient.objects.create(
             name='Tomato', 
             nutritional_information='Vitamin C', 
@@ -232,7 +235,7 @@ class ScheduleTests(TestCase):
         self.ingredient2 = Ingredient.objects.create(
             name='Lettuce', 
             nutritional_information='Rich in vitamins A, C, and K', 
-            calories=5  # Example calorie count
+            calories=5
         )
         self.recipe = Recipe.objects.create(
             name='Salad',
@@ -240,12 +243,12 @@ class ScheduleTests(TestCase):
             meal_type='Lunch',
             instructions='Mix all ingredients in a bowl.'
         )
+
         # Add both ingredients to the recipe
         self.recipe.ingredients.set([self.ingredient1, self.ingredient2])
         self.recipe.save()
 
     def test_schedule_creation(self):
-        # Create a schedule for a meal
         schedule_time = timezone.now() + timedelta(days=1)  # Schedule for tomorrow
         schedule = Schedule.objects.create(
             user=self.user,
@@ -259,9 +262,53 @@ class ScheduleTests(TestCase):
         self.assertEqual(Schedule.objects.count(), 1)
         self.assertEqual(schedule.recipes.count(), 1)
         self.assertIn(self.recipe, schedule.recipes.all())
-        # Optionally, verify that the recipe ingredients include the expected ingredients with calories
+        
+        # Verify that the recipe ingredients include the expected ingredients with calories
         recipe_ingredients = list(schedule.recipes.first().ingredients.all())
         self.assertIn(self.ingredient1, recipe_ingredients)
         self.assertIn(self.ingredient2, recipe_ingredients)
         self.assertEqual(self.ingredient1.calories, 22)
         self.assertEqual(self.ingredient2.calories, 5)
+
+    @patch('NutriPapiApp.views.get_current_time')
+    def test_meal_reminder_within_one_hour(self, mock_get_current_time):
+        """Test receiving a meal reminder within one hour before the scheduled meal time."""
+
+        # Simulate current time being 30 minutes before the meal
+        simulated_time = timezone.now().replace(hour=7, minute=30, second=0, microsecond=0, tzinfo=pytz.utc)
+        mock_get_current_time.return_value = simulated_time
+
+        # Schedule a meal within the next hour
+        schedule_time = simulated_time + timedelta(minutes=30)
+        Schedule.objects.create(user=self.user, date_and_time=schedule_time, meal_type='breakfast')
+
+        response = self.client.get(reverse('meal_reminder'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Reminder', response.json()['reminder'])
+
+    @patch('NutriPapiApp.views.get_current_time')
+    def test_meal_reminder_outside_one_hour(self, mock_get_current_time):
+        """Test not receiving a meal reminder when outside the one-hour window before the scheduled meal time."""
+
+        # Simulate current time being 2 hours before the meal
+        simulated_time = timezone.now().replace(hour=10, minute=0, second=0, microsecond=0, tzinfo=pytz.utc)
+        mock_get_current_time.return_value = simulated_time
+
+        # Schedule a meal outside the next hour
+        schedule_time = simulated_time + timedelta(hours=2)
+        Schedule.objects.create(user=self.user, date_and_time=schedule_time, meal_type='lunch')
+
+        response = self.client.get(reverse('meal_reminder'))
+        self.assertEqual(response.status_code, 204)
+
+    @patch('NutriPapiApp.views.get_current_time')
+    def test_no_meal_scheduled(self, mock_get_current_time):
+        """Test not receiving a meal reminder when no meal is scheduled."""
+        self.client.login(username=self.user.username, password='password123')
+
+        # Simulate any current time
+        simulated_time = timezone.now().replace(hour=10, minute=0, second=0, microsecond=0, tzinfo=pytz.utc)
+        mock_get_current_time.return_value = simulated_time
+
+        response = self.client.get(reverse('meal_reminder'))
+        self.assertEqual(response.status_code, 204)
