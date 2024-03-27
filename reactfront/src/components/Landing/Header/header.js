@@ -13,16 +13,16 @@ export const Header = () => {
   return (
     <header className='headerBackground'>
         <div className='header'>
-            <div className='text'>
-                <div className='subTitle'>
+            <div className='headertext'>
+                <div className='headerSubTitle'>
                     EAT SMARTER. GET FITTER.
                 </div>
-                <div className='title'>
+                <div className='headerTitle'>
                     Tailored Nutrition, <br/>
                     for Your Unique <br/>
                     LifeStyle
                 </div>
-                <div className="desc">
+                <div className="headerDesc">
                     Input your goals, and let's tailor your path to a healthier you with custom recipe plans.
                 </div>
                 <button className='btn' onClick={handleTryClick}>

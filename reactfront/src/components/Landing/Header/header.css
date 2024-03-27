@@ -16,26 +16,26 @@
     align-items: center;
 }
 
-.text{
+.headertext{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: start;
 }
 
-.subTitle{
+.headerSubTitle{
     color: gray;
     font-weight: 14px;
     font-size: 15px;
 }
 
-.title{
+.headerTitle{
     font-weight: 18px;
     font-size: 42px;
     margin-bottom: 2px;
 }
 
-.desc{
+.headerDesc{
     font-weight: 12px;
     font-size: 17px;
     margin-bottom: 16px;
