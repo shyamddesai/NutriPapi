@@ -380,11 +380,17 @@ def calculate_recommended_calories(user, logged_calories=None):
     recommended_calories = amr * goal_multiplier.get(user.goals)
 
     # Vary the recommended calories based on the user's daily calorie intake logged
-    if logged_calories is not None:
-        recommended_calories * 1.05  # Increase calories by 5% for meeting goal
-    else:
-        recommended_calories * 0.95  # Decrease calories by 5% for not meeting goal
-    
+    if logged_calories is not None and logged_calories > 0:
+        calorie_difference = logged_calories - recommended_calories
+        calorie_difference = abs(calorie_difference)
+
+        if calorie_difference >= 100:
+            # User is exceeding their calorie goal
+            recommended_calories += 0.05 * calorie_difference # Increase recommended calories by 5% of logged calories
+        else:
+            # User is not meeting their calorie goal
+            recommended_calories -= 0.05 * calorie_difference # Decrease recommended calories by 5% of logged calories
+
     return recommended_calories
 
 @login_required
@@ -392,9 +398,17 @@ def caloric_intake_recommendation_view(request):
     if request.method == 'GET':
         user = request.user
 
-        recommended_calories = calculate_recommended_calories(user)
+        # Retrieve the user's logs for today
+        today = datetime.date.today()
+        user_logs = MealLog.objects.filter(user=user, date_and_time__date=today)
+        
+        # Extract the total logged calories for today
+        logged_calories = sum([log.calories for log in user_logs])
+
+        recommended_calories = calculate_recommended_calories(user, logged_calories)
         
         return JsonResponse({  
+            'logged_calories': logged_calories,
             'recommended_calories': recommended_calories
         }, status=200)
     return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)

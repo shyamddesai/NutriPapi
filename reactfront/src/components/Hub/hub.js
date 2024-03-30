@@ -130,7 +130,7 @@ const Hub = () => {
 
                 // Set the streak to the number of days since account creation
                 setDayStreak(daysSinceCreation);
-                console.log("Days since Account Creation: ", daysSinceCreation);
+                // console.log("Days since Account Creation: ", daysSinceCreation);
             } catch (error) {
                 console.error("Failed to fetch streak data", error);
             }
