@@ -70,11 +70,19 @@ def signup_follow_view(request):
                 user.first_name = data['first_name']
             if 'birthday' in data:
                 user.birthday = data['birthday']
+            if 'goals' in data:
+                user.goals = data['goals']
+
+            # Set the account creation date
+            if not user.created_at:
+                user.created_at = datetime.timezone.now()
+
             user.save()
 
             # Return a dictionary of user attributes
             return JsonResponse({
                 'id': user.id,
+                'created_at': user.created_at,
                 'username': user.username,
                 'target_weight': user.target_weight,
                 'current_weight': user.current_weight,
@@ -83,6 +91,7 @@ def signup_follow_view(request):
                 'gender': user.gender,
                 'dietary_restriction': user.dietary_restriction,
                 'birthday': user.birthday,
+                'goals': user.goals,
             }, status=200)
         except Exception as e:
             print(e)
@@ -175,6 +184,8 @@ def user_info_view(request):
                 if float(data['weekly_physical_activity']) < 0:
                     return JsonResponse({'error': 'Weekly Physical Activity cannot be negative'}, status=400)
                 user.weekly_physical_activity = data['weekly_physical_activity']
+            if 'goals' in data:
+                user.goals = data['goals']
             if 'gender' in data:
                 user.gender = data['gender']
             if 'dietary_restriction' in data:
@@ -207,6 +218,7 @@ def get_user_info(request):
     user = request.user
     return JsonResponse({
         'id': user.id,
+        'created_at': user.created_at,
         'username': user.username,
         'email': user.email,
         'first_name': user.first_name,
@@ -216,6 +228,7 @@ def get_user_info(request):
         'target_weight': user.target_weight,
         'height': user.height,
         'dietary_restriction': user.dietary_restriction,
+        'goals': user.goals,
         'weekly_physical_activity': user.weekly_physical_activity,
         'password': user.password
     })
@@ -317,19 +330,59 @@ def remove_ingredients_from_fridge_view(request):
         # print("Ingredients in Fridge: ", fridge.ingredients.all())
         return JsonResponse({'message': 'Ingredients removed successfully'}, status=200)
 
+# Daily required calorie calculator: https://www.verywellfit.com/how-many-calories-do-i-need-each-day-2506873
 @login_required
 def caloric_intake_recommendation_view(request):
     if request.method == 'GET':
         user = request.user
 
         # Check if the user's health profile is complete
-        if not all([user.current_weight, user.target_weight, user.height, user.weekly_physical_activity]):
+        if not all([user.current_weight, user.target_weight, user.height, user.weekly_physical_activity, user.goals, user.birthday]):
             return JsonResponse({'error': 'Please complete your health profile'}, status=400)
-        # This is a placeholder formula 
-        recommended_calories = (10 * user.current_weight + 6.25 * user.height - 5 ) * user.weekly_physical_activity
+        
+        # Calculate user's age
+        today = datetime.date.today()
+        age = today.year - user.birthday.year - ((today.month, today.day) < (user.birthday.month, user.birthday.day))
 
-        return JsonResponse({'recommended_calories': recommended_calories}, status=200)
+        # Calculate BMR
+        if user.gender == 'male':
+            bmr = 66.47 + (13.75 * user.current_weight) + (5.003 * user.height) - (6.755 * age)
+        else: 
+            if user.gender == 'female':
+                bmr = 655.1 + (9.563 * user.current_weight) + (1.850 * user.height) - (4.676 * age)
+            else:
+                return JsonResponse({'error': 'Gender not stored correctly'}, status=400)
+            
+        # Adjust BMR based on activity level to get AMR
+        activity_multiplier = {
+            1: 1.2,  # Sedentary
+            2: 1.375,  # Lightly active
+            3: 1.55,  # Moderately active
+            4: 1.725,  # Active
+            5: 1.9  # Very active
+        }
+        amr = bmr * activity_multiplier.get(user.weekly_physical_activity)
+        daily_calorie_requirement = amr
 
+        # Adjust _requirement based on user's goal
+        goal_multiplier = {
+            'lose': 0.8,  # 20% calorie deficit for weight loss
+            'maintain': 1.0,  # No adjustment needed
+            'gain': 1.2   # 20% calorie surplus for weight gain
+        }
+        recommended_calories = amr * goal_multiplier.get(user.goals)
+        return JsonResponse({  
+            'age': age,
+            'gender': user.gender,
+            'current_weight': user.current_weight,
+            'target_weight': user.target_weight,
+            'height': user.height,
+            'weekly_physical_activity': user.weekly_physical_activity,
+            'goals': user.goals,
+            'bmr': bmr,
+            'daily_calorie_requirement': daily_calorie_requirement,
+            'recommended_calories': recommended_calories
+        }, status=200)
     return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
 @csrf_exempt

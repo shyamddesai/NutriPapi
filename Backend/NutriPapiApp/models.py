@@ -1,3 +1,5 @@
+from datetime import timezone
+import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -21,15 +23,17 @@ class Ingredient(models.Model):
         return self.name
 
 class User(AbstractUser):
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created At')
     target_weight = models.FloatField(verbose_name='Target Weight', default=80.0)
     current_weight = models.FloatField(verbose_name='Current Weight', default=80.0)
     dietary_restriction = models.CharField(max_length=255, verbose_name='Dietary Restriction', null=True, blank=True)
     height = models.FloatField(verbose_name='Height in cm', default=160.0)
     weekly_physical_activity = models.IntegerField(
         verbose_name='Weekly Physical Activity in hours',
-        validators=[MinValueValidator(0), MaxValueValidator(168)],
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
         default=0 
     )
+    goals = models.CharField(max_length=255, verbose_name='Goals', null=True, blank=True)
     birthday = models.DateField(verbose_name='Birthday', null=True, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], verbose_name='Gender', default='M')
     

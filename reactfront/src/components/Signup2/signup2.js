@@ -55,7 +55,7 @@ const SignUp2 = () => {
 
           <label className='signup2label'>Goals</label>
           <select className='signup2select' name="goals" value={formData.goals} onChange={handleChange} required>
-            <option value="">Select Activity Level</option>
+            <option value="">Select Goals</option>
             <option value="lose">Lose Weight</option>
             <option value="maintain">Maintain Weight</option>
             <option value="gain">Gain Weight</option>
@@ -64,9 +64,11 @@ const SignUp2 = () => {
           <label className='signup2label'>Activity Level</label>
           <select className='signup2select' name="weekly_physical_activity" value={formData.weekly_physical_activity} onChange={handleChange} required>
             <option value="">Select Activity Level</option>
-            <option value="3">Sedentary (0-5 hours a week)</option>
-            <option value="9">Moderately Active (6-12 hours a week)</option>
-            <option value="16">Very Active (12+ hours a week)</option>
+            <option value="1">Sedentary (little or no exercise)</option>
+            <option value="2">Lightly active (exercise 1–3 days/week)</option>
+            <option value="3">Moderately active (exercise 3–5 days/week)</option>
+            <option value="4">Active (exercise 6–7 days/week)</option>
+            <option value="5">Very active (hard exercise 6–7 days/week)</option>
           </select>
 
           <label className='signup2label'>Birthday</label>
