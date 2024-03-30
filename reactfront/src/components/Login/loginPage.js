@@ -11,13 +11,6 @@ const LoginPage = () => {
 
   const navigate = useNavigate(); // Initialize useNavigate
 
-  useEffect(() => {
-    const token = localStorage.getItem('userInfo'); // Check for the token in local storage
-    if (token) {
-      navigate('/hub'); // If token exists, redirect to /hub
-    }
-  }, [navigate]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCredentials(prevState => ({

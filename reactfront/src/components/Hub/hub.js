@@ -11,10 +11,11 @@ const Hub = () => {
     const [profilePhoto, setProfilePhoto] = useState(null);
     const [profilePhotoPreview, setProfilePhotoPreview] = useState(icon); // Use the icon as the default
     const [recommendedCalories, setRecommendedCalories] = useState(null);
+    const [goals, setGoals] = useState('maintain');
     const [currentWeight, setCurrentWeight] = useState(0);
     const [targetWeight, setTargetWeight] = useState(0);
-    const [weightLost, setWeightLost] = useState(0);
     const [weightToLose, setWeightToLose] = useState(0);
+    const [weightToGain, setWeightToGain] = useState(0);
     const [dayStreak, setDayStreak] = useState(0);
     const [meals, setMeals] = useState({
         breakfast: {
@@ -82,18 +83,35 @@ const Hub = () => {
     useEffect(() => {
         const fetchWeightData = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/calorie_recommendation/', { withCredentials: true });
-                setCurrentWeight(response.data.currentWeight);
-                setTargetWeight(response.data.targetWeight);
-                setWeightLost(response.data.weightLost);
-                setWeightToLose(response.data.targetWeight - response.data.currentWeight); // Assuming this calculation is correct for your case
+                const response = await axios.get('http://localhost:8000/user/get_info/', { withCredentials: true });
+                setCurrentWeight(response.data.current_weight);
+                setTargetWeight(response.data.target_weight);
+                if (goals === 'gain') {
+                    setWeightToGain(response.data.target_weight - response.data.current_weight);
+                } else if (goals === 'lose') {
+                    setWeightToLose(response.data.current_weight - response.data.target_weight);
+                }
             } catch (error) {
                 console.error("Failed to fetch weight data", error);
             }
         };
 
         fetchWeightData();
-    }, []); // Runs once after initial render
+    }, [goals]);
+
+
+    useEffect(() => {
+        const fetchGoals = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/user/get_info/', { withCredentials: true });
+                setGoals(response.data.goals);
+            } catch (error) {
+                console.error("Failed to fetch goals", error);
+            }
+        };
+
+        fetchGoals();
+    }, []);
 
 
     useEffect(() => {
@@ -103,22 +121,21 @@ const Hub = () => {
                 const creationDateResponse = await axios.get('http://localhost:8000/user/get_info/', { withCredentials: true });
                 const creationDateString = creationDateResponse.data.created_at;
                 const creationDate = new Date(creationDateString);
-                console.log("Account Creation Date", creationDate);
-                
+                console.log("Account Creation: ", creationDate);
+
                 // Calculate the difference in days between the current date and the creation date
                 const currentDate = new Date();
                 const timeDiff = Math.abs(currentDate.getTime() - creationDate.getTime());
-                console.log("Time Difference", timeDiff);
                 const daysSinceCreation = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                
+
                 // Set the streak to the number of days since account creation
                 setDayStreak(daysSinceCreation);
-                console.log("Days since Account Creation", daysSinceCreation);
+                console.log("Days since Account Creation: ", daysSinceCreation);
             } catch (error) {
                 console.error("Failed to fetch streak data", error);
             }
         };
-    
+
         fetchStreakData();
     }, []);
 
@@ -171,21 +188,24 @@ const Hub = () => {
 
                         <div className='hubVerticalLine'></div>
 
-
                         <div className='hubSummaryWeight'>
-                            <div className='hubSummaryWeights'>
-                                Weight Lost So Far:
-                                <div className='hubSummaryWeightNumber'>
-                                    {weightLost} kgs
+                            {goals === 'lose' && (
+                                <div className='hubSummaryWeights'>
+                                    Weight To Lose:
+                                    <div className='hubSummaryWeightNumber'>
+                                        {weightToLose} kgs
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
-                            <div className='hubSummaryWeights'>
-                                Weight To Lose:
-                                <div className='hubSummaryWeightNumber'>
-                                    {weightToLose} kgs
+                            {goals === 'gain' && (
+                                <div className='hubSummaryWeights'>
+                                    Weight To Gain:
+                                    <div className='hubSummaryWeightNumber'>
+                                        {weightToGain} kgs
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             <div className='hubSummaryStreakBox'>
                                 <div className='hubSummaryStreakBoxText'>
@@ -196,7 +216,7 @@ const Hub = () => {
                                 </div>
                             </div>
                         </div>
-                    </div> {/* Closing div for hubBody */}
+                    </div>
                 </section>
 
                 <section className='hubTodayMeal'>
@@ -233,8 +253,8 @@ const Hub = () => {
                         
                     </div>
                 </section> */}
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

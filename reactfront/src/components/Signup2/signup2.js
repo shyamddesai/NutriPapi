@@ -7,7 +7,6 @@ const SignUp2 = () => {
   const [formData, setFormData] = useState({
     first_name: '',
     gender: '',
-    goals: '',
     weekly_physical_activity: '',
     birthday: '',
     current_weight: '',
@@ -51,14 +50,6 @@ const SignUp2 = () => {
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
-          </select>
-
-          <label className='signup2label'>Goals</label>
-          <select className='signup2select' name="goals" value={formData.goals} onChange={handleChange} required>
-            <option value="">Select Goals</option>
-            <option value="lose">Lose Weight</option>
-            <option value="maintain">Maintain Weight</option>
-            <option value="gain">Gain Weight</option>
           </select>
 
           <label className='signup2label'>Activity Level</label>

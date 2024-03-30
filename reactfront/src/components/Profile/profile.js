@@ -42,6 +42,7 @@ const Profile = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setUserInfo({ ...userInfo, [name]: value });
+
   };
 
   const handleSubmit = async (e) => {
@@ -102,16 +103,6 @@ const Profile = () => {
           <label>Height (cm)</label>
             <input type="range" min="120" max="240" name="height" value={userInfo.height} onChange={handleChange} required />
             <output>{userInfo.height} cm</output>
-          </div>
-
-          <div className="formGroup">
-            <label>Goals</label>
-            <select name="goals" value={userInfo.goals} onChange={handleChange} required>
-              <option value="">Select Goals</option>
-              <option value="lose">Lose Weight</option>
-              <option value="maintain">Maintain Weight</option>
-              <option value="gain">Gain Weight</option>
-            </select>
           </div>
 
           <div className="formGroup">

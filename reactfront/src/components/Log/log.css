@@ -40,6 +40,12 @@
     margin-bottom: 5px;
 }
 
+.logDate {
+    text-align: left;
+    color: black;
+    margin-bottom: 5px;
+}
+
 .inputField {
     width: 100%;
     padding: 10px;

@@ -18,7 +18,6 @@ const Log = () => {
             [name]: value === '' ? 0 : isNaN(value) ? mealLog[name] : parseInt(value),
         });
     };
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -39,10 +38,14 @@ const Log = () => {
         }
     };
 
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().slice(0, 10);
+
     return (
         <div className="logContainer">
             <div className="card">
                 <h1 className="title">Daily Calories Log</h1>
+                <h3 className="logDate">Date: {today}</h3>
                 <form onSubmit={handleSubmit} className="form">
                     <div className="inputGroup">
                         <label htmlFor="breakfast" className="label">Breakfast</label>
@@ -102,7 +105,7 @@ const Log = () => {
 
             {showSuccess && (
                 <div className="successNotification">
-                    Log submitted successfully!
+                    Log successfully submitted for today!
                 </div>
             )}
         </div>
