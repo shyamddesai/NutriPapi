@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import caloric_intake_recommendation_view, sign_out_view, change_password, delete_account_view, meal_reminder_view, log_meal_view, get_user_info, remove_ingredients_from_fridge_view, signup_view, signup_follow_view, signin_view, user_info_view, add_ingredients_to_fridge_view, view_fridge_contents_view
+from .views import view_meal_logs, delete_meal_logs_for_today, caloric_intake_recommendation_view, sign_out_view, change_password, delete_account_view, meal_reminder_view, log_meal_view, get_user_info, remove_ingredients_from_fridge_view, signup_view, signup_follow_view, signin_view, user_info_view, add_ingredients_to_fridge_view, view_fridge_contents_view
 
 urlpatterns = [
     path('signup/', signup_view, name='signup'),
@@ -15,5 +15,7 @@ urlpatterns = [
     path('fridge/remove_ingredient/', remove_ingredients_from_fridge_view, name='remove_ingredients_from_fridge'),
     path('calorie_recommendation/', caloric_intake_recommendation_view, name='caloric_intake_recommendation'),
     path('meals/log/', log_meal_view, name='log_meal'),
+    path('meals/view_log/', view_meal_logs, name='view_meal_logs'),
+    path('meals/logs/delete/', delete_meal_logs_for_today, name='delete_meal_logs_for_today'),
     path('reminder/', meal_reminder_view, name='meal_reminder'),
 ]

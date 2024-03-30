@@ -41,8 +41,12 @@ class User(AbstractUser):
 class MealLog(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='logs', verbose_name='User')
     date_and_time = models.DateTimeField(auto_now_add=True, verbose_name='Date and Time')
-    meal_type = models.CharField(max_length=100, verbose_name='Meal Type')
-    calories = models.IntegerField(verbose_name='Calories')
+    calories = models.IntegerField(verbose_name='Calories') # Total calories for the meal
+    breakfast_calories = models.IntegerField(verbose_name='Calories for Breakfast', null=True, blank=True)
+    lunch_calories = models.IntegerField(verbose_name='Calories for Lunch', null=True, blank=True)
+    dinner_calories = models.IntegerField(verbose_name='Calories for Dinner', null=True, blank=True)
+    snacks_calories = models.IntegerField(verbose_name='Calories for Snacks', null=True, blank=True)
+
 
     def __str__(self):
         return f"{self.user.username}'s {self.meal_type} on {self.date_and_time}"

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from .models import Fridge, Ingredient, Schedule
+from .models import Fridge, Ingredient, Schedule, MealLog
 from NutriPapiApp.models import Fridge, Ingredient, Schedule
 import json
 import datetime
@@ -341,7 +341,7 @@ def remove_ingredients_from_fridge_view(request):
         return JsonResponse({'message': 'Ingredients removed successfully'}, status=200)
 
 # Daily required calorie calculator: https://www.verywellfit.com/how-many-calories-do-i-need-each-day-2506873
-def calculate_recommended_calories(user):
+def calculate_recommended_calories(user, logged_calories=None):
     # Check if the user's health profile is complete
     if not all([user.current_weight, user.target_weight, user.height, user.weekly_physical_activity, user.goals, user.birthday]):
         return JsonResponse({'error': 'Please complete your health profile'}, status=400)
@@ -377,8 +377,15 @@ def calculate_recommended_calories(user):
         'gain': 1.2   # 20% calorie surplus for weight gain
     }
 
-    return amr * goal_multiplier.get(user.goals)
+    recommended_calories = amr * goal_multiplier.get(user.goals)
 
+    # Vary the recommended calories based on the user's daily calorie intake logged
+    if logged_calories is not None:
+        recommended_calories * 1.05  # Increase calories by 5% for meeting goal
+    else:
+        recommended_calories * 0.95  # Decrease calories by 5% for not meeting goal
+    
+    return recommended_calories
 
 @login_required
 def caloric_intake_recommendation_view(request):
@@ -423,8 +430,37 @@ def log_meal_view(request):
             else:
                 calorie_status = 'You have exceeded your daily calorie goal. You may want to reduce your intake.'
 
+            # Store the current date
+            log_date = datetime.date.today().isoformat()
+
+            # Check if a MealLog entry for today already exists for the user
+            existing_entry = MealLog.objects.filter(user=user, date_and_time__date=log_date).first()
+
+            if existing_entry:
+                # Update the existing entry
+                existing_entry.breakfast_calories = breakfast
+                existing_entry.lunch_calories = lunch
+                existing_entry.dinner_calories = dinner
+                existing_entry.snacks_calories = snacks
+                existing_entry.calories = calories_today
+                existing_entry.date_and_time = log_date
+                existing_entry.save()
+            else:
+                # Create a new MealLog instance and save it to the database
+                meal_log = MealLog(
+                    user=user,
+                    date_and_time=log_date,
+                    calories=calories_today,
+                    breakfast_calories=breakfast,
+                    lunch_calories=lunch,
+                    dinner_calories=dinner,
+                    snacks_calories=snacks
+                )
+                meal_log.save()
+
             return JsonResponse({
                 'calorie_status': calorie_status,
+                'log_date': log_date,
                 'details': {
                     'breakfast': breakfast,
                     'lunch': lunch,
@@ -440,6 +476,37 @@ def log_meal_view(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
+@csrf_exempt
+@login_required
+def view_meal_logs(request):
+    if request.method == 'GET':
+        user = request.user
+        today = datetime.date.today()
+        meal_logs = MealLog.objects.filter(user=user, date_and_time__date=today)
+        logs_data = [{
+            'id': log.id,
+            'date_and_time': log.date_and_time,
+            'calories': log.calories,
+            'breakfast': log.breakfast_calories,
+            'lunch': log.lunch_calories,
+            'dinner': log.dinner_calories,
+            'snacks': log.snacks_calories
+        } for log in meal_logs]
+        return JsonResponse({'meal_logs': logs_data}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+@csrf_exempt
+@login_required
+def delete_meal_logs_for_today(request):
+    if request.method == 'GET': # This method is intended to delete all logs (as an admin from the browser) for testing purposes
+        user = request.user
+        today = datetime.date.today()
+        deleted_count, _ = MealLog.objects.filter(user=user, date_and_time__date=today).delete()
+        return JsonResponse({'message': f'{deleted_count} meal logs deleted for today'}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
 def get_current_time():
     return datetime.datetime.now()

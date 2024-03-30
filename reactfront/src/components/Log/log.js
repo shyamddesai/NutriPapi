@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './log.css';
 
 const Log = () => {
@@ -10,6 +10,23 @@ const Log = () => {
         snacks: 0,
     });
     const [showSuccess, setShowSuccess] = useState(false);
+
+    useEffect(() => {
+        const fetchMealLogs = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/meals/view_log/', { withCredentials: true });
+                const mealLogs = response.data.meal_logs;
+                if (mealLogs.length !== 0) {
+                    const { breakfast, lunch, dinner, snacks } = mealLogs[0];
+                    setMealLog({ breakfast: breakfast, lunch: lunch, dinner: dinner, snacks: snacks });
+                }
+            } catch (error) {
+                console.error('Error fetching meal logs:', error);
+            }
+        };
+
+        fetchMealLogs();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
