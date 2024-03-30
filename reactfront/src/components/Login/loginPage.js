@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './loginPage.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,13 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    const token = localStorage.getItem('userInfo'); // Check for the token in local storage
+    if (token) {
+      navigate('/hub'); // If token exists, redirect to /hub
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
