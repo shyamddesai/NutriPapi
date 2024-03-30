@@ -4,17 +4,21 @@ import './log.css';
 
 const Log = () => {
     const [mealLog, setMealLog] = useState({
-        breakfast: '',
-        lunch: '',
-        dinner: '',
-        exercise: '',
+        breakfast: 0,
+        lunch: 0,
+        dinner: 0,
+        snacks: 0,
     });
     const [showSuccess, setShowSuccess] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setMealLog({ ...mealLog, [name]: value });
+        setMealLog({
+            ...mealLog,
+            [name]: value === '' ? 0 : isNaN(value) ? mealLog[name] : parseInt(value),
+        });
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,7 +42,7 @@ const Log = () => {
     return (
         <div className="logContainer">
             <div className="card">
-                <h1 className="title">Daily Log</h1>
+                <h1 className="title">Daily Calories Log</h1>
                 <form onSubmit={handleSubmit} className="form">
                     <div className="inputGroup">
                         <label htmlFor="breakfast" className="label">Breakfast</label>
@@ -49,6 +53,7 @@ const Log = () => {
                             value={mealLog.breakfast}
                             onChange={handleChange}
                             className="inputField"
+                            placeholder="Enter breakfast calories"
                             required
                         />
                     </div>
@@ -61,6 +66,7 @@ const Log = () => {
                             value={mealLog.lunch}
                             onChange={handleChange}
                             className="inputField"
+                            placeholder="Enter lunch calories"
                             required
                         />
                     </div>
@@ -73,6 +79,20 @@ const Log = () => {
                             value={mealLog.dinner}
                             onChange={handleChange}
                             className="inputField"
+                            placeholder="Enter dinner calories"
+                            required
+                        />
+                    </div>
+                    <div className="inputGroup">
+                        <label htmlFor="snacks" className="label">Snacks</label>
+                        <input
+                            type="text"
+                            id="snacks"
+                            name="snacks"
+                            value={mealLog.snacks}
+                            onChange={handleChange}
+                            className="inputField"
+                            placeholder="Enter snacks calories"
                             required
                         />
                     </div>

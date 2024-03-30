@@ -344,17 +344,19 @@ def log_meal_view(request):
             breakfast = data.get('breakfast')
             lunch = data.get('lunch')
             dinner = data.get('dinner')
+            snacks = data.get('snacks')
 
-            if not all([breakfast, lunch, dinner]):
-                return JsonResponse({'error': 'Meal details are required'}, status=400)
+            if not all([breakfast, lunch, dinner, snacks]):
+                return JsonResponse({'error': 'Calorie count required'}, status=400)
 
             # We'll just return the meal log data as confirmation for now
             return JsonResponse({
-                'message': 'Meal details logged successfully',
+                'message': 'Calories logged successfully',
                 'details': {
                     'breakfast': breakfast,
                     'lunch': lunch,
-                    'dinner': dinner
+                    'dinner': dinner,
+                    'snacks': snacks
                 }
             }, status=200)
 
@@ -362,10 +364,10 @@ def log_meal_view(request):
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
-
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
     
+
 MEAL_TIMES = {
     'breakfast': datetime.time(8, 0),  # Reminder at 7:00 AM for breakfast at 8:00 AM
     'lunch': datetime.time(12, 0),     # Reminder at 11:00 AM for lunch at 12:00 PM

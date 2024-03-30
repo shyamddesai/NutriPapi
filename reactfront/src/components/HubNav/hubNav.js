@@ -7,6 +7,7 @@ const hubnav = () => {
         <div className='hubnavheader'>
           <a href="/hub" className="hubnavTab">Home</a>
           <a href="/meals" className="hubnavTab">Meals</a>
+          <a href="/log" className="hubnavTab">Log</a>
           <a href="/profile" className="hubnavTab">Profile</a>
           <a href="/settings" className="hubnavTab">Settings</a>       
         </div>
