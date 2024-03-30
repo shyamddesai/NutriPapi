@@ -1,5 +1,3 @@
-from datetime import timezone
-import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -39,6 +37,15 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.username
+    
+class MealLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='logs', verbose_name='User')
+    date_and_time = models.DateTimeField(auto_now_add=True, verbose_name='Date and Time')
+    meal_type = models.CharField(max_length=100, verbose_name='Meal Type')
+    calories = models.IntegerField(verbose_name='Calories')
+
+    def __str__(self):
+        return f"{self.user.username}'s {self.meal_type} on {self.date_and_time}"
 
 class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedules', verbose_name='User')
