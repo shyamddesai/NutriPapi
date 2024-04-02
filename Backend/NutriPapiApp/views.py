@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from .models import Fridge, Ingredient, Schedule, MealLog
+from .models import Fridge, Ingredient, Recipe, Schedule, MealLog
 from NutriPapiApp.models import Fridge, Ingredient, Schedule
 from NutriPapiApp.encryption_utils import encrypt_data, decrypt_data
 from django.utils import timezone
@@ -619,3 +619,41 @@ def search_view(request):
         return JsonResponse({'results': results_data})
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed
+    
+@csrf_exempt
+def import_recipes_and_ingredients(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    # Assuming JSON data is sent with the 'data' key in form data
+    json_data = request.POST.get('data')
+    if not json_data:
+        return JsonResponse({'error': 'No data provided'}, status=400)
+    
+    try:
+        data = json.loads(json_data)
+        
+        for recipe_data in data:
+            # Assuming 'title', 'preparation', 'instructions', and 'ingredients' are keys in each recipe object
+            recipe, created = Recipe.objects.get_or_create(
+                name=recipe_data['title'],
+                defaults={
+                    'preparation': recipe_data.get('preparation', ''),
+                    'instructions': recipe_data.get('instructions', ''),
+                    # Add other fields as necessary
+                }
+            )
+            
+            for ingredient_name in recipe_data['ingredients']:
+                ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
+                recipe.ingredients.add(ingredient)
+        
+        return JsonResponse({'message': 'Recipes and ingredients imported successfully'}, status=200)
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
