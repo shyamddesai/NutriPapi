@@ -608,3 +608,14 @@ def meal_reminder_view(request):
             return JsonResponse({'message': 'No meal suggestions available, so no reminders can be provided.'}, status=204)  # 204 No Content
         else:
             return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed
+
+@csrf_exempt
+@login_required
+def search_view(request):
+    if request.method == 'GET':
+        keyword=request.GET.get('keyword')
+        results = Ingredient.objects.filter(name__icontains=keyword)
+        results_data = [{'name': result.name, 'nutritional_information': result.nutritional_information, 'calories': result.calories} for result in results]
+        return JsonResponse({'results': results_data})
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed

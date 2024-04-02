@@ -18,4 +18,5 @@ urlpatterns = [
     path('meals/view_log/', view_meal_logs, name='view_meal_logs'),
     path('meals/logs/delete/', delete_meal_logs_for_today, name='delete_meal_logs_for_today'),
     path('reminder/', meal_reminder_view, name='meal_reminder'),
+    path('search/', search_view, name='search')
 ]
