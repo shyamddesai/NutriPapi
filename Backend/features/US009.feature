@@ -14,7 +14,7 @@ Feature: Searching for ingredients to receive nutritional information
     When the user searches for an ingredient that is not available in the system's database.
     Then the system should display a message indicating that the ingredient is not found.
 
-  Scenario: Searching for an ingredient with a vague or incomplete name (Error Flow)
+  Scenario: Searching for an ingredient with no input (Error Flow)
     Given the user is logged into the NutriPapi system and navigates to the ingredient search section.
-    When the user enters a vague or incomplete name for an ingredient.
-    Then the system should ask the user to provide more specific information.
+    When the user enters nothing into the search box for ingredient.
+    Then the system should ask the user to enter the name.
