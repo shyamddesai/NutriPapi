@@ -247,3 +247,30 @@ INFO 2024-03-26 20:22:38,006 basehttp 24917 123145464631296 "GET /user/get_info/
 INFO 2024-03-26 20:22:40,119 basehttp 24917 123145464631296 "GET /user/get_info/ HTTP/1.1" 200 352
 INFO 2024-03-26 20:22:40,123 basehttp 24917 123145481420800 "GET /user/get_info/ HTTP/1.1" 200 352
 INFO 2024-03-27 13:12:00,132 autoreload 31071 140704438302912 Watching for file changes with StatReloader
+INFO 2024-04-02 16:54:09,390 autoreload 27552 27716 Watching for file changes with StatReloader
+INFO 2024-04-02 16:54:23,926 autoreload 28828 26584 Watching for file changes with StatReloader
+INFO 2024-04-02 17:03:27,269 autoreload 27388 29356 Watching for file changes with StatReloader
+INFO 2024-04-02 17:05:21,385 basehttp 27388 20976 "OPTIONS /signup/ HTTP/1.1" 200 0
+INFO 2024-04-02 17:05:22,540 basehttp 27388 21068 "POST /signup/ HTTP/1.1" 201 29
+INFO 2024-04-02 17:07:18,064 basehttp 27388 10388 "OPTIONS /signup_follow/ HTTP/1.1" 200 0
+INFO 2024-04-02 17:07:18,102 basehttp 27388 8484 "POST /signup_follow/ HTTP/1.1" 200 259
+INFO 2024-04-02 17:07:18,205 basehttp 27388 7516 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:18,212 basehttp 27388 11956 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:18,216 basehttp 27388 26532 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:18,219 basehttp 27388 27204 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:18,233 basehttp 27388 7516 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:18,240 basehttp 27388 26532 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:18,248 basehttp 27388 11956 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:18,263 basehttp 27388 7976 "GET /calorie_recommendation/ HTTP/1.1" 200 66
+INFO 2024-04-02 17:07:18,264 basehttp 27388 8484 "GET /calorie_recommendation/ HTTP/1.1" 200 66
+INFO 2024-04-02 17:07:34,213 basehttp 27388 27204 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:34,213 basehttp 27388 7516 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:39,676 basehttp 27388 7976 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:39,679 basehttp 27388 27204 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:39,680 basehttp 27388 26532 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:39,681 basehttp 27388 7516 "GET /calorie_recommendation/ HTTP/1.1" 200 66
+INFO 2024-04-02 17:07:39,683 basehttp 27388 11956 "GET /calorie_recommendation/ HTTP/1.1" 200 66
+INFO 2024-04-02 17:07:39,683 basehttp 27388 8484 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:39,695 basehttp 27388 27204 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:39,716 basehttp 27388 7976 "GET /user/get_info/ HTTP/1.1" 200 467
+INFO 2024-04-02 17:07:39,724 basehttp 27388 26532 "GET /user/get_info/ HTTP/1.1" 200 467
