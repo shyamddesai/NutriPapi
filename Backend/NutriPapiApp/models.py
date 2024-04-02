@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -35,7 +37,11 @@ class User(AbstractUser):
     goals = models.CharField(max_length=255, verbose_name='Goals', null=True, blank=True)
     birthday = models.DateField(verbose_name='Birthday', null=True, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], verbose_name='Gender', default='M')
-    
+
+    # Add fields for account lockout
+    failed_login_attempts = models.IntegerField(default=0, verbose_name='Failed Login Attempts')
+    lockout_until = models.DateTimeField(null=True, blank=True, verbose_name='Lockout Until')
+        
     # Add encrypted fields for sensitive data
     encrypted_birthday = models.BinaryField(verbose_name='Encrypted Birthday', null=True, blank=True)
     encrypted_email = models.BinaryField(verbose_name='Encrypted Email', null=True, blank=True)
@@ -64,6 +70,22 @@ class User(AbstractUser):
 
     def get_height(self):
         return decrypt_data(self.encrypted_height) if self.encrypted_height else None
+    
+    def is_locked(self):
+        """Check if the user's account is currently locked."""
+        return (self.lockout_until and timezone.now() < self.lockout_until) # Returns True if the lockout is still active
+
+    def lock_account(self):
+        """Lock the user's account due to repeated failed login attempts."""
+        self.lockout_until = timezone.now() + timedelta(minutes=5) # Lock the account for 5 minutes
+        self.failed_login_attempts = 0 # Reset the count of failed login attempts
+        self.save()
+
+    def reset_failed_attempts(self):
+        """Reset the count of failed login attempts."""
+        self.failed_login_attempts = 0
+        self.lockout_until = None
+        self.save()
 
     def __str__(self):
         return self.username

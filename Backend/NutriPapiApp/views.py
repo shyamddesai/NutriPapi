@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Fridge, Ingredient, Schedule, MealLog
 from NutriPapiApp.models import Fridge, Ingredient, Schedule
 from NutriPapiApp.encryption_utils import encrypt_data, decrypt_data
-import json
-import datetime
+from django.utils import timezone
+import datetime, json
 
 User = get_user_model()
 
@@ -41,8 +41,14 @@ def signup_view(request):
                 password=data['password']
             )
 
+            # Set the account creation date
+            if not user.created_at:
+                user.created_at = datetime.timezone.now()
+
             # Encrypt sensitive fields
             user.encrypted_email = encrypt_data(data['email'])
+
+            user.save()
             
             login(request, user)
             return JsonResponse({'id': user.id, 'username': user.username}, status=201)
@@ -93,10 +99,6 @@ def signup_follow_view(request):
                 user.goals = 'lose'
             else:
                 user.goals = 'maintain'
-            
-            # Set the account creation date
-            if not user.created_at:
-                user.created_at = datetime.timezone.now()
 
             # Encrypt sensitive fields
             user.encrypted_weight = encrypt_data(str(user.current_weight))
@@ -129,11 +131,31 @@ def signup_follow_view(request):
 def signin_view(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        user = authenticate(username=data['username'], password=data['password'])
-        if user is not None:
-            login(request, user)
-            return JsonResponse({'id': user.id, 'username': user.username}, status=200)  # User logged in
-        else:
+        username = data.get('username')
+        password = data.get('password')
+
+        try:
+            user = User.objects.get(username=username)
+
+            if user.is_locked():
+                lockout_duration = (user.lockout_until - timezone.now()).total_seconds()//60
+                return JsonResponse({'error': 'Your account is temporarily locked. Please try again in ' + str(int(lockout_duration)) + ' minutes.'}, status=403)
+
+            user_auth = authenticate(username=username, password=password)
+
+            if user_auth is not None:
+                user.reset_failed_attempts()
+                login(request, user)
+                return JsonResponse({'id': user.id, 'username': user.username}, status=200)
+            else:
+                user.failed_login_attempts += 1
+                if user.failed_login_attempts >= 5:
+                    user.lock_account()
+                    return JsonResponse({'error': 'Too many failed login attempts. Your account has been locked for 5 minutes.'}, status=403)
+                else:
+                    user.save()
+                    return JsonResponse({'error': 'Invalid password. You have ' + str(5 - user.failed_login_attempts) + ' attempts remaining.'}, status=400)
+        except User.DoesNotExist:
             return JsonResponse({'error': 'Invalid credentials'}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
@@ -253,7 +275,9 @@ def get_user_info(request):
         'dietary_restriction': user.dietary_restriction,
         'goals': user.goals,
         'weekly_physical_activity': user.weekly_physical_activity,
-        'password': user.password
+        'password': user.password,
+        'failed_login_attempts': user.failed_login_attempts,
+        'lockout_until': user.lockout_until
     })
 
 @csrf_exempt
