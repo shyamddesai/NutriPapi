@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
-from encryption_utils import encrypt_data, decrypt_data
+from NutriPapiApp.encryption_utils import encrypt_data, decrypt_data
 
 class Recipe(models.Model):
     name = models.CharField(max_length=255, verbose_name='Recipe Name')

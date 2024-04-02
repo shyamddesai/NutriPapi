@@ -1,12 +1,11 @@
 from django.http import JsonResponse
-from django.http import HttpRequest
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from .models import Fridge, Ingredient, Schedule, MealLog
 from NutriPapiApp.models import Fridge, Ingredient, Schedule
-from encryption_utils import encrypt_data, decrypt_data
+from NutriPapiApp.encryption_utils import encrypt_data, decrypt_data
 import json
 import datetime
 
@@ -121,7 +120,7 @@ def signup_follow_view(request):
                 'goals': user.goals,
             }, status=200)
         except Exception as e:
-            print(e)
+            # print(e)
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
@@ -356,9 +355,10 @@ def remove_ingredients_from_fridge_view(request):
 
 # Daily required calorie calculator: https://www.verywellfit.com/how-many-calories-do-i-need-each-day-2506873
 def calculate_recommended_calories(user, logged_calories=None):
+    # print(user.current_weight, user.target_weight, user.height, user.weekly_physical_activity, user.goals, user.birthday)
     # Check if the user's health profile is complete
     if not all([user.current_weight, user.target_weight, user.height, user.weekly_physical_activity, user.goals, user.birthday]):
-        return JsonResponse({'error': 'Please complete your health profile'}, status=400)
+        return None
     
     # Decrypt encrypted fields
     current_weight = decrypt_data(user.encrypted_weight) if user.encrypted_weight else None
@@ -433,6 +433,8 @@ def caloric_intake_recommendation_view(request):
         logged_calories = sum([log.calories for log in user_logs])
 
         recommended_calories = calculate_recommended_calories(user, logged_calories)
+        if recommended_calories is None:
+            return JsonResponse({'error': 'Please complete your health profile'}, status=400)
         
         return JsonResponse({  
             'logged_calories': logged_calories,
@@ -447,8 +449,15 @@ def log_meal_view(request):
         try:
             data = json.loads(request.body)
             user = request.user
-            
-           # Extracting meal and exercise details from the request
+
+            # Validate meal details
+            required_fields = ['breakfast', 'lunch', 'dinner', 'snacks']
+            if not all(field in data for field in required_fields):
+                return JsonResponse({'error': 'All meal fields are required'}, status=400)
+            if any(data[field] < 0 for field in required_fields if field in data):
+                return JsonResponse({'error': 'Meal calories cannot be negative'}, status=400)
+                        
+            # Extracting meal and exercise details from the request
             breakfast = data.get('breakfast', 0)  # Default to 0 if not provided
             lunch = data.get('lunch', 0)
             dinner = data.get('dinner', 0)
