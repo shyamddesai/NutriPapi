@@ -90,8 +90,8 @@ class UserTests(TestCase):
         self.assertEqual(data['first_name'], 'Test')
         self.assertEqual(data['gender'], 'M')
         self.assertEqual(data['target_weight'], 70)
-        self.assertEqual(data['current_weight'], 75)
-        self.assertEqual(data['height'], 180)
+        self.assertEqual(float(data['current_weight']), 75)
+        self.assertEqual(float(data['height']), 180)
         self.assertEqual(data['weekly_physical_activity'], 5)
 
     def test_change_password(self):
@@ -191,6 +191,18 @@ class RecipeTests(TestCase):
         """Create a user for the test and ingredients with calorie information."""
         self.user = User.objects.create_user(username='testuser', password='password123')
         self.client.login(username=self.user.username, password='password123')
+
+        # Complete the health profile
+        health_profile_data = {
+            'current_weight': 70,
+            'target_weight': 75,
+            'height': 170,
+            'weekly_physical_activity': 3,
+            'gender': 'male',
+            'dietary_restriction': 'none',
+            'birthday': '1990-01-01'
+        }
+        self.client.post(reverse('signup_follow'), data=health_profile_data, content_type='application/json')
         
         # Now including calories when creating ingredients
         self.ingredient1 = Ingredient.objects.create(
@@ -227,15 +239,24 @@ class RecipeTests(TestCase):
 
     def test_log_meal_success(self):
         """Test successfully logging a meal with all details provided."""
+        recommended_calories_url = reverse('caloric_intake_recommendation')
+        response = self.client.get(recommended_calories_url)
+        
+        data = json.loads(response.content.decode('utf-8'))
+        recommended_calories = data['recommended_calories']
+        
+        meal_calories = int(recommended_calories) / 4
+
         url = reverse('log_meal')
         meal_data = {
-            'breakfast': 'Oatmeal',
-            'lunch': 'Salad',
-            'dinner': 'Grilled Chicken Breast'
+            'breakfast': meal_calories,
+            'lunch': meal_calories,
+            'dinner': meal_calories,
+            'snacks': meal_calories
         }
         response = self.client.post(url, json.dumps(meal_data), content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Meal details logged successfully', response.json()['message'])
+        self.assertIn('You have met your daily calorie goal', response.json()['calorie_status'])
 
 class ScheduleTests(TestCase):
     def setUp(self):
