@@ -6,6 +6,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from .models import Fridge, Ingredient, Schedule, MealLog
 from NutriPapiApp.models import Fridge, Ingredient, Schedule
+from encryption_utils import encrypt_data, decrypt_data
 import json
 import datetime
 
@@ -40,6 +41,10 @@ def signup_view(request):
                 email=data['email'],
                 password=data['password']
             )
+
+            # Encrypt sensitive fields
+            user.encrypted_email = encrypt_data(data['email'])
+            
             login(request, user)
             return JsonResponse({'id': user.id, 'username': user.username}, status=201)
 
@@ -93,6 +98,11 @@ def signup_follow_view(request):
             # Set the account creation date
             if not user.created_at:
                 user.created_at = datetime.timezone.now()
+
+            # Encrypt sensitive fields
+            user.encrypted_weight = encrypt_data(str(user.current_weight))
+            user.encrypted_height = encrypt_data(str(user.height))
+            user.encrypted_birthday = encrypt_data(str(user.birthday))
 
             user.save()
 
@@ -169,6 +179,11 @@ def user_info_view(request):
             data = json.loads(request.body)
             # print(data)
             user = request.user
+
+            # Decrypt sensitive fields before returning user info
+            user.birthday = decrypt_data(user.encrypted_birthday) if user.encrypted_birthday else None
+            user.current_weight = decrypt_data(user.encrypted_weight) if user.encrypted_weight else None
+            user.height = decrypt_data(user.encrypted_height) if user.encrypted_height else None
             
             # Update user info based on the provided data
             if 'target_weight' in data:
@@ -195,8 +210,6 @@ def user_info_view(request):
                 user.birthday = data['birthday']    
             if 'first_name' in data:
                 user.first_name = data['first_name']
-            if 'email' in data:
-                user.email = data['email']
 
             # Set goals based on weight comparison
             if user.current_weight < user.target_weight:
@@ -207,6 +220,7 @@ def user_info_view(request):
                 user.goals = 'maintain'
 
             user.save()
+
             return JsonResponse({'message': 'User info updated successfully'}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -233,10 +247,10 @@ def get_user_info(request):
         'email': user.email,
         'first_name': user.first_name,
         'gender': user.gender,
-        'birthday': user.birthday,
-        'current_weight': user.current_weight,
+        'birthday': decrypt_data(user.encrypted_birthday) if user.encrypted_birthday else None,
+        'current_weight': decrypt_data(user.encrypted_weight) if user.encrypted_weight else None,
         'target_weight': user.target_weight,
-        'height': user.height,
+        'height': decrypt_data(user.encrypted_height) if user.encrypted_height else None,
         'dietary_restriction': user.dietary_restriction,
         'goals': user.goals,
         'weekly_physical_activity': user.weekly_physical_activity,
@@ -345,17 +359,30 @@ def calculate_recommended_calories(user, logged_calories=None):
     # Check if the user's health profile is complete
     if not all([user.current_weight, user.target_weight, user.height, user.weekly_physical_activity, user.goals, user.birthday]):
         return JsonResponse({'error': 'Please complete your health profile'}, status=400)
+    
+    # Decrypt encrypted fields
+    current_weight = decrypt_data(user.encrypted_weight) if user.encrypted_weight else None
+    height = decrypt_data(user.encrypted_height) if user.encrypted_height else None
+    birthday = decrypt_data(user.encrypted_birthday) if user.encrypted_birthday else None
+
+    # Convert decrypted fields to appropriate types
+    current_weight = float(current_weight) if current_weight else None
+    height = float(height) if height else None
+    birthday = datetime.datetime.strptime(birthday, '%Y-%m-%d').date() if birthday else None
 
     # Calculate user's age
-    today = datetime.date.today()
-    age = today.year - user.birthday.year - ((today.month, today.day) < (user.birthday.month, user.birthday.day))
+    if birthday:
+        today = datetime.date.today()
+        age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+    else:
+        age = None
 
     # Calculate BMR
     if user.gender == 'male':
-        bmr = 66.47 + (13.75 * user.current_weight) + (5.003 * user.height) - (6.755 * age)
+        bmr = 66.47 + (13.75 * current_weight) + (5.003 * height) - (6.755 * age)
     else: 
         if user.gender == 'female':
-            bmr = 655.1 + (9.563 * user.current_weight) + (1.850 * user.height) - (4.676 * age)
+            bmr = 655.1 + (9.563 * current_weight) + (1.850 * height) - (4.676 * age)
         else:
             return JsonResponse({'error': 'Gender not stored correctly'}, status=400)
         

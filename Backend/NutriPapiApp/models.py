@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
+from encryption_utils import encrypt_data, decrypt_data
 
 class Recipe(models.Model):
     name = models.CharField(max_length=255, verbose_name='Recipe Name')
@@ -29,12 +30,41 @@ class User(AbstractUser):
     weekly_physical_activity = models.IntegerField(
         verbose_name='Weekly Physical Activity in hours',
         validators=[MinValueValidator(1), MaxValueValidator(5)],
-        default=0 
+        default=1 
     )
     goals = models.CharField(max_length=255, verbose_name='Goals', null=True, blank=True)
     birthday = models.DateField(verbose_name='Birthday', null=True, blank=True)
     gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female'), ('O', 'Other')], verbose_name='Gender', default='M')
     
+    # Add encrypted fields for sensitive data
+    encrypted_birthday = models.BinaryField(verbose_name='Encrypted Birthday', null=True, blank=True)
+    encrypted_email = models.BinaryField(verbose_name='Encrypted Email', null=True, blank=True)
+    encrypted_weight = models.BinaryField(verbose_name='Encrypted Weight', null=True, blank=True)
+    encrypted_height = models.BinaryField(verbose_name='Encrypted Height', null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.birthday:
+            self.encrypted_birthday = encrypt_data(str(self.birthday))
+        if self.email:
+            self.encrypted_email = encrypt_data(self.email)
+        if self.current_weight:
+            self.encrypted_weight = encrypt_data(str(self.current_weight))
+        if self.height:
+            self.encrypted_height = encrypt_data(str(self.height))
+        super().save(*args, **kwargs)
+
+    def get_birthday(self):
+        return decrypt_data(self.encrypted_birthday) if self.encrypted_birthday else None
+
+    def get_email(self):
+        return decrypt_data(self.encrypted_email) if self.encrypted_email else None
+
+    def get_weight(self):
+        return decrypt_data(self.encrypted_weight) if self.encrypted_weight else None
+
+    def get_height(self):
+        return decrypt_data(self.encrypted_height) if self.encrypted_height else None
+
     def __str__(self):
         return self.username
     
