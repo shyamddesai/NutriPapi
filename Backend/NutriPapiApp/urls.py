@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import view_meal_logs, delete_meal_logs_for_today, caloric_intake_recommendation_view, sign_out_view, change_password, delete_account_view, meal_reminder_view, log_meal_view, get_user_info, remove_ingredients_from_fridge_view, signup_view, signup_follow_view, signin_view, user_info_view, add_ingredients_to_fridge_view, view_fridge_contents_view
+from .views import view_meal_logs, delete_meal_logs_for_today, caloric_intake_recommendation_view, sign_out_view, change_password, delete_account_view, meal_reminder_view, log_meal_view, get_user_info, remove_ingredients_from_fridge_view, signup_view, signup_follow_view, signin_view, user_info_view, add_ingredients_to_fridge_view, view_fridge_contents_view, search_view
 
 urlpatterns = [
     path('signup/', signup_view, name='signup'),
