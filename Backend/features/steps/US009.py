@@ -22,8 +22,13 @@ def step_impl(context):
 
 @then('the system should display detailed nutritional information about that ingredient.')
 def step_impl(context):
-    
-    assert 'banana' in context.response.json()['results'][0]['name']
+    response_data = context.response.json()
+    assert 'banana' in response_data['results'][0]['name'], "Ingredient name not in response"
+    assert 'nutritional_information' in response_data['results'][0], "Nutritional information not in response"
+    assert response_data['results'][0]['nutritional_information'] != "", "Nutritional information is empty"
+    assert 'calories' in response_data['results'][0], "Calories information not in response"
+    assert response_data['results'][0]['calories'] is not None, "Calories information is missing"
+
 
 @given('the user is logged into the NutriPapi system and navigates to the ingredient search section.')
 def step_impl(context):
