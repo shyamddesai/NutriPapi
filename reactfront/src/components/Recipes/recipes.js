@@ -12,7 +12,7 @@ const Recipes = () => {
     const RecipesAndIngredients = async () => {
         try {
             const response = await axios.post(
-                'http://localhost:8000/import/',
+                'http://localhost:8000/recipe/add/',
                 { data: importData },
                 { headers: { 'Content-Type': 'application/json' }, withCredentials: true }
             );

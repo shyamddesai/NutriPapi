@@ -10,15 +10,15 @@ class Recipe(models.Model):
     preparation = models.TextField(verbose_name='Recipe Preparation')
     meal_type = models.CharField(max_length=100, verbose_name='Recipe Meal Type')
     instructions = models.TextField(verbose_name='Recipe Instructions')
+    calories = models.IntegerField(verbose_name='Calories', null=True, blank=True)
+    nutritional_information = models.TextField(verbose_name='Nutritional Information', null=True, blank=True)  # New field
 
     def __str__(self):
         return self.name
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=255, verbose_name='Ingredient Name')
-    nutritional_information = models.TextField(verbose_name='Nutritional Information')
     recipes = models.ManyToManyField(Recipe, related_name='ingredients', verbose_name='Recipes')
-    calories = models.IntegerField(verbose_name='Calories per Standard Unit', null=True, blank=True)
 
     def __str__(self):
         return self.name

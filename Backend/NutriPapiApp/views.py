@@ -1,3 +1,4 @@
+import random
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
@@ -621,39 +622,101 @@ def search_view(request):
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed
     
 @csrf_exempt
+@login_required
 def import_recipes_and_ingredients(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
     
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    # We don't have staff users, so just uncomment the following line when adding recipes...
+    # if not request.user.is_staff:
+    #     return JsonResponse({'error': 'Unauthorized access'}, status=403)
 
-    # Assuming JSON data is sent with the 'data' key in form data
-    json_data = request.POST.get('data')
-    if not json_data:
-        return JsonResponse({'error': 'No data provided'}, status=400)
-    
     try:
-        data = json.loads(json_data)
+        # Access the raw string from 'data' key
+        raw_data = json.loads(request.body.decode('utf-8')).get('data')
         
-        for recipe_data in data:
-            # Assuming 'title', 'preparation', 'instructions', and 'ingredients' are keys in each recipe object
+        # Now load this raw string as JSON to get the actual list
+        recipes_data = json.loads(raw_data)
+        # print(recipes_data)
+
+        existing_items_info = []  # To keep track of existing items
+        new_items_info = []  # To keep track of new items
+
+        for recipe_data in recipes_data:
+            nutritional_info = "Fat: {}g, Protein: {}g, Sodium: {}mg".format(
+                recipe_data.get('fat', 0),
+                recipe_data.get('protein', 0),
+                recipe_data.get('sodium', 0)
+            )
+
             recipe, created = Recipe.objects.get_or_create(
-                name=recipe_data['title'],
+                name=recipe_data['name'],
                 defaults={
-                    'preparation': recipe_data.get('preparation', ''),
-                    'instructions': recipe_data.get('instructions', ''),
-                    # Add other fields as necessary
+                    'preparation': "\n".join(recipe_data.get('preparation', [])),
+                    'instructions': "\n".join(recipe_data.get('instructions', [])),
+                    'meal_type': recipe_data.get('meal_type', 'General'),
+                    'calories': recipe_data.get('calories', 0),
+                    'nutritional_information': nutritional_info,
                 }
             )
-            
-            for ingredient_name in recipe_data['ingredients']:
-                ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
-                recipe.ingredients.add(ingredient)
-        
-        return JsonResponse({'message': 'Recipes and ingredients imported successfully'}, status=200)
-        
+
+            if created:
+                new_items_info.append(f"New recipe added: {recipe.name}")
+                # Only add ingredients if the recipe is newly created
+                for ingredient_name in recipe_data.get('ingredients', []):
+                    ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
+                    recipe.ingredients.add(ingredient)
+                    if created:
+                        new_items_info.append(f"New ingredient added: {ingredient.name}")
+                    else:
+                        existing_items_info.append(f"Existing ingredient used: {ingredient.name}")
+            else:
+                existing_items_info.append(f"Existing recipe used: {recipe.name}")
+
+            messages = {
+            'existing_items': existing_items_info,
+            'new_items': new_items_info,
+            'message': 'Recipes and ingredients imported successfully'
+        }
+
+        return JsonResponse(messages, status=200)
+
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    except KeyError as e:
+        return JsonResponse({'error': f'Missing key in data: {str(e)}'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+@csrf_exempt
+@login_required
+def list_recipes(request):
+    if request.method == 'GET':
+        recipes = Recipe.objects.all()
+        recipes_data = [{
+            'id': recipe.id,
+            'name': recipe.name,
+            'preparation': recipe.preparation,
+            'meal_type': recipe.meal_type,
+            'instructions': recipe.instructions,
+            'calories': recipe.calories,
+            'nutritional_information': recipe.nutritional_information,
+            'ingredients': list(recipe.ingredients.values_list('name', flat=True))
+        } for recipe in recipes]
+        return JsonResponse({'recipes': recipes_data}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+@csrf_exempt
+@login_required
+def list_ingredients(request):
+    if request.method == 'GET':
+        ingredients = Ingredient.objects.all()
+        ingredients_data = [{
+            'id': ingredient.id,
+            'name': ingredient.name,
+            'recipes': list(ingredient.recipes.values_list('name', flat=True))
+        } for ingredient in ingredients]
+        return JsonResponse({'ingredients': ingredients_data}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
