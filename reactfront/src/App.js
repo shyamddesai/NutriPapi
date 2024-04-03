@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Meals from './pages/Meals';
 import Log from './pages/Log';
+import Recipes from './pages/Recipes';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/meals" element={<Meals />} />
           <Route path="/log" element={<Log />} />
+          <Route path="/recipes" element={<Recipes />} />
           {/* Footer can still remain here if it's meant to be on every page */}
         </Routes>
         <Footer />
