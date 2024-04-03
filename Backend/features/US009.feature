@@ -14,4 +14,4 @@ Feature: Searching for ingredients to receive nutritional information
     When the user searches for an ingredient that is not available in the system's database.
     Then the system should display a message indicating that the ingredient is not found.
 
- 
+
