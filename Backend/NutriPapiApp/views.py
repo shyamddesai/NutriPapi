@@ -1,9 +1,10 @@
+import random
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from .models import Fridge, Ingredient, Schedule, MealLog
+from .models import Fridge, Ingredient, Recipe, Schedule, MealLog
 from NutriPapiApp.models import Fridge, Ingredient, Schedule
 from NutriPapiApp.encryption_utils import encrypt_data, decrypt_data
 from django.utils import timezone
@@ -614,8 +615,127 @@ def meal_reminder_view(request):
 def search_view(request):
     if request.method == 'GET':
         keyword=request.GET.get('keyword')
+        if keyword == '':
+            return JsonResponse({'results': []})
         results = Ingredient.objects.filter(name__icontains=keyword)
         results_data = [{'name': result.name, 'nutritional_information': result.nutritional_information, 'calories': result.calories} for result in results]
         return JsonResponse({'results': results_data})
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed
+    
+@csrf_exempt
+@login_required
+def import_recipes_and_ingredients(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
+    # We don't have staff users, so just comment the following line when adding recipes...
+    # if not request.user.is_staff:
+    #     return JsonResponse({'error': 'Unauthorized access'}, status=403)
+
+    try:
+        # Access the raw string from 'data' key
+        raw_data = json.loads(request.body.decode('utf-8')).get('data')
+        
+        # Now load this raw string as JSON to get the actual list
+        recipes_data = json.loads(raw_data)
+        # print(recipes_data)
+
+        existing_items_info = []  # To keep track of existing items
+        new_items_info = []  # To keep track of new items
+
+        for recipe_data in recipes_data:
+            # Check if a recipe with the same name already exists
+            if Recipe.objects.filter(name=recipe_data['name']).exists():
+                existing_items_info.append(f"Skipped existing recipe: {recipe_data['name']}")
+                continue
+
+            nutritional_info = "Fat: {}g, Protein: {}g, Sodium: {}mg".format(
+                recipe_data.get('fat', 0),
+                recipe_data.get('protein', 0),
+                recipe_data.get('sodium', 0)
+            )
+
+            recipe, recipe_created = Recipe.objects.get_or_create(
+                name=recipe_data['name'],
+                defaults={
+                    'preparation': "\n".join(recipe_data.get('preparation', [])),
+                    'instructions': "\n".join(recipe_data.get('instructions', [])),
+                    'meal_type': recipe_data.get('meal_type', 'General'),
+                    'calories': recipe_data.get('calories', 0),
+                    'nutritional_information': nutritional_info,
+                }
+            )
+
+            if recipe_created:
+                new_items_info.append(f"New recipe added: {recipe.name}")
+            else:
+                existing_items_info.append(f"Existing recipe used: {recipe.name}")
+
+            # Process ingredients
+            for ingredient_name in recipe_data.get('ingredients', []):
+                ingredient, ingredient_created = Ingredient.objects.get_or_create(name=ingredient_name)
+                recipe.ingredients.add(ingredient)
+                
+                if ingredient_created:
+                    new_items_info.append(f"New ingredient added: {ingredient.name}")
+                else:
+                    existing_items_info.append(f"Existing ingredient used: {ingredient.name}")
+
+            messages = {
+            'existing_items': existing_items_info,
+            'new_items': new_items_info,
+            'message': 'All recipes and ingredients imported successfully.'
+        }
+
+        return JsonResponse(messages, status=200)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    except KeyError as e:
+        return JsonResponse({'error': f'Missing key in data: {str(e)}'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    
+@csrf_exempt
+@login_required
+def list_recipes(request):
+    if request.method == 'GET':
+        recipes = Recipe.objects.all()
+        recipes_data = [{
+            'id': recipe.id,
+            'name': recipe.name,
+            'preparation': recipe.preparation,
+            'meal_type': recipe.meal_type,
+            'instructions': recipe.instructions,
+            'calories': recipe.calories,
+            'nutritional_information': recipe.nutritional_information,
+            'ingredients': list(recipe.ingredients.values_list('name', flat=True))
+        } for recipe in recipes]
+        return JsonResponse({'recipes': recipes_data}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+@csrf_exempt
+@login_required
+def list_ingredients(request):
+    if request.method == 'GET':
+        ingredients = Ingredient.objects.all()
+        ingredients_data = [{
+            'id': ingredient.id,
+            'name': ingredient.name,
+            'recipes': list(ingredient.recipes.values_list('name', flat=True))
+        } for ingredient in ingredients]
+        return JsonResponse({'ingredients': ingredients_data}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+    
+@csrf_exempt
+@login_required
+def delete_recipes_and_ingredients(request):
+    if request.method == 'GET': # This method is intended to delete all recipes and ingredients (as an admin from the browser) for testing purposes
+        deleted_count, _ = Recipe.objects.all().delete()
+        deleted_count_ingredients, _ = Ingredient.objects.all().delete()
+        return JsonResponse({'message': f'{deleted_count} deleted recipes, and {deleted_count_ingredients} deleted ingredients'}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
