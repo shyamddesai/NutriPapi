@@ -9,6 +9,9 @@ from NutriPapiApp.models import Fridge, Ingredient, Schedule
 from NutriPapiApp.encryption_utils import encrypt_data, decrypt_data
 from django.utils import timezone
 import datetime, json
+import pandas as pd
+from scipy.sparse import csr_matrix
+from sklearn.metrics.pairwise import cosine_similarity
 
 User = get_user_model()
 
@@ -722,3 +725,73 @@ def list_ingredients(request):
         return JsonResponse({'ingredients': ingredients_data}, status=200)
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+ 
+ 
+ 
+ 
+ 
+from django.core.exceptions import ObjectDoesNotExist
+
+def get_data_from_db():
+    with open('RecipeData/recipe_data_full_formatted.json', 'r') as file:
+        recipe_data = json.load(file)
+
+    for recipe in recipe_data:
+        try:
+            Recipe.objects.get(name=recipe['name'])
+        except ObjectDoesNotExist:
+            Recipe.objects.create(
+                name=recipe['name'],
+                preparation='\n'.join(recipe.get('preparation', [])),
+                instructions='\n'.join(recipe['instructions']),
+                meal_type=random.choice(['breakfast', 'lunch', 'dinner'])
+            )
+
+def preprocess_data(users, recipes):
+    # Generate mock data with random ratings
+    mock_data = []
+    for user in users:
+        for recipe in recipes:
+            rating_value = random.randint(1, 5) 
+            mock_data.append({'UserID': user.id, 'RecipeID': recipe.id, 'Rating': rating_value})
+
+    df = pd.DataFrame(mock_data, columns=['UserID', 'RecipeID', 'Rating'])
+    df = df.drop_duplicates(['UserID', 'RecipeID'])
+
+    user_recipe_matrix = df.pivot(index='UserID', columns='RecipeID', values='Rating').fillna(0)
+    sparse_matrix = csr_matrix(user_recipe_matrix.values)
+    user_similarity_df = pd.DataFrame(cosine_similarity(sparse_matrix), index=user_recipe_matrix.index, columns=user_recipe_matrix.index)
+    return user_similarity_df, user_recipe_matrix
+
+def recommend_recipes(user_id, user_similarity_df, user_recipe_matrix):
+    similar_users = user_similarity_df.loc[user_id].sort_values(ascending=False).iloc[1:4].index
+    similar_user_ratings = user_recipe_matrix.loc[similar_users]
+    avg_ratings = similar_user_ratings.mean()
+    rated_recipes = user_recipe_matrix.loc[user_id][user_recipe_matrix.loc[user_id] > 0].index
+    avg_ratings = avg_ratings[~avg_ratings.index.isin(rated_recipes)]
+    recommended_recipe_ids = avg_ratings.sort_values(ascending=False).head(3).index
+    return recommended_recipe_ids
+
+def get_recommendations(request):
+    get_data_from_db()
+
+    users = User.objects.all()
+    recipes = Recipe.objects.all()
+
+    user_similarity_df, user_recipe_matrix = preprocess_data(users, recipes)
+
+    user = request.user
+
+    if user.id not in user_recipe_matrix.index:
+        return JsonResponse({'recommendations': []})
+
+    recommended_recipe_ids = recommend_recipes(user.id, user_similarity_df, user_recipe_matrix)
+
+    recommended_recipes = Recipe.objects.filter(id__in=recommended_recipe_ids)
+
+    user_restrictions = user.dietary_restriction.split(', ') if user.dietary_restriction else []
+    if user_restrictions:
+        recommended_recipes = recommended_recipes.filter(dietary_restriction__in=user_restrictions)
+
+    recommended_recipe_names = list(recommended_recipes.values_list('name', flat=True))
+    return JsonResponse({'recommendations': recommended_recipe_names})

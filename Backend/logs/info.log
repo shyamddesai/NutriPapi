@@ -247,3 +247,55 @@ INFO 2024-03-26 20:22:38,006 basehttp 24917 123145464631296 "GET /user/get_info/
 INFO 2024-03-26 20:22:40,119 basehttp 24917 123145464631296 "GET /user/get_info/ HTTP/1.1" 200 352
 INFO 2024-03-26 20:22:40,123 basehttp 24917 123145481420800 "GET /user/get_info/ HTTP/1.1" 200 352
 INFO 2024-03-27 13:12:00,132 autoreload 31071 140704438302912 Watching for file changes with StatReloader
+ERROR 2024-04-02 21:35:01,868 log 25492 28052 Internal Server Error: /get-recommendations/
+Traceback (most recent call last):
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\thesis\NutriPapi\backend\NutriPapiApp\views.py", line 784, in get_recommendations
+    df = Rating.objects.all().values_list('user_id', 'recipe_id', 'rating')
+         ^^^^^^
+NameError: name 'Rating' is not defined
+ERROR 2024-04-02 21:41:14,120 log 28764 6456 Internal Server Error: /get-recommendations/
+Traceback (most recent call last):
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\thesis\NutriPapi\backend\NutriPapiApp\views.py", line 779, in get_recommendations
+    get_data_from_db()
+  File "C:\Users\ahmed\thesis\NutriPapi\backend\NutriPapiApp\views.py", line 737, in get_data_from_db
+    with open('Backend/RecipeData/recipe_data_full_formatted.json', 'r') as file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'Backend/RecipeData/recipe_data_full_formatted.json'
+ERROR 2024-04-02 22:06:21,272 log 15168 12964 Internal Server Error: /get-recommendations/
+Traceback (most recent call last):
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\thesis\NutriPapi\backend\NutriPapiApp\views.py", line 786, in get_recommendations
+    user_similarity_df, user_recipe_matrix = preprocess_data(users, recipes)
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\thesis\NutriPapi\backend\NutriPapiApp\views.py", line 765, in preprocess_data
+    user_similarity_df = pd.DataFrame(cosine_similarity(sparse_matrix), index=user_recipe_matrix.index, columns=user_recipe_matrix.index)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_param_validation.py", line 211, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\metrics\pairwise.py", line 1577, in cosine_similarity
+    X, Y = check_pairwise_arrays(X, Y)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\metrics\pairwise.py", line 156, in check_pairwise_arrays
+    X = Y = check_array(
+            ^^^^^^^^^^^^
+  File "C:\Users\ahmed\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 969, in check_array
+    raise ValueError(
+ValueError: Found array with 0 sample(s) (shape=(0, 0)) while a minimum of 1 is required by check_pairwise_arrays.
