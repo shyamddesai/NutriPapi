@@ -1,38 +1,49 @@
-@given(u'the user is logged into the NutriPapi system and navigates to the ingredient search section for their meal suggestions.')
+from behave import given, when, then
+from django.urls import reverse
+from NutriPapiApp.models import Ingredient, User
+from django.test.client import Client
+
+@given('the user is logged into the NutriPapi system and navigates to the ingredient search section for their meal suggestions.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Given the user is logged into the NutriPapi system and navigates to the ingredient search section for their meal suggestions.')
+     # Create the user and log them in
+    context.user = User.objects.create_user(username='testuser', password='testpassword')
+    context.client = Client()
+    context.client.force_login(context.user)
 
+    # Create an ingredient to ensure the search will find it
+    Ingredient.objects.create(name='banana', nutritional_information='Some info', calories=100)
 
-@when(u'the user searches for an ingredient by name.')
+    context.url = reverse('search')
+
+@when('the user searches for an ingredient by name.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When the user searches for an ingredient by name.')
+    
+    context.response = context.client.get(context.url + '?keyword=banana')
 
-
-@then(u'the system should display detailed nutritional information about that ingredient.')
+@then('the system should display detailed nutritional information about that ingredient.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then the system should display detailed nutritional information about that ingredient.')
+    
+    assert 'banana' in context.response.json()['results'][0]['name']
 
-
-@given(u'the user is logged into the NutriPapi system and navigates to the ingredient search section.')
+@given('the user is logged into the NutriPapi system and navigates to the ingredient search section.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Given the user is logged into the NutriPapi system and navigates to the ingredient search section.')
+    
+    context.user = User.objects.create_user(username='testuser2', password='testpassword')
+    context.client = Client()
+    context.client.force_login(context.user)
+    context.url = reverse('search')
 
 
-@when(u'the user searches for an ingredient that is not available in the system\'s database.')
+@when('the user searches for an ingredient that is not available in the system\'s database.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: When the user searches for an ingredient that is not available in the system\'s database.')
+    
+    context.response = context.client.get(context.url + '?keyword=nonexistentingredient')
 
-
-@then(u'the system should display a message indicating that the ingredient is not found.')
+@then('the system should display a message indicating that the ingredient is not found.')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then the system should display a message indicating that the ingredient is not found.')
+    assert context.response.status_code == 200
+    assert len(context.response.json()['results']) == 0
 
 
-@when(u'the user enters a vague or incomplete name for an ingredient.')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When the user enters a vague or incomplete name for an ingredient.')
 
 
-@then(u'the system should ask the user to provide more specific information.')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Then the system should ask the user to provide more specific information.')
