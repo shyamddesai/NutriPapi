@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import './meals.css';
+import MealReminder from '../MealReminder/mealreminder';
 import breakfastImage from '../../assets/Breakfast_001.jpeg';
 import lunchImage from '../../assets/Lunch_001.jpeg';
 import dinnerImage from '../../assets/Dinner_001.jpg';
@@ -67,6 +68,10 @@ const Meals = () => {
 
     return (
         <div>
+            <div>
+                <MealReminder />
+            </div>
+
             <div className="mealsContainer">
                 <div className="meal">
                     <h2>Breakfast</h2>
