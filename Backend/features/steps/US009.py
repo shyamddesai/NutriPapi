@@ -15,16 +15,15 @@ def step_impl(context):
     context.client.force_login(user)
     context.user = user
     ingredients_info = [
-        {'name': 'apple', 'nutritional_information': 'Vitamins: A, C, Calcium', 'calories': 95},
-        {'name': 'banana', 'nutritional_information': 'Vitamins: B6, C, Potassium', 'calories': 105},
-        {'name': 'orange', 'nutritional_information': 'Vitamins: C, B9, Potassium', 'calories': 62}
+        {'name': 'apple', 'nutritional_information': 'Vitamins: A, C, Calcium'},
+        {'name': 'banana', 'nutritional_information': 'Vitamins: B6, C, Potassium'},
+        {'name': 'orange', 'nutritional_information': 'Vitamins: C, B9, Potassium'}
     ]
     for item in ingredients_info:
-        Ingredient.objects.get_or_create(
+        Ingredient.objects.update_or_create(
             name=item['name'],
             defaults={
                 'nutritional_information': item['nutritional_information'],
-                'calories': item['calories']
             }
         )
 
@@ -40,7 +39,6 @@ def step_impl(context):
     search_result = json.loads(context.search_response.content)
     apple_info = search_result['results'][0]  # Assuming apple is the first result
     assert apple_info['nutritional_information'] == 'Vitamins: A, C, Calcium', "Incorrect nutritional information."
-    assert apple_info['calories'] == 95, "Incorrect calorie count."
 
 
 @given(u'the user is logged into the NutriPapi system and navigates to the ingredient search section.')
@@ -51,16 +49,15 @@ def step_impl(context):
     context.client.force_login(user)
     context.user = user
     ingredients_info = [
-        {'name': 'apple', 'nutritional_information': 'Vitamins: A, C, Calcium', 'calories': 95},
-        {'name': 'banana', 'nutritional_information': 'Vitamins: B6, C, Potassium', 'calories': 105},
-        {'name': 'orange', 'nutritional_information': 'Vitamins: C, B9, Potassium', 'calories': 62}
+        {'name': 'apple', 'nutritional_information': 'Vitamins: A, C, Calcium'},
+        {'name': 'banana', 'nutritional_information': 'Vitamins: B6, C, Potassium'},
+        {'name': 'orange', 'nutritional_information': 'Vitamins: C, B9, Potassium'}
     ]
     for item in ingredients_info:
-        Ingredient.objects.get_or_create(
+        Ingredient.objects.update_or_create(
             name=item['name'],
             defaults={
                 'nutritional_information': item['nutritional_information'],
-                'calories': item['calories']
             }
         )
 

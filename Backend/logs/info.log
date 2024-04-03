@@ -247,3 +247,40 @@ INFO 2024-03-26 20:22:38,006 basehttp 24917 123145464631296 "GET /user/get_info/
 INFO 2024-03-26 20:22:40,119 basehttp 24917 123145464631296 "GET /user/get_info/ HTTP/1.1" 200 352
 INFO 2024-03-26 20:22:40,123 basehttp 24917 123145481420800 "GET /user/get_info/ HTTP/1.1" 200 352
 INFO 2024-03-27 13:12:00,132 autoreload 31071 140704438302912 Watching for file changes with StatReloader
+INFO 2024-04-03 02:47:19,348 autoreload 34113 8669641408 Watching for file changes with StatReloader
+ERROR 2024-04-03 02:53:52,920 log 34508 8669641408 Internal Server Error: /search/
+Traceback (most recent call last):
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 55, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/NutriPapiApp/views.py", line 621, in search_view
+    results_data = [{'name': result.name, 'nutritional_information': result.nutritional_information, 'calories': result.calories} for result in results]
+                                                                                                                 ^^^^^^^^^^^^^^^
+AttributeError: 'Ingredient' object has no attribute 'calories'
+ERROR 2024-04-03 02:54:15,645 log 34518 8669641408 Internal Server Error: /search/
+Traceback (most recent call last):
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 55, in wrapped_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/.venv/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 23, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yutingli1123/Git/NutriPapi/Backend/NutriPapiApp/views.py", line 621, in search_view
+    results_data = [{'name': result.name, 'nutritional_information': result.nutritional_information, 'calories': result.calories} for result in results]
+                                                                                                                 ^^^^^^^^^^^^^^^
+AttributeError: 'Ingredient' object has no attribute 'calories'
