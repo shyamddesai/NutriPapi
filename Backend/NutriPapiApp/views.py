@@ -629,7 +629,7 @@ def import_recipes_and_ingredients(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
     
-    # We don't have staff users, so just uncomment the following line when adding recipes...
+    # We don't have staff users, so just comment the following line when adding recipes...
     # if not request.user.is_staff:
     #     return JsonResponse({'error': 'Unauthorized access'}, status=403)
 
@@ -645,13 +645,18 @@ def import_recipes_and_ingredients(request):
         new_items_info = []  # To keep track of new items
 
         for recipe_data in recipes_data:
+            # Check if a recipe with the same name already exists
+            if Recipe.objects.filter(name=recipe_data['name']).exists():
+                existing_items_info.append(f"Skipped existing recipe: {recipe_data['name']}")
+                continue
+
             nutritional_info = "Fat: {}g, Protein: {}g, Sodium: {}mg".format(
                 recipe_data.get('fat', 0),
                 recipe_data.get('protein', 0),
                 recipe_data.get('sodium', 0)
             )
 
-            recipe, created = Recipe.objects.get_or_create(
+            recipe, recipe_created = Recipe.objects.get_or_create(
                 name=recipe_data['name'],
                 defaults={
                     'preparation': "\n".join(recipe_data.get('preparation', [])),
@@ -662,23 +667,25 @@ def import_recipes_and_ingredients(request):
                 }
             )
 
-            if created:
+            if recipe_created:
                 new_items_info.append(f"New recipe added: {recipe.name}")
-                # Only add ingredients if the recipe is newly created
-                for ingredient_name in recipe_data.get('ingredients', []):
-                    ingredient, _ = Ingredient.objects.get_or_create(name=ingredient_name)
-                    recipe.ingredients.add(ingredient)
-                    if created:
-                        new_items_info.append(f"New ingredient added: {ingredient.name}")
-                    else:
-                        existing_items_info.append(f"Existing ingredient used: {ingredient.name}")
             else:
                 existing_items_info.append(f"Existing recipe used: {recipe.name}")
+
+            # Process ingredients
+            for ingredient_name in recipe_data.get('ingredients', []):
+                ingredient, ingredient_created = Ingredient.objects.get_or_create(name=ingredient_name)
+                recipe.ingredients.add(ingredient)
+                
+                if ingredient_created:
+                    new_items_info.append(f"New ingredient added: {ingredient.name}")
+                else:
+                    existing_items_info.append(f"Existing ingredient used: {ingredient.name}")
 
             messages = {
             'existing_items': existing_items_info,
             'new_items': new_items_info,
-            'message': 'Recipes and ingredients imported successfully'
+            'message': 'All recipes and ingredients imported successfully.'
         }
 
         return JsonResponse(messages, status=200)
@@ -720,5 +727,15 @@ def list_ingredients(request):
             'recipes': list(ingredient.recipes.values_list('name', flat=True))
         } for ingredient in ingredients]
         return JsonResponse({'ingredients': ingredients_data}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+    
+@csrf_exempt
+@login_required
+def delete_recipes_and_ingredients(request):
+    if request.method == 'GET': # This method is intended to delete all recipes and ingredients (as an admin from the browser) for testing purposes
+        deleted_count, _ = Recipe.objects.all().delete()
+        deleted_count_ingredients, _ = Ingredient.objects.all().delete()
+        return JsonResponse({'message': f'{deleted_count} deleted recipes, and {deleted_count_ingredients} deleted ingredients'}, status=200)
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
