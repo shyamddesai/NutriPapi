@@ -138,7 +138,7 @@ class FridgeIngredientTests(TestCase):
         self.client.login(username='testuser', password='password123')
  
         # Create an Ingredient for testing
-        self.ingredient = Ingredient.objects.create(name='Tomato', nutritional_information='Rich in Vitamin C', calories=18)
+        self.ingredient = Ingredient.objects.create(name='Tomato')
 
         # Create a Fridge associated with the test user
         self.fridge = Fridge.objects.create(user=self.user)
@@ -151,9 +151,6 @@ class FridgeIngredientTests(TestCase):
         response = self.client.post(url, json.dumps(data), content_type="application/json")
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self.fridge.ingredients.filter(name=self.ingredient.name).exists())
-
-        ingredient_in_fridge = self.fridge.ingredients.get(name=self.ingredient.name)
-        self.assertEqual(ingredient_in_fridge.calories, 18)
 
     def test_view_fridge_contents(self):
         """Test viewing the ingredients in the fridge."""
@@ -168,7 +165,7 @@ class FridgeIngredientTests(TestCase):
 
     def test_remove_ingredients_from_fridge(self):
         """Test removing ingredients from the fridge."""
-        cucumber = Ingredient.objects.create(name='Cucumber', calories=16)
+        cucumber = Ingredient.objects.create(name='Cucumber')
         self.fridge.ingredients.add(self.ingredient, cucumber)
 
         # Remove one ingredient
@@ -206,15 +203,11 @@ class RecipeTests(TestCase):
         
         # Now including calories when creating ingredients
         self.ingredient1 = Ingredient.objects.create(
-            name='Tomato', 
-            nutritional_information='Rich in Vitamin C', 
-            calories=18  # Assuming 18 calories per standard amount (e.g., per 100g)
+            name='Tomato'
         )
 
         self.ingredient2 = Ingredient.objects.create(
-            name='Cucumber', 
-            nutritional_information='Rich in Vitamin K', 
-            calories=16  # Assuming 16 calories per standard amount
+            name='Cucumber'
         )
 
     def test_recipe_creation_and_ingredient_association(self):
@@ -234,8 +227,6 @@ class RecipeTests(TestCase):
         self.assertEqual(self.recipe.ingredients.count(), 2)
         self.assertIn(self.ingredient1, self.recipe.ingredients.all())
         self.assertIn(self.ingredient2, self.recipe.ingredients.all())
-        self.assertEqual(self.ingredient1.calories, 18)
-        self.assertEqual(self.ingredient2.calories, 16)
 
     def test_log_meal_success(self):
         """Test successfully logging a meal with all details provided."""
@@ -264,14 +255,10 @@ class ScheduleTests(TestCase):
         self.client.login(username=self.user.username, password='password123')
 
         self.ingredient1 = Ingredient.objects.create(
-            name='Tomato', 
-            nutritional_information='Vitamin C', 
-            calories=22  
+            name='Tomato'
         )
         self.ingredient2 = Ingredient.objects.create(
-            name='Lettuce', 
-            nutritional_information='Rich in vitamins A, C, and K', 
-            calories=5
+            name='Lettuce'
         )
         self.recipe = Recipe.objects.create(
             name='Salad',
@@ -303,8 +290,6 @@ class ScheduleTests(TestCase):
         recipe_ingredients = list(schedule.recipes.first().ingredients.all())
         self.assertIn(self.ingredient1, recipe_ingredients)
         self.assertIn(self.ingredient2, recipe_ingredients)
-        self.assertEqual(self.ingredient1.calories, 22)
-        self.assertEqual(self.ingredient2.calories, 5)
 
     @patch('NutriPapiApp.views.get_current_time')
     def test_meal_reminder_within_one_hour(self, mock_get_current_time):
