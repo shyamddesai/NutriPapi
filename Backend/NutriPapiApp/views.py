@@ -621,7 +621,7 @@ def search_view(request):
         if keyword == '':
             return JsonResponse({'results': []})
         results = Ingredient.objects.filter(name__icontains=keyword)
-        results_data = [{'name': result.name, 'nutritional_information': result.nutritional_information, 'calories': result.calories} for result in results]
+        results_data = [{'name': result.name, 'nutritional_information': result.nutritional_information} for result in results]
         return JsonResponse({'results': results_data})
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed
