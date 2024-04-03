@@ -104,13 +104,14 @@ class MealLog(models.Model):
         return f"{self.user.username}'s {self.meal_type} on {self.date_and_time}"
 
 class Schedule(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedules', verbose_name='User')
-    date_and_time = models.DateTimeField(verbose_name='Date and Time')
-    meal_type = models.CharField(max_length=100, verbose_name='Meal Type')
-    recipes = models.ManyToManyField(Recipe, related_name='schedules', verbose_name='Recipes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedules')
+    date = models.DateField(verbose_name='Date')
+    breakfast = models.ForeignKey(Recipe, related_name='breakfast_schedules', null=True, blank=True, on_delete=models.SET_NULL)
+    lunch = models.ForeignKey(Recipe, related_name='lunch_schedules', null=True, blank=True, on_delete=models.SET_NULL)
+    dinner = models.ForeignKey(Recipe, related_name='dinner_schedules', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-        return f"{self.date_and_time} - {self.meal_type}"
+        return f"{self.user} - {self.date}"
     
 class Fridge(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='fridge', verbose_name='User')

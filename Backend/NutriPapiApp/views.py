@@ -591,24 +591,35 @@ def get_current_time():
 def meal_reminder_view(request):
     if request.method == 'GET':
         user = request.user
-        current_time = get_current_time().time()
+        today = timezone.now().date()
+        current_time = timezone.now().time()
 
-        # Iterate through meal times to check if it's within one hour of the meal time
-        for meal, meal_time in MEAL_TIMES.items():
-            meal_datetime = datetime.datetime.combine(datetime.date.today(), meal_time)
-            current_datetime = datetime.datetime.combine(datetime.date.today(), current_time)
-            time_difference = (meal_datetime - current_datetime).total_seconds()
+        try:
+            schedule = Schedule.objects.get(user=user, date=today)
+            print(f"Today's Date: {today}, Current Time: {current_time}")
+            print(schedule)
+        except Schedule.DoesNotExist:
+            return JsonResponse({'message': 'No meal scheduled for today'}, status=204)  # 204 No Content
+        
+        reminders = []
 
-            # print("Current time: ", current_time)
-            # print("Meal time: ", meal_time)
-            # print("Time difference: ", time_difference)
+        # Check if it's time to remind for each meal
+        for meal_name, meal_time in MEAL_TIMES.items():
+            meal = getattr(schedule, meal_name, None)
+            if meal:  # Ensure there is a meal scheduled
+                meal_datetime = datetime.datetime.combine(today, meal_time)
+                current_datetime = datetime.datetime.combine(today, current_time)
+                time_difference = (meal_datetime - current_datetime).total_seconds()
+                
+                if 0 <= time_difference <= 3600:
+                    reminders.append(f"Reminder, get your ingredients ready for {meal_name}: {meal.name}!")
 
-            if 0 <= time_difference <= 3600:  # Time difference within an hour
-                if Schedule.objects.filter(user=user, meal_type=meal, date_and_time__date=datetime.date.today()).exists():
-                    return JsonResponse({'reminder': f"Reminder, get your ingredients ready for {meal}!"}, status=200)
-            return JsonResponse({'message': 'No meal suggestions available, so no reminders can be provided.'}, status=204)  # 204 No Content
+        if reminders:
+            return JsonResponse({'reminders': reminders}, status=200)
         else:
-            return JsonResponse({'error': 'Only GET requests are allowed'}, status=405) # 405 Method Not Allowed
+            return JsonResponse({'message': 'No reminders at this time'}, status=204)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
 
 @csrf_exempt
 @login_required
@@ -630,8 +641,8 @@ def import_recipes_and_ingredients(request):
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
     
     # We don't have staff users, so just comment the following line when adding recipes...
-    # if not request.user.is_staff:
-    #     return JsonResponse({'error': 'Unauthorized access'}, status=403)
+    if not request.user.is_staff:
+        return JsonResponse({'error': 'Unauthorized access'}, status=403)
 
     try:
         # Access the raw string from 'data' key
@@ -656,12 +667,15 @@ def import_recipes_and_ingredients(request):
                 recipe_data.get('sodium', 0)
             )
 
+            meal_types = ['breakfast', 'lunch', 'dinner']
+            random_meal_type = random.choice(meal_types)
+
             recipe, recipe_created = Recipe.objects.get_or_create(
                 name=recipe_data['name'],
                 defaults={
                     'preparation': "\n".join(recipe_data.get('preparation', [])),
                     'instructions': "\n".join(recipe_data.get('instructions', [])),
-                    'meal_type': recipe_data.get('meal_type', 'General'),
+                    'meal_type': random_meal_type,
                     'calories': recipe_data.get('calories', 0),
                     'nutritional_information': nutritional_info,
                 }
@@ -737,5 +751,77 @@ def delete_recipes_and_ingredients(request):
         deleted_count, _ = Recipe.objects.all().delete()
         deleted_count_ingredients, _ = Ingredient.objects.all().delete()
         return JsonResponse({'message': f'{deleted_count} deleted recipes, and {deleted_count_ingredients} deleted ingredients'}, status=200)
+    else:
+        return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)
+
+@csrf_exempt
+@login_required
+def schedule_meals(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user = request.user
+            date_str = data.get('date')
+
+            # Validate and parse the date
+            if not date_str:
+                return JsonResponse({'error': 'Date is required'}, status=400)
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d')
+
+            # Ensure a schedule exists for this user and date
+            schedule, created = Schedule.objects.get_or_create(user=user, date=date)
+
+            all_recipes = list(Recipe.objects.all())
+            if not all_recipes:
+                return JsonResponse({'error': 'No recipes available to schedule'}, status=404)
+
+            # Assign if not already set
+            if not schedule.breakfast:
+                schedule.breakfast = random.choice(all_recipes)
+            if not schedule.lunch:
+                schedule.lunch = random.choice(all_recipes)
+            if not schedule.dinner:
+                schedule.dinner = random.choice(all_recipes)
+
+            schedule.save()
+
+            return JsonResponse({
+                'message': 'Meals scheduled successfully',
+                'assigned_recipes': {
+                    'date': date_str,
+                    'breakfast': schedule.breakfast.name,
+                    'lunch': schedule.lunch.name,
+                    'dinner': schedule.dinner.name,
+                }
+            }, status=200)
+        except KeyError as e:
+            return JsonResponse({'error': f'Missing key in data: {str(e)}'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
+    
+@csrf_exempt
+@login_required
+def view_schedule(request):
+    if request.method == 'GET':
+        user = request.user
+
+        # Fetch all schedules for the user
+        schedules = Schedule.objects.filter(user=user).order_by('date')
+        if schedules.exists():
+            schedules_data = []
+            for schedule in schedules:
+                schedule_data = {
+                    'date': schedule.date.strftime('%Y-%m-%d'),
+                    'breakfast': schedule.breakfast.name if schedule.breakfast else None,
+                    'lunch': schedule.lunch.name if schedule.lunch else None,
+                    'dinner': schedule.dinner.name if schedule.dinner else None
+                }
+                schedules_data.append(schedule_data)
+
+            return JsonResponse({'schedules': schedules_data}, status=200)
+        else:
+            return JsonResponse({'error': 'No schedules found'}, status=404)
     else:
         return JsonResponse({'error': 'Only GET requests are allowed'}, status=405)

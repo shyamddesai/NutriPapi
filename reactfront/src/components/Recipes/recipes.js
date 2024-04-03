@@ -4,12 +4,17 @@ import './recipes.css';
 
 const Recipes = () => {
     const [importData, setImportData] = useState('');
+    const [scheduledDate, setScheduledDate] = useState('');
 
     const handleImportDataChange = (event) => {
         setImportData(event.target.value);
     };
 
-    const RecipesAndIngredients = async () => {
+    const handleScheduledDateChange = (event) => {
+        setScheduledDate(event.target.value);
+    };
+
+    const importRecipesAndIngredients = async () => {
         try {
             const response = await axios.post(
                 'http://localhost:8000/recipe/add/',
@@ -25,17 +30,53 @@ const Recipes = () => {
         }
     };
 
+    const scheduleMeal = async () => {
+        try {
+            const response = await axios.post(
+                'http://localhost:8000/schedule/add',
+                { date: scheduledDate },
+                { withCredentials: true }
+            );
+            console.log('Meal scheduled successfully', response.data);
+            alert(`Meal scheduled successfully for ${scheduledDate}.`);
+        } catch (error) {
+            console.error('Failed to schedule meal:', error);
+            alert('Failed to schedule meal.');
+        }
+    };
+
     return (
-        <div className="importContainer">
-            <h2>Import Recipes and Ingredients</h2>
-            <textarea
-                value={importData}
-                onChange={handleImportDataChange}
-                placeholder="Paste JSON data here"
-                rows="5"
-                className="importTextarea"
-            ></textarea>
-            <button onClick={RecipesAndIngredients} className="importButton">Import Data</button>
+        <div>
+            <div className="importContainer">
+                <h2>Import Recipes and Ingredients</h2>
+                <textarea
+                    value={importData}
+                    onChange={handleImportDataChange}
+                    placeholder="Paste JSON data here"
+                    rows="5"
+                    className="importTextarea"
+                ></textarea>
+                <button onClick={importRecipesAndIngredients} className="importButton">Import Data</button>
+            </div>
+            <div className="scheduleMealContainer">
+                <h2>Schedule Meal</h2>
+                <input
+                    type="date"
+                    value={scheduledDate}
+                    onChange={handleScheduledDateChange}
+                    className="scheduleInput"
+                />
+                {/* <select
+                    value={mealType}
+                    onChange={handleMealTypeChange}
+                    className="mealTypeSelect"
+                >
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                </select> */}
+                <button onClick={scheduleMeal} className="scheduleButton">Schedule Meal</button>
+            </div>
         </div>
     );
 };
