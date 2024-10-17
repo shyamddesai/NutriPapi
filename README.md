@@ -3,17 +3,89 @@
 Introducing NutriPapi: Your Personalized Health Companion
 ![NutriPapi Logo](docs/NutriPapi_logo.png)
 
-NutriPapi is an innovative health management platform designed to empower users in achieving their wellness goals effortlessly. Seamlessly integrating advanced features with user-friendly design, NutriPapi provides a comprehensive suite of tools tailored to your individual needs.
+NutriPapi is an innovative health management platform designed to empower users in achieving their wellness goals effortlessly. With AI-powered meal recommendations, personalized health tracking, and secure data handling, NutriPapi serves as a comprehensive solution for anyone looking to improve their dietary habits and overall well-being.
 
-With NutriPapi, creating an account is just the beginning. Users can input crucial details such as weight, height, activity levels, and dietary preferences, enabling the system to generate personalized recommendations. Whether you're aiming to shed a few pounds, bulk up, or maintain a balanced lifestyle, NutriPapi's daily suggested caloric intake feature ensures you stay on track with your goals.
+## Key Features
+- **Personalized Health Tracking**: Users can input health metrics (e.g., weight, height, activity level) and dietary preferences, enabling NutriPapi to provide custom caloric intake recommendations.
+- **AI-Powered Recipe Recommendations**: Using scikit-learn, NLP, and clustering algorithms, NutriPapi’s recommendation engine learns from user likes/dislikes and suggests meals based on available ingredients.
+- **Ingredient-Based Meal Planning**: Input ingredients on hand, and NutriPapi will create meal plans suited to dietary preferences and nutritional goals.
+- **Progress Tracking and Reports**: Log daily meals, track calories, and receive weekly progress updates.
+- **Security and Privacy**: NutriPapi prioritizes user data security with robust authentication and encryption protocols.
 
-Say goodbye to meal planning woes with NutriPapi's intelligent ingredient management system. Simply input the contents of your fridge, and NutriPapi will craft diverse and nutritious meal suggestions customized to your dietary preferences. Plus, with the ability to log daily meals and exercise routines, tracking your progress has never been easier.
+## Technical Overview
+- **Frontend**: Built with Next.js for a responsive user interface.
+- **Backend**: Powered by Django and SQLite, supporting secure data handling and efficient storage.
+- **Machine Learning**: Utilizes scikit-learn for decision trees, k-means clustering, and NLP techniques (e.g., tokenization) to personalize meal suggestions.
+- **Agile Development**: Managed using SCRUM methodology and GitHub Projects, featuring four-week sprints and task management by the SCRUM master.
 
-NutriPapi goes beyond mere functionality, offering features like generating weekly progress reports, receiving timely reminders to stay on track, and even providing inspiring quotes related to diet and health. 
+---
 
-Security and privacy are paramount, with NutriPapi implementing robust authentication methods and encryption protocols to safeguard sensitive user data.
+## Installation and Setup
+### Backend Setup
+1. **Create and activate a virtual environment**:
+   ```bash
+   python -m venv nutripapi
+   cd Backend
+   .\nutripapi\Scripts\Activate  # On Windows
 
-Experience the future of health management with NutriPapi. Whether you're a fitness enthusiast, health-conscious individual, or simply looking to improve your well-being, NutriPapi is your trusted companion every step of the way.
+   # On MacOS/Linux:
+   cd .nutripapi/bin && source activate
+   ```
+2. **Install dependencies**:
+   ```bash
+   pip install -r .\requirements.txt  # On Windows
+   python3 -m pip install -r requirements.txt  # On MacOS/Linux
+   ```
+3. **Run the server**:
+   ```bash
+   python .\manage.py runserver
+   ```
+
+### React Frontend Setup
+1. **Navigate to the React frontend**:
+   ```bash
+   cd reactfront
+   ```
+2. **Install dependencies and start the application**:
+   ```bash
+   npm install
+   npm run start
+   ```
+
+### Database Migrations
+1. **Apply migrations**:
+   ```bash
+   cd Backend
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+### Acceptance Tests
+1. **Run acceptance tests**:
+   ```bash
+   cd Backend
+   python manage.py test
+   ```
+
+### Cucumber Tests
+1. **Run Cucumber tests**:
+   ```bash
+   cd Backend
+   python .\manage.py behave .\features\US0XX.feature
+   ```
+  
+---
+
+## Agile Development
+NutriPapi is developed using Agile methodologies, anchored in SCRUM for iterative development, continuous feedback, and adaptive planning. The process begins with a comprehensive product backlog in GitHub Projects, which guides feature development, user stories, and technical tasks.
+
+Each four-week sprint starts with a collaborative selection of user stories from the backlog, outlining the features to be implemented. Throughout the sprint, developers use GitHub for version control and collaboration, creating branches, reviewing code, and merging updates according to best practices.
+
+Our release pipeline integrates GitHub for source control, unit and acceptance tests, and project documentation, with GitHub Actions facilitating continuous integration. Team coordination involves weekly online meetings, daily scrums on Microsoft Teams, and key meetings at sprint milestones. Project documentation is maintained on GitHub Wiki, with updates shared via Microsoft Teams and WhatsApp. The scrum master ensures progress alignment by maintaining a weekly task list within GitHub for project tracking and issue resolution.
+
+### SCRUM Masters
+- Sprint A: Shyam Desai, shyam.desai@mail.mcgill.ca
+- Sprint B: Shyam Desai, shyam.desai@mail.mcgill.ca
 
 ### Team Members
 - Masa Kagami <br>
@@ -26,19 +98,6 @@ Experience the future of health management with NutriPapi. Whether you're a fitn
 - Simiao Rao <br>
 - Jingyi Wang <br>
 - Simo Benkirane <br>
-
----
-
-## Agile Development
-NutriPapi is developed using Agile methodologies. Our development process is anchored in SCRUM, a framework that emphasizes iterative development, continuous feedback, and adaptive planning. This product kicks off with a comprehensive product backlog, meticulously curated and managed using Github Projects. This backlog serves as our compass, guiding us through the myriad of features, user stories, and technical tasks that comprise our development journey.
-
-Our sprint cycle lasts four weeks and it forms the backbone of our development cycle. At the onset of each sprint, our team collaborates to set expectations and select a set of user stories from the backlog. These user stories encapsulate the features and functionalities that we aim to implement within the sprint timeframe. Throughout the sprint, our developers leverage the power of Github for version control and collaboration. Branches are created, code is developed, reviewed, and merged into the main branch, all while adhering to best practices and coding standards.
-
-In addition to our development process, our release pipeline involves various components. We utilize Github for source control, housing the source code, unit tests, automated acceptance tests, and project documentation. Continuous integration is facilitated through Github Actions, ensuring seamless integration of code changes. Team coordination is vital, with weekly online meetings supplemented by in-person discussions, daily scrum meetings held on Microsoft Teams, and planning, retrospective, and demo meetings scheduled at specific sprint milestones. Technical knowledge sharing is facilitated through collaborative project documentation on Github Wiki and key updates communicated via Microsoft Teams and WhatsApp channels. Project tracking and issue resolution are managed within Github, with the scrum master maintaining a weekly task list to ensure progress alignment within the team.
-
-### Scrum Masters
-- Sprint A: Shyam Desai, shyam.desai@mail.mcgill.ca
-- Sprint B: Masa Kagami, nagamasa.kagami@mail.mcgill.ca
 
 ### Done Checklist
 - [ ] All story related tasks have been completed.
